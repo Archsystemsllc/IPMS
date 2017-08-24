@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="programs" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/program/programs.jsp" />
+	</definition>
+	
+	<definition name="program" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/program/program.jsp" />
+	</definition>
+	
+	<definition name="programcal" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/program/programcal.jsp" />
+	</definition>
+	
+	<definition name="programsadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/program/programsadd.jsp" />
+	</definition>
+	
+	<definition name="programsedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/program/programsedit.jsp" />
+	</definition>  
+	
+</tiles-definitions>

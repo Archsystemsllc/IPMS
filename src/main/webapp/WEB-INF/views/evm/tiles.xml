@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition name="evm" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/evm/evm.jsp" />
+	</definition>  
+	<definition name="evmprojects" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/evm/evmprojects.jsp" />
+	</definition>  
+	<definition name="evmproject" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/evm/evmproject.jsp" />
+	</definition>  
+	
+</tiles-definitions>

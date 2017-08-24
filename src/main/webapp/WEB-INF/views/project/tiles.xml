@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="projects" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/project/projects.jsp" />
+	</definition>
+	
+	<definition name="project" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/project/project.jsp" />
+	</definition>
+	
+	<definition name="projectcal" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/project/projectcal.jsp" />
+	</definition>
+	
+	<definition name="projectsadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/project/projectsadd.jsp" />
+	</definition>
+	
+	<definition name="projectsedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/project/projectsedit.jsp" />
+	</definition>  
+	<definition name="contactus" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/contactus.jsp" />
+	</definition> 
+	
+</tiles-definitions>

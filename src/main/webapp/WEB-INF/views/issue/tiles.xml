@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="issues" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/issue/issues.jsp" />
+	</definition>
+	
+	<definition name="issue" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/issue/issue.jsp" />
+	</definition>
+	
+	<definition name="issuesadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/issue/issuesadd.jsp" />
+	</definition>
+	
+	<definition name="issuesedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/issue/issuesedit.jsp" />
+	</definition>
+	
+
+</tiles-definitions>

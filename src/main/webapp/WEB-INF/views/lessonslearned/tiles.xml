@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="lessonslearneds" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/lessonslearned/lessonslearneds.jsp" />
+	</definition>
+	
+	<definition name="lessonslearned" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/lessonslearned/lessonslearned.jsp" />
+	</definition>
+	
+	<definition name="lessonslearnedsadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/lessonslearned/lessonslearnedsadd.jsp" />
+	</definition>
+	
+	<definition name="lessonslearnedsedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/lessonslearned/lessonslearnedsedit.jsp" />
+	</definition>
+	
+</tiles-definitions>

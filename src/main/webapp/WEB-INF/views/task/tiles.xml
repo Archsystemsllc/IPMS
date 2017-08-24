@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="tasks" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/tasks.jsp" />
+	</definition>
+	
+	<definition name="task" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/task.jsp" />
+	</definition>
+	
+	<definition name="tasksadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/tasksadd.jsp" />
+	</definition>
+	
+	<definition name="tasksedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/tasksedit.jsp" />
+	</definition>
+	
+	<definition name="portfolio" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/portfolio.jsp" />
+	</definition>
+	<definition name="contactus" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/task/contactus.jsp" />
+	</definition>
+
+</tiles-definitions>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+<http use-expressions="true">
+        <intercept-url pattern="/app/**" access="isAuthenticated()" />
+        <intercept-url pattern="*/resources/**" access="permitAll" />
+        <form-login login-page="/util/login"
+			authentication-failure-url="/util/loginfailed" />
+		<logout logout-success-url="/util/logout" />
+        
+    </http>
+	
+	<global-method-security secured-annotations="enabled" />
+
+	
+
+	<beans:bean id="digestFilter" class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
+		<beans:property name="userDetailsService" ref="myUserDetailsService" />
+		<beans:property name="authenticationEntryPoint" ref="digestEntryPoint" />
+	</beans:bean>
+
+	<beans:bean id="digestEntryPoint" class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
+		<beans:property name="realmName" value="Contacts Realm via Digest Authentication" />
+		<beans:property name="key" value="acegi" />
+	</beans:bean>
+
+	<authentication-manager alias="authenticationManager" erase-credentials="false">
+	<authentication-provider>
+		<jdbc-user-service data-source-ref="restDataSource" 
+							users-by-username-query="select name, password, true from principal where username = ?"
+							authorities-by-username-query="SELECT u.username, r.name FROM principal u, role r, principal_role ur WHERE u.principal_id=ur.principal_id AND r.role_id=ur.role_id AND u.username=?"/>
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

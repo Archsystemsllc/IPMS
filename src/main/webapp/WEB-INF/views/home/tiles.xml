@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="groupdashboard" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/groupdashboard.jsp" />
+	</definition>
+
+	<definition name="dashboard" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/dashboard.jsp" />
+	</definition>
+	
+	<definition name="dashboard-bsg" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/dashboard-bsg.jsp" />
+	</definition>
+	
+	<definition name="projectdashboard" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/projectdashboard.jsp" />
+	</definition>	
+	
+	<definition name="reports" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/reports.jsp" />
+	</definition>
+	
+	<definition name="report" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/report.jsp" />
+	</definition>
+	
+	<definition name="reportsadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/home/reportsadd.jsp" />
+	</definition>	
+		
+</tiles-definitions>

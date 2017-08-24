@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="actionitems" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/actionitem/actionitems.jsp" />
+	</definition>
+	
+	<definition name="actionitem" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/actionitem/actionitem.jsp" />
+	</definition>
+	
+	<definition name="actionitemsadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/actionitem/actionitemsadd.jsp" />
+	</definition>
+	
+	<definition name="actionitemsedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/actionitem/actionitemsedit.jsp" />
+	</definition>
+	
+</tiles-definitions>

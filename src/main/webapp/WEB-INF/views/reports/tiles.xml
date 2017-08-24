@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="projectreport" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/reports/projectreport.jsp" />
+	</definition>
+	
+	<definition name="programreport" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/reports/programreport.jsp" />
+	</definition>
+	
+	<definition name="groupreport" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/reports/groupreport.jsp" />
+	</definition>
+	
+	<definition name="statusreport" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/reports/statusreport.jsp" />
+	</definition>
+
+</tiles-definitions>

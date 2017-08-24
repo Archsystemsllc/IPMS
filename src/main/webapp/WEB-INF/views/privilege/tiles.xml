@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>					  										
+	<definition name="privileges" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/privilege/privileges.jsp" />
+	</definition>
+	
+	<definition name="privilege" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/privilege/privilege.jsp" />
+	</definition>
+	
+	<definition name="privilegecal" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/privilege/privilegecal.jsp" />
+	</definition>
+	
+	<definition name="privilegesadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/privilege/privilegesadd.jsp" />
+	</definition>
+	
+	<definition name="privilegesedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/privilege/privilegesedit.jsp" />
+	</definition>  
+	
+</tiles-definitions>

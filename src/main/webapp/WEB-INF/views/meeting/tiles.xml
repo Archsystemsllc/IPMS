@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	
+	<definition name="meetings" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/meetings.jsp" />
+	</definition>
+	
+	<definition name="meeting" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/meeting.jsp" />
+	</definition>
+	
+	<definition name="meetingsadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/meetingsadd.jsp" />
+	</definition>
+	
+	<definition name="meetingsedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/meetingsedit.jsp" />
+	</definition>
+	
+	<definition name="agendasedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/agendasedit.jsp" />
+	</definition>
+	
+	<definition name="agendaedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/agendaedit.jsp" />
+	</definition>
+	
+	<definition name="agenda" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/agenda.jsp" />
+	</definition>
+	<definition name="agendaadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/agendaadd.jsp" />
+	</definition>
+	<definition name="meetingminutes" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/meetingminutes.jsp" />
+	</definition>
+	<definition name="meetingminutesadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/meetingminutesadd.jsp" />
+	</definition>
+	
+</tiles-definitions>
+

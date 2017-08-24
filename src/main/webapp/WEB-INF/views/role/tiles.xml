@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>					  										
+	<definition name="roles" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/role/roles.jsp" />
+	</definition>
+	
+	<definition name="role" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/role/role.jsp" />
+	</definition>
+	
+	<definition name="rolecal" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/role/rolecal.jsp" />
+	</definition>
+	
+	<definition name="rolesadd" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/role/rolesadd.jsp" />
+	</definition>
+	
+	<definition name="rolesedit" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/role/rolesedit.jsp" />
+	</definition>  
+	
+</tiles-definitions>

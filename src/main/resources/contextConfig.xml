@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<aop:aspectj-autoproxy />
+
+	<bean id="aspectLogger" class="com.archsystemsinc.ipms.util.AspectLogger" />
+	<bean
+		class="com.archsystemsinc.ipms.sec.webapp.controller.validator.ProgramValidator" />
+	<bean id="downloadService" class="com.archsystemsinc.ipms.poi.service.DownloadService" />
+	<context:property-placeholder
+		location="
+        classpath*:*persistence-mysql.properties,
+        classpath*:*env-${target}.properties,
+        classpath*:*emailer.properties,
+        classpath*:*web-${target}.properties" />
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="i18n/messages" />
+		<property name="cacheSeconds" value="10" />
+	</bean>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="username" value="zingwebapp@gmail.com" />
+		<property name="password" value="zinged12345" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.from">${mail.smtp.from}</prop>
+				<prop key="mail.smtp.user">${mail.smtp.user}</prop>
+				<prop key="mail.smtp.password">${mail.smtp.password}</prop>
+				<prop key="mail.smtp.host">${mail.smtp.host}</prop>
+				<prop key="mail.smtp.port">${mail.smtp.port}</prop>
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+			</props>
+		</property>
+	</bean>
+	
+ <bean id="emailer" class="com.archsystemsinc.ipms.sec.util.email.Emailer">
+   <property name="mailSender" ref="mailSender" />
+ </bean>
+</beans>
