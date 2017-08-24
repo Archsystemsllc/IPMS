@@ -13,6 +13,7 @@
 	<bean
 		class="com.archsystemsinc.ipms.sec.webapp.controller.validator.ProgramValidator" />
 	<bean id="downloadService" class="com.archsystemsinc.ipms.poi.service.DownloadService" />
+	<bean id="uploadService" class="com.archsystemsinc.ipms.poi.service.UploadService" />
 	<context:property-placeholder
 		location="
         classpath*:*persistence-mysql.properties,
