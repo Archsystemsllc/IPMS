@@ -19,24 +19,43 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.xml.validation.Validator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,8 +63,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
+import com.archsystemsinc.ipms.poi.service.UploadService;
 import com.archsystemsinc.ipms.sec.model.ActionItemPriority;
 import com.archsystemsinc.ipms.sec.model.Issue;
 import com.archsystemsinc.ipms.sec.model.IssueStatus;
@@ -88,6 +110,9 @@ public class IssueController extends AbstractController<Issue> {
 
 	@Autowired
 	private DownloadService downloadService;
+	
+	@Autowired
+	private UploadService uploadService;
 
 	@Override
 	@InitBinder
@@ -389,5 +414,33 @@ public class IssueController extends AbstractController<Issue> {
 		    }
 
 	  }
+	  
+		
+		@RequestMapping(value = "/issues/upload",method = RequestMethod.GET)
+		public String uploadIssue(final Model model) {
+			model.addAttribute(new FileUpload());
+			model.addAttribute(referenceData());
+			return "uploadIssue";
+		}
+		
+		@RequestMapping(value = "/issues/upload", method = RequestMethod.POST)
+		public String uploadIssue(@ModelAttribute("fileUpload") final FileUpload uploadItem, final Principal principal,
+				final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes) {		
+			
+			logger.debug("Received request to upload issues report");
+			final String typeOfUpload = GenericConstants.ISSUES;
+			if(result.hasErrors()) {
+				redirectAttributes.addFlashAttribute("fileUploadError", "error.upload.internal.problem");
+				return "redirect:/app/issues/upload";
+			} else {
+				//Delegate to UploadService.
+				String returnString = uploadService.uploadXLS(uploadItem, typeOfUpload, redirectAttributes);
+				if(returnString.equalsIgnoreCase("fileUploadError")) {
+					return "redirect:/app/issues/upload";
+				} else {
+					return returnString;
+				}
+			}
+		}
 
 }

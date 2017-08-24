@@ -17,30 +17,42 @@
                            action="upload" method="post">
                     <div class="widget_content">
                         <h6>Issues Upload</h6>
-                         <c:if test="${not empty message }">
-				   <div>
-								<h4 class="alert-heading"><c:out value="${message}" /></h4>
-  								
-				    </div>  
-			    </c:if>
-                        <form:errors path="*" cssClass="errorblock" element="div" />
-                        <ul>                          
-							  <li>
-                                <div class="form_grid_12">
-                                    <label for="fileData" class="field_title">Issues File</label>
-                                    <div class="form_input">
-                                        <form:input type="file" id="fileData" name="fileData" path="fileData" />
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="form_grid_12">
-                                    <div class="form_input">
-                                        <button type="submit" class="btn_small btn_blue"><span id="sub">Upload</span></button>
-                                        <button type="reset" class="btn_small btn_blue"><span>Reset</span></button>
-                                    </div>
-                                </div>
-                            </li>
+                         <c:if test="${not empty message}">
+                         	<br />
+				  			 <div class="errorblock">
+								<c:out value="${message}" />
+				    		</div>  
+			    		 </c:if>
+                   		<c:if test="${not empty fileUploadSuccess}">
+							<br />
+							<div class="successblock">
+								<spring:message code="${fileUploadSuccess}"></spring:message>
+							</div>
+						</c:if>
+						<c:if test="${not empty fileUploadError}">
+							<br />
+							<div class="errorblock">
+								<spring:message code="${fileUploadError}"></spring:message>
+							</div>
+						</c:if>
+						<form:errors path="*" cssClass="errorblock" element="div" />
+                       	<ul>                          
+						  <li>
+                               <div class="form_grid_12">
+                                   <label for="fileData" class="field_title">Issues File</label>
+                                   <div class="form_input">
+                                       <form:input type="file" id="fileData" name="fileData" path="fileData" />
+                                   </div>
+                               </div>
+                           </li>
+                           <li>
+                               <div class="form_grid_12">
+                                   <div class="form_input">
+                                       <button type="submit" class="btn_small btn_blue" name="btnAction" value="Import"><span id="sub">Upload</span></button>
+                                       <button type="reset" class="btn_small btn_blue"><span>Reset</span></button>
+                                   </div>
+                               </div>
+                           </li>
                         </ul>
                         </div>     
 					</form:form>						

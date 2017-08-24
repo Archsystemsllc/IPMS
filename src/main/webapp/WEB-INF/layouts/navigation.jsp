@@ -224,7 +224,7 @@
 								class="list-icon">&nbsp;</span>Issue Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-issue">Add Issue</a></li>
-									<li><a href="#">Upload Issues</a></li>	
+									<li><a href="${pageContext.request.contextPath}/app/issues/upload">Upload Issues</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/issues">View Issues</a></li>				
 								</ul>
 						</li>
@@ -317,8 +317,4 @@
 
 		</div>
 	</div>
-</div>
-
-
-
 </div>
