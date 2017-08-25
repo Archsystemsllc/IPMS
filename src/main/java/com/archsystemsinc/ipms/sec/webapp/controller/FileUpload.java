@@ -16,6 +16,7 @@ public class FileUpload {
 	private List<Task> tasks;
     private Long programId;
     private Map<Integer, String> programs;
+    private Long projectId;
     
 	public Map<Integer, String> getPrograms() {
 		return programs;
@@ -83,4 +84,11 @@ public class FileUpload {
 		fileData = fileData1;
 	}
 
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
 }

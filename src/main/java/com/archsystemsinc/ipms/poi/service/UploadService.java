@@ -20,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.sec.model.Issue;
+import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
+import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 import com.archsystemsinc.ipms.sec.util.GenericConstants;
 import com.archsystemsinc.ipms.sec.webapp.controller.FileUpload;
@@ -39,6 +41,9 @@ public class UploadService {
 	
 	@Autowired
 	private IProjectService projectService;
+	
+	@Autowired
+	private IProgramService programService;
 	
 	@Autowired
 	private IIssueService issueService;
@@ -114,13 +119,22 @@ public class UploadService {
 
 	public String uploadIssues(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 	
-		Project project = null;
-		if(null != uploadItem.getProgramId()){
-			project = projectService.findOne(uploadItem.getProgramId());
-		} else {
-			project = projectService.findOne(36);
+		boolean reqFieldsEmpty = false;
+		if(uploadItem.getProgramId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Program");
+			reqFieldsEmpty = true;
 		}
-		try {
+		if(uploadItem.getProjectId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Project");
+			reqFieldsEmpty = true;
+		} 
+		if(reqFieldsEmpty) {
+			return REDIRECT + ISSUES_UPLOAD;
+		}
+		else {
+			Project project = projectService.findOne(uploadItem.getProjectId());
+			Program program = programService.findOne(uploadItem.getProgramId());
+			try {
 				Issue issue = null;
 				constructExcelColumnMap(GenericConstants.ISSUES);
 	          //I've Header and I'm ignoring header for that I've +1 in loop
@@ -137,17 +151,19 @@ public class UploadService {
 	              //status - Pending by default		        
 				  issue.setPriority("N/A");
 				  issue.setProject(project);
+				  issue.setProgram(program);
 	              issueService.create(issue);
 			
-		}  catch(ConstraintViolationException ce) {
-			Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
-			for(ConstraintViolation<?> v: cv) {
-				if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
-					redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
-				} else {
-					redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
-				}	
-				return REDIRECT + ISSUES_UPLOAD;
+			}  catch(ConstraintViolationException ce) {
+				Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+				for(ConstraintViolation<?> v: cv) {
+					if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+					} else {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+					}	
+					return REDIRECT + ISSUES_UPLOAD;
+				}
 			}
 		}
 		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);

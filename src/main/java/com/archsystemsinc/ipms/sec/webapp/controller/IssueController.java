@@ -19,43 +19,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,10 +56,12 @@ import com.archsystemsinc.ipms.sec.model.ActionItemPriority;
 import com.archsystemsinc.ipms.sec.model.Issue;
 import com.archsystemsinc.ipms.sec.model.IssueStatus;
 import com.archsystemsinc.ipms.sec.model.Principal;
+import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.model.RevisionHistory;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
 import com.archsystemsinc.ipms.sec.persistence.service.IPrincipalService;
+import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 import com.archsystemsinc.ipms.sec.persistence.service.IRevisionHistoryService;
 import com.archsystemsinc.ipms.sec.util.GenericConstants;
@@ -101,6 +87,9 @@ public class IssueController extends AbstractController<Issue> {
 
 	@Autowired
 	private IProjectService projectService;
+	
+	@Autowired
+	private IProgramService programService;
 	
 	@Autowired
 	private IRevisionHistoryService revisionHistoryService;
@@ -337,7 +326,26 @@ public class IssueController extends AbstractController<Issue> {
 					.getName());
 		}
 		referenceData.put("projectList", pList);
-
+		
+		final String currentUser = SecurityContextHolder.getContext()
+				.getAuthentication().getName();
+		Principal principal = principalService.findByName(currentUser);
+		final List<Project> currentUserProjectlist = projectService.findActiveUserProjects(principal);
+		final Map<Integer, String> cpList = new LinkedHashMap<Integer, String>();
+		for (int i = 0; i < currentUserProjectlist.size(); i++) {
+			cpList.put(currentUserProjectlist.get(i).getId().intValue(), currentUserProjectlist.get(i)
+					.getName());
+		}
+		referenceData.put("currentUserProjectlist", cpList);
+		
+		final List<Program> currentUserProgramlist = programService.findUserPrograms(principal);
+		final Map<Integer, String> cpgList = new LinkedHashMap<Integer, String>();
+		for (int i = 0; i < currentUserProgramlist.size(); i++) {
+			cpgList.put(currentUserProgramlist.get(i).getId().intValue(), currentUserProgramlist.get(i)
+					.getName());
+		}
+		referenceData.put("currentUserProgramlist", cpgList);
+		
 		final Map<String, String> priorityList = new LinkedHashMap<String, String>();
 		priorityList.put(ActionItemPriority.High.toString(),
 				ActionItemPriority.High.toString());
@@ -419,7 +427,7 @@ public class IssueController extends AbstractController<Issue> {
 		@RequestMapping(value = "/issues/upload",method = RequestMethod.GET)
 		public String uploadIssue(final Model model) {
 			model.addAttribute(new FileUpload());
-			model.addAttribute(referenceData());
+			model.addAttribute("referenceData", referenceData());
 			return "uploadIssue";
 		}
 		

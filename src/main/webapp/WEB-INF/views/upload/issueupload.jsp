@@ -4,6 +4,9 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<style>
+ .required:after { content:" *"; }
+</style>
 
 <div class="content">
     <div class="grid_container">
@@ -37,9 +40,29 @@
 						</c:if>
 						<form:errors path="*" cssClass="errorblock" element="div" />
                        	<ul>                          
-						  <li>
+                             <li>
+                                <div class="form_grid_12">
+                                    <label for="programId" class="field_title required">Program</label>
+                                    <div class="form_input">
+                                        <form:select id="programId" name="programId" path="programId" class="mid">
+                                             <form:options items="${referenceData.currentUserProgramlist}"  />
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form_grid_12">
+                                    <label for="projectId" class="field_title required">Project</label>
+                                    <div class="form_input">
+                                        <form:select id="projectId" name="projectId" path="projectId" class="mid">
+                                            <form:options items="${referenceData.currentUserProjectlist}"  />
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </li>
+                             <li>
                                <div class="form_grid_12">
-                                   <label for="fileData" class="field_title">Issues File</label>
+                                   <label for="fileData" class="field_title required">Issues File</label>
                                    <div class="form_input">
                                        <form:input type="file" id="fileData" name="fileData" path="fileData" />
                                    </div>
