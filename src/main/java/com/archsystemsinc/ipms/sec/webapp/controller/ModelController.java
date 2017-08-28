@@ -55,7 +55,7 @@ public class ModelController extends AbstractController<ModelIPMS> {
 
 	@Autowired
 	private IPrincipalService principalService;
-	
+
 	@Autowired
 	private IProgramService programService;
 
@@ -68,61 +68,65 @@ public class ModelController extends AbstractController<ModelIPMS> {
 	@Override
 	@InitBinder
 	public void initBinder(final WebDataBinder binder) {
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(
-				GenericConstants.DEFAULT_DATE_FORMAT);
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(GenericConstants.DEFAULT_DATE_FORMAT);
 		dateFormat.setLenient(false);
 		// true passed to CustomDateEditor constructor means convert empty
 		// String to null
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(
-				dateFormat, true));
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 
 	@RequestMapping(value = "/models", method = RequestMethod.GET)
 	public String ModelIpms(final Model model, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
 		final List<ModelIPMS> models = service.findAll();
-		if(models != null) {
+		if (models != null) {
 			Collections.sort((List<ModelIPMS>) models);
-		}		
+		}
 		model.addAttribute("models", models);
 		return "models";
 	}
 
 	@RequestMapping(value = "/model/{id}")
-	public String ModelIPMS(@PathVariable("id") final Long id,
-			final Model model, final HttpServletRequest request, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+	public String ModelIPMS(@PathVariable("id") final Long id, final Model model, final HttpServletRequest request,
+			java.security.Principal principal) {
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
 		final ModelIPMS modelIPMS = service.findOne(id);
 		model.addAttribute("modelIPMS", modelIPMS);
-		
-			final String page = request.getParameter("page");
-			if (page == null)
-				model.addAttribute("page", "");
-			else
-				model.addAttribute("page", page);
-		return "modelIPMS";
+
+		final String page = request.getParameter("page");
+		if (page == null)
+			model.addAttribute("page", "");
+		else
+			model.addAttribute("page", page);
+		return "model";
 	}
 
 	@RequestMapping(value = "/new-Model", method = RequestMethod.GET)
 	public String newModel(final Model model, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
 		final ModelIPMS modelIPMS = new ModelIPMS();
 		model.addAttribute("modelIPMS", modelIPMS);
 		model.addAttribute("referenceData", referenceData());
 		return "modelsAdd";
 	}
-	
+
 	@RequestMapping(value = "/new-model/{programId}", method = RequestMethod.GET)
-	public String newModelWithProgram(final Model model, @PathVariable("programId") final Long programId, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+	public String newModelWithProgram(final Model model, @PathVariable("programId") final Long programId,
+			java.security.Principal principal) {
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
 		final Program program = programService.findOne(programId);
 		final ModelIPMS modelIPMS = new ModelIPMS();
-		if(null!=program) {
-			modelIPMS.setProgram(program);;
+		if (null != program) {
+			modelIPMS.setProgram(program);
+			;
 		}
 		model.addAttribute("program", program);
 		model.addAttribute("referenceData", referenceData());
@@ -130,98 +134,93 @@ public class ModelController extends AbstractController<ModelIPMS> {
 	}
 
 	@RequestMapping(value = "/edit-model/{id}", method = RequestMethod.GET)
-	public String editModel(@PathVariable("id") final Long id,
-			final Model model, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+	public String editModel(@PathVariable("id") final Long id, final Model model, java.security.Principal principal) {
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
 		final ModelIPMS modelIPMS = service.findOne(id);
-		modelIPMS.setManagerId(modelIPMS.getManager().getId());
+		// modelIPMS.setManagerId(modelIPMS.getManager().getId());
 		model.addAttribute("modelIPMS", modelIPMS);
 		model.addAttribute("referenceData", referenceData());
 		return "modelsedit";
 	}
 
 	@RequestMapping(value = "/new-Model", method = RequestMethod.POST)
-	public String addModel(
-			@Valid @ModelAttribute("modelIPMS") final ModelIPMS modelIPMS,
-			final BindingResult result, final Model model, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+	public String addModel(@Valid @ModelAttribute("modelIPMS") final ModelIPMS modelIPMS, final BindingResult result,
+			final Model model, java.security.Principal principal) {
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
-System.out.println("testing");
+		System.out.println("testing");
 		String returnView = "";
-		final Principal manager = principalService.findOne(modelIPMS
-				.getManagerId());
+		final Principal manager = principalService.findOne(modelIPMS.getManagerId());
 
-		final Program program=programService.findOne(modelIPMS.getProgramId());
+		final Program program = programService.findOne(modelIPMS.getProgramId());
 		modelIPMS.setProgram(program);
 		modelIPMS.setManager(manager);
-		try{
-		if (result.hasErrors()) {
+		try {
+			if (result.hasErrors()) {
+				returnView = "modelsAdd";
+				model.addAttribute("modelIPMS", modelIPMS);
+				model.addAttribute("referenceData", referenceData());
+			} else {
+				service.create(modelIPMS);
+				model.addAttribute("success", "success.model.created");
+				returnView = "redirect:/app/models";
+			}
+		} catch (Exception e) {
+			model.addAttribute("error", "unique.model.modelName");
 			returnView = "modelsAdd";
 			model.addAttribute("modelIPMS", modelIPMS);
 			model.addAttribute("referenceData", referenceData());
-		} else {
-			service.create(modelIPMS);
-			model.addAttribute("success","success.model.created");
-			returnView = "models";
-		}	
-		}
-		catch(Exception e)
-		{
-			model.addAttribute("error","unique.model.modelName");
-			returnView = "modelsAdd";
-			model.addAttribute("modelIPMS", modelIPMS);
-			model.addAttribute("referenceData", referenceData());	
 		}
 		return returnView;
 
 	}
 
 	@RequestMapping(value = "/edit-model", method = RequestMethod.POST)
-	public String updateProgram(
-			@Valid @ModelAttribute("modelIPMS") final ModelIPMS modelIPMS,
-			final BindingResult result, final Model model,
-			final HttpServletRequest request, java.security.Principal principal) {
-		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService.findByName(principal.getName());
+	public String updateProgram(@Valid @ModelAttribute("model") final ModelIPMS modelIPMS, final BindingResult result,
+			final Model model, final HttpServletRequest request, java.security.Principal principal) {
+		final com.archsystemsinc.ipms.sec.model.Principal currentUser = principalService
+				.findByName(principal.getName());
 		model.addAttribute("currentUser", currentUser);
 		String returnView = "";
 		// using name as long --bad idea
-		if(modelIPMS.getProgram().getId().equals(0L)) {
+		if (modelIPMS.getProgramId().equals(0L)) {
 			modelIPMS.setProgram(null);
+		} else {
+			modelIPMS.setProgram(programService.findOne(modelIPMS.getProgramId()));
 		}
-		final Principal iprincipal = principalService.findOne(modelIPMS
-				.getManagerId());
+		final Principal iprincipal = principalService.findOne(modelIPMS.getManagerId());
 		modelIPMS.setManager(iprincipal);
 		if (request.getParameter("btnAction").equalsIgnoreCase("Activate")) {
 			modelIPMS.setActive(true);
-			
-		} else if (request.getParameter("btnAction").equalsIgnoreCase(
-				"Deactivate")) {
+
+		} else if (request.getParameter("btnAction").equalsIgnoreCase("Deactivate")) {
 			modelIPMS.setActive(false);
 
-		} else if (request.getParameter("btnAction").equalsIgnoreCase(
-				"End Model")) {
+		} else if (request.getParameter("btnAction").equalsIgnoreCase("End Model")) {
 			System.out.println("Ending model " + modelIPMS.getId());
 			modelIPMS.setEndDate(new Date(System.currentTimeMillis()));
-		} 
-		try{
-		if (result.hasErrors()) {
-			returnView = "modelsedit";
-		} else {
-			service.update(modelIPMS);
-			returnView = "forward:model/" + modelIPMS.getId();
-			model.addAttribute("success","success.modelIPMS.updated");
 		}
-		model.addAttribute("modelIPMS", modelIPMS);
-		model.addAttribute("referenceData", referenceData());
-		}catch(Exception e)
-		{
-			model.addAttribute("error","unique.modelIPMS.modelName");
+		try {
+			if (result.hasErrors()) {
+				returnView = "modelsedit";
+			} else {
+				service.update(modelIPMS);
+				// returnView = "forward:model/" + modelIPMS.getId();
+				returnView = "redirect:/app/models";
+				model.addAttribute("success", "success.modelIPMS.updated");
+			}
+			model.addAttribute("modelIPMS", modelIPMS);
+			model.addAttribute("referenceData", referenceData());
+		} catch (Exception e) {
+			model.addAttribute("error", "unique.modelIPMS.modelName");
 			returnView = "modelsadd";
 			model.addAttribute("modelIPMS", modelIPMS);
-			model.addAttribute("referenceData", referenceData());	
+			model.addAttribute("referenceData", referenceData());
 		}
-		
+
 		return returnView;
 	}
 
@@ -241,14 +240,14 @@ System.out.println("testing");
 			pList.put(list.get(i).getId().intValue(), list.get(i).getName());
 		}
 		referenceData.put("principalList", pList);
-		
+
 		List<Program> program = programService.findAll();
-		
+
 		final Map<Integer, String> programList = new LinkedHashMap<Integer, String>();
 		for (int i = 0; i < program.size(); i++) {
 			programList.put(program.get(i).getId().intValue(), program.get(i).getName());
 		}
-		
+
 		referenceData.put("programList", programList);
 		return referenceData;
 	}
@@ -259,20 +258,16 @@ System.out.println("testing");
 	}
 
 	@RequestMapping(value = "/models/xls", method = RequestMethod.GET)
-	public void getXLS(final HttpServletResponse response, final Model model,
-			final java.security.Principal principal)
-					throws ClassNotFoundException {
+	public void getXLS(final HttpServletResponse response, final Model model, final java.security.Principal principal)
+			throws ClassNotFoundException {
 		logger.debug("Received request to download issues report as an XLS");
 		final String sheetName = GenericConstants.MODELS;
 		final String[] coloumnNames = { "1", "2", "3", "4", "5", "6" };
 		// Delegate to downloadService. Make sure to pass an instance of
 		// HttpServletResponse
-		final Principal currentUser = principalService.findByName(principal
-				.getName());
+		final Principal currentUser = principalService.findByName(principal.getName());
 		final List modelIPMS = service.findUserModels(currentUser);
-		downloadService
-				.downloadXLS(response, sheetName, modelIPMS, coloumnNames);
+		downloadService.downloadXLS(response, sheetName, modelIPMS, coloumnNames);
 	}
-
 
 }
