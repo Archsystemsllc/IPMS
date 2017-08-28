@@ -16,23 +16,19 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.sec.model.ActionItem;
 import com.archsystemsinc.ipms.sec.model.Issue;
-
 import com.archsystemsinc.ipms.sec.model.LessonsLearned;
-import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.MeetingMinutes;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
+import com.archsystemsinc.ipms.sec.persistence.service.IActionItemService;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
 import com.archsystemsinc.ipms.sec.persistence.service.ILessonsLearnedService;
-import com.archsystemsinc.ipms.sec.persistence.service.IActionItemService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingMinutesService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
@@ -68,7 +64,6 @@ public class UploadService {
 	
 	@Autowired
 	private IMeetingService meetingservice;
-	private IMeetingService meetingService;
 	
 	@Autowired
 	private IMeetingMinutesService meetingminutesService;
@@ -106,6 +101,7 @@ public class UploadService {
 	public final static String ACTIONITEMS_UPLOAD = "/app/uploadactionitems";
 	
 	public final static String ACTIONITEMS_VIEW = "/app/actionitems";
+	
 	public final static String MEETING_MINUTES_VIEW = "/app/meetingminutes";
 	
 	public final static String MEETING_MINUTES_UPLOAD = "/app/meetingminutesupload";
@@ -134,14 +130,6 @@ public class UploadService {
 				redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_MISSING);
 				return FILE_UPLOAD_ERROR;
 			} else {
-				if(GenericConstants.ISSUES.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadIssues(uploadItem, redirectAttributes);
-				}else if(GenericConstants.TASKS.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadTasks(uploadItem, redirectAttributes);
-				}else if(GenericConstants.LESSONS_LEARNED.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadLessonsLearned(uploadItem, redirectAttributes);
-				} else if(GenericConstants.ACTION_ITEMS.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadActionItems(uploadItem, redirectAttributes);
 				fileExcel = WorkbookFactory.create(uploadItem.getFileData().getInputStream());
 				firstFileSheet = fileExcel.getSheetAt(0);
 				//Checking if file contains atleast 1 row of data other than header in 1st row.
@@ -161,9 +149,7 @@ public class UploadService {
 					return FILE_UPLOAD_ERROR;
 				}
 			} 
-		
-			}
-			} catch (InvalidFormatException | IOException e1) {
+		} catch (InvalidFormatException | IOException e1) {
 			redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INVALID_FORMAT);
 			return FILE_UPLOAD_ERROR;
 		} catch (Exception e) {
@@ -270,9 +256,7 @@ public class UploadService {
 					}	
 					return REDIRECT + MEETING_MINUTES_UPLOAD;
 				}
-			} catch(DataIntegrityViolationException ce) {
-				ce.printStackTrace();
-			}
+			} 
 		}
 		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
 		return REDIRECT + MEETING_MINUTES_VIEW;
