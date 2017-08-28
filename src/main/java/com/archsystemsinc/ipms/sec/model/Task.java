@@ -118,6 +118,10 @@ public class Task implements INameableEntity {
 	@Transient
 	private Long createdById;
 	
+	@ManyToOne
+	@JoinColumn(name = "model_id")
+	private ModelIPMS modelIPMS;
+	
 	public Float getBaselineCost() {
 		return baselineCost;
 	}
@@ -261,6 +265,15 @@ public class Task implements INameableEntity {
 	public void setAssignedToId(final Long assignedToIdToSet) {
 		assignedToId = assignedToIdToSet;
 	}
+	public ModelIPMS getModelIPMS() {
+		return modelIPMS;
+	}
+
+	public void setModelIPMS(ModelIPMS modelIPMS) {
+		this.modelIPMS = modelIPMS;
+	}
+
+
 
 	@Override
 	public Long getId() {

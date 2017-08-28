@@ -1,6 +1,8 @@
 package com.archsystemsinc.ipms.spring.persistence.jpa;
 
 import java.util.Properties;
+import java.sql.SQLException;
+
 
 import javax.sql.DataSource;
 

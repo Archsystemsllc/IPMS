@@ -187,10 +187,10 @@
 						Model Management<span class="up_down_arrow">&nbsp;</span></a>
 					<ul class="acitem">
 					
-						<li><a href="${pageContext.request.contextPath}/app/projects"><span
+						<li><a href="${pageContext.request.contextPath}/app/models"><span
 								class="list-icon">&nbsp;</span>View Models</a></li>
 						<li><a
-							href="${pageContext.request.contextPath}/app/new-project"><span
+							href="${pageContext.request.contextPath}/app/new-Model"><span
 								class="list-icon">&nbsp;</span>Add New Model</a></li>					
 					</ul></li>
 				</sec:authorize>

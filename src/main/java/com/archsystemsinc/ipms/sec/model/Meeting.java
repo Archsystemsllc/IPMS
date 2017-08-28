@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -146,6 +147,15 @@ public class Meeting implements INameableEntity {
 	
 	@Transient
 	private String facilitator;
+	
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "model_id")
+	private ModelIPMS modelIPMS;
+	
+	
+	
+	
 	
 
 	public String getFacilitator() {
@@ -432,6 +442,14 @@ public class Meeting implements INameableEntity {
 	public MeetingMinutes getMeetingminutes() {
 		return meetingminutes;
 	}
+	public ModelIPMS getModelIPMS() {
+		return modelIPMS;
+	}
+
+	public void setModelIPMS(ModelIPMS modelIPMS) {
+		this.modelIPMS = modelIPMS;
+	}
+	
 
 	public void setMeetingminutes(MeetingMinutes meetingminutes) {
 		this.meetingminutes = meetingminutes;

@@ -5,15 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -31,19 +28,15 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @Entity
 @XmlRootElement
-@XStreamAlias("program")
-@Table(name = "program")
-@CheckDateRange(ObjectTypeEnum.Program)
-public class Program implements INameableEntity,Comparable<Program> {
-
-	/**
-	 * 
-	 */
+@XStreamAlias("model")
+@Table(name = "model")
+@CheckDateRange(ObjectTypeEnum.Model)
+public class ModelIPMS implements INameableEntity,Comparable<ModelIPMS> {
 	private static final long serialVersionUID = -7233891501800577062L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "program_id")
+	@Column(name = "model_id")
 	private Long id;
 
 	@Column(name = "active", columnDefinition = "BIT", length = 1)
@@ -73,8 +66,9 @@ public class Program implements INameableEntity,Comparable<Program> {
 	private Principal manager;
 	
 	@ManyToOne
-	@JoinColumn(name = "organizationgroup_id")
-	private OrganizationGroup organizationGroup;
+	@JoinColumn(name = "program_id")
+	private Program program;
+
 
 	public String getActivity() {
 		return activity;
@@ -84,17 +78,13 @@ public class Program implements INameableEntity,Comparable<Program> {
 		this.activity = activity;
 	}
 
-	@OneToMany( mappedBy = "program")
-	private Set<ModelIPMS> modelIPMS = new HashSet<ModelIPMS>();
-	
-	@OneToMany( mappedBy = "program")
+	@OneToMany( mappedBy = "modelIPMS")
 	private Set<Meeting> meetings = new HashSet<Meeting>();
 
-
-	@OneToMany( mappedBy = "program")
+	@OneToMany( mappedBy = "modelIPMS")
 	private Set<Project> projects = new HashSet<Project>();
 
-	@OneToMany( mappedBy = "program")
+	@OneToMany( mappedBy = "modelIPMS")
 	private Set<Task> tasks = new HashSet<Task>();
 
 	@Transient
@@ -108,15 +98,18 @@ public class Program implements INameableEntity,Comparable<Program> {
 
 	@Transient
 	private Long managerId;
+	
+	@Transient
+	private Long programId;
 
 	@Transient
 	private Set<LessonsLearned> lessonsLearned;
 
-	public Program() {
+	public ModelIPMS() {
 		super();
 	}
 
-	public Program(final String nameToSet) {
+	public ModelIPMS(final String nameToSet) {
 		super();
 		name = nameToSet;
 	}
@@ -188,6 +181,7 @@ public class Program implements INameableEntity,Comparable<Program> {
 		return lessonsLearned;
 	}
 
+	
 	public Set<Meeting> getMeetings() {
 		return meetings;
 	}
@@ -273,6 +267,8 @@ public class Program implements INameableEntity,Comparable<Program> {
 	public void setManagerId(final Long managerIdToSet) {
 		managerId = managerIdToSet;
 	}
+	
+	
 
 	//
 	@Override
@@ -295,7 +291,7 @@ public class Program implements INameableEntity,Comparable<Program> {
 		}
 		if( getClass() != obj.getClass() )
 			return false;
-		final Program other = (Program) obj;
+		final ModelIPMS other = (ModelIPMS) obj;
 		if( name == null ){
 			if( other.name != null )
 				return false;
@@ -323,7 +319,7 @@ public class Program implements INameableEntity,Comparable<Program> {
 	}
 
 	@Override
-	public int compareTo(Program o) {
+	public int compareTo(ModelIPMS o) {
 		
 		// ProvidedItems items1, items2  
 		boolean b1 = o.isActive();  
@@ -338,11 +334,20 @@ public class Program implements INameableEntity,Comparable<Program> {
 	
 	}
 
-	public OrganizationGroup getOrganizationGroup() {
-		return organizationGroup;
+	public Program getProgram() {
+		return program;
 	}
 
-	public void setOrganizationGroup(OrganizationGroup organizationGroup) {
-		this.organizationGroup = organizationGroup;
+	public void setProgram(Program program) {
+		this.program = program;
+	}
+	
+	public Long getProgramId() {
+		return programId;
+	}
+
+	public void setProgramId(final Long programIdToSet) {
+		programId = programIdToSet;
 	}
 }
+

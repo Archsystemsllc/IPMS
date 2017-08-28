@@ -2,5 +2,5 @@ package com.archsystemsinc.ipms.sec.model.constraint;
 
 public enum ObjectTypeEnum {
 	
-	Program, Project, Issue;
+	Program, Project, Model, Issue;
 }

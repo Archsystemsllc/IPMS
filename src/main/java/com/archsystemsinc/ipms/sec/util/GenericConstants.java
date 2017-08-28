@@ -13,6 +13,7 @@ public final class GenericConstants {
 	public static final String PROGRAMS = "Programs";
 	public static final String PROJECTS = "Projects";
 	public static final String MEETINGS = "Meetings";
+	public static final String MODELS="Models";
 	public static final String ACTION_ITEMS = "ActionItems";
 	public static final String LESSONS_LEARNED = "LessonsLearned";
 	public static final String TASKS = "Tasks";

@@ -100,6 +100,13 @@ public class Project implements INameableEntity {
 
 	@Transient
 	private Set<ActionItem> actionItems;
+	
+	@ManyToOne
+	@JoinColumn(name = "model_id")
+	private ModelIPMS modelIPMS;
+	
+	
+
 
 	public Project() {
 		super();
@@ -253,6 +260,13 @@ public class Project implements INameableEntity {
 		manager = manager1;
 	}
 
+	public ModelIPMS getModelIPMS() {
+		return modelIPMS;
+	}
+
+	public void setModelIPMS(ModelIPMS modelIPMS) {
+		this.modelIPMS = modelIPMS;
+	}
 
 	@Override
 	public String getName(){
