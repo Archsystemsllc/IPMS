@@ -10,4 +10,8 @@
 		<put-attribute name="content" value="/WEB-INF/views/upload/issueupload.jsp" />
 	</definition>
 	
+	<definition name="meetingminutesupload" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/upload/meetingminutesupload.jsp" />
+	</definition>
+	
 </tiles-definitions>

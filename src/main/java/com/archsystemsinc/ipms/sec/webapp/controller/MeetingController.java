@@ -49,9 +49,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
+import com.archsystemsinc.ipms.poi.service.UploadService;
 import com.archsystemsinc.ipms.sec.model.DiscussionAgenda;
 import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.MeetingAgendaItem;
@@ -111,6 +113,9 @@ public class MeetingController extends AbstractController<Meeting> {
 	
 	@Autowired
 	private DownloadService downloadService;
+	
+	@Autowired
+	private UploadService uploadService;
 
 	@Override
 	@InitBinder
@@ -218,6 +223,33 @@ public class MeetingController extends AbstractController<Meeting> {
 		final List<MeetingMinutes> meetingminutes = meetingminutesservice.findAll();
 		model.addAttribute("meetingminutes", meetingminutes);
 		return "meetingminutes";
+	}
+	
+	@RequestMapping(value = "/meetingminutesupload", method = RequestMethod.GET)
+	public String uploadMeetingminutes(final Model model) {
+		model.addAttribute(new FileUpload());
+		model.addAttribute("referenceData", referenceData());
+		return "meetingminutesupload";
+	}
+	
+	@RequestMapping(value = "/meetingminutesupload", method = RequestMethod.POST)
+	public String uploadMeetingminutes(@ModelAttribute("fileUpload") final FileUpload uploadItem, final Principal principal,
+			final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes) {		
+		
+		logger.debug("Received request to upload Meeting minutes report");
+		final String typeOfUpload = GenericConstants.MEETING_MINUTES;
+		if(result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("fileUploadError", "error.upload.internal.problem");
+			return "redirect:/app/meetingminutesupload";
+		} else {
+			//Delegate to UploadService.
+			String returnString = uploadService.uploadXLS(uploadItem, typeOfUpload, redirectAttributes);
+			if(returnString.equalsIgnoreCase("fileUploadError")) {
+				return "redirect:/app/meetingminutesupload";
+			} else {
+				return returnString;
+			}
+		}
 	}
 	
 	@RequestMapping(value = "/meeting/{id}")

@@ -17,7 +17,7 @@ public final class GenericConstants {
 	public static final String LESSONS_LEARNED = "LessonsLearned";
 	public static final String TASKS = "Tasks";
 	public static final String REQUIREMENTS = "Requirements";
-	
+	public static final String MEETING_MINUTES = "MeetingMinutes";
 	
 	
 	/* Emailer Releated Constants */

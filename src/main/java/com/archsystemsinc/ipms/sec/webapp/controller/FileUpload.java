@@ -17,6 +17,7 @@ public class FileUpload {
     private Long programId;
     private Map<Integer, String> programs;
     private Long projectId;
+    private Long meetingId;
     
 	public Map<Integer, String> getPrograms() {
 		return programs;
@@ -90,5 +91,13 @@ public class FileUpload {
 
 	public void setProjectId(Long projectId) {
 		this.projectId = projectId;
+	}
+
+	public Long getMeetingId() {
+		return meetingId;
+	}
+
+	public void setMeetingId(Long meetingId) {
+		this.meetingId = meetingId;
 	}
 }

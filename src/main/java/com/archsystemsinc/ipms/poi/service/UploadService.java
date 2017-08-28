@@ -15,14 +15,19 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.sec.model.Issue;
+import com.archsystemsinc.ipms.sec.model.Meeting;
+import com.archsystemsinc.ipms.sec.model.MeetingMinutes;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
+import com.archsystemsinc.ipms.sec.persistence.service.IMeetingMinutesService;
+import com.archsystemsinc.ipms.sec.persistence.service.IMeetingService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 import com.archsystemsinc.ipms.sec.util.GenericConstants;
@@ -48,6 +53,12 @@ public class UploadService {
 	@Autowired
 	private IIssueService issueService;
 	
+	@Autowired
+	private IMeetingService meetingService;
+	
+	@Autowired
+	private IMeetingMinutesService meetingminutesService;
+	
 	private Workbook fileExcel;
 	
 	private Sheet firstFileSheet;
@@ -60,17 +71,23 @@ public class UploadService {
 	
 	public final static String FILE_UPLOAD_SUCCESS = "fileUploadSuccess";
 	
-	public final static String ERROR_UPLOAD_MISSING = "error.upload.missing";
+	public final static String ERROR_UPLOAD_MISSING = "error.upload.empty";
 	
 	public final static String ERROR_UPLOAD_INVALID_FORMAT = "error.upload.invalid.format";
 	
 	public final static String ERROR_UPLOAD_INTERNAL_PROBLEM = "error.upload.internal.problem";
+	
+	public final static String ERROR_UPLOAD_MISSING_DATA = "error.upload.missing.data";
 	
 	public final static String SUCCESS_UPLOAD_MESSAGE = "success.import.document";
 	
 	public final static String ISSUES_VIEW = "/app/issues";
 	
 	public final static String ISSUES_UPLOAD = "/app/issues/upload";
+	
+	public final static String MEETING_MINUTES_VIEW = "/app/meetingminutes";
+	
+	public final static String MEETING_MINUTES_UPLOAD = "/app/meetingminutesupload";
 	
 	
 	/**
@@ -91,20 +108,29 @@ public class UploadService {
 	public String uploadXLS(FileUpload uploadItem, String typeOfUpload, final RedirectAttributes redirectAttributes) {
 		String returnString = "";
 		try {
-			fileExcel = WorkbookFactory.create(uploadItem.getFileData().getInputStream());
-			firstFileSheet = fileExcel.getSheetAt(0);
-			if(uploadItem == null || uploadItem.getFileData() == null || uploadItem.getFileData().getInputStream() ==null || uploadItem.getFileData().getSize() == 0)
+			if(uploadItem == null || uploadItem.getFileData() == null || uploadItem.getFileData().getSize() == 0 || uploadItem.getFileData().getInputStream() ==null)
 			{
 				redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_MISSING);
 				return FILE_UPLOAD_ERROR;
 			} else {
-				if(GenericConstants.ISSUES.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadIssues(uploadItem, redirectAttributes);
-				}else if(GenericConstants.TASKS.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadTasks(uploadItem, redirectAttributes);
-				}else if(GenericConstants.LESSONS_LEARNED.equalsIgnoreCase(typeOfUpload)){
-					returnString = uploadLessonsLearned(uploadItem, redirectAttributes);
-				}			
+				fileExcel = WorkbookFactory.create(uploadItem.getFileData().getInputStream());
+				firstFileSheet = fileExcel.getSheetAt(0);
+				//Checking if file contains atleast 1 row of data other than header in 1st row.
+				if(firstFileSheet.getFirstRowNum()  < firstFileSheet.getLastRowNum())
+				{
+					if(GenericConstants.ISSUES.equalsIgnoreCase(typeOfUpload)){
+						returnString = uploadIssues(uploadItem, redirectAttributes);
+					}else if(GenericConstants.TASKS.equalsIgnoreCase(typeOfUpload)){
+						returnString = uploadTasks(uploadItem, redirectAttributes);
+					}else if(GenericConstants.LESSONS_LEARNED.equalsIgnoreCase(typeOfUpload)){
+						returnString = uploadLessonsLearned(uploadItem, redirectAttributes);
+					}else if(GenericConstants.MEETING_MINUTES.equalsIgnoreCase(typeOfUpload)){
+						returnString = uploadMeetingMinutes(uploadItem, redirectAttributes);
+					}	
+				} else {
+					redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_MISSING_DATA);
+					return FILE_UPLOAD_ERROR;
+				}
 			} 
 		} catch (InvalidFormatException | IOException e1) {
 			redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INVALID_FORMAT);
@@ -169,6 +195,55 @@ public class UploadService {
 		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
 		return REDIRECT + ISSUES_VIEW;
 	}
+	
+	public String uploadMeetingMinutes(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
+		
+		boolean reqFieldsEmpty = false;
+		if(uploadItem.getMeetingId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Meeting");
+			reqFieldsEmpty = true;
+		}
+		if(reqFieldsEmpty) {
+			return REDIRECT + MEETING_MINUTES_UPLOAD;
+		}
+		else {
+			try {
+				MeetingMinutes minutes = null;
+				constructExcelColumnMap(GenericConstants.MEETING_MINUTES);
+	          //Ignoring header in the first row
+				for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+					  minutes= new MeetingMinutes();
+		              Row ro=firstFileSheet.getRow(r);
+		              minutes.setName(ro.getCell(0).getStringCellValue());
+		              minutes.setDiscussion(ro.getCell(1).getStringCellValue());
+		              minutes.setScribe(ro.getCell(2).getStringCellValue());
+		              minutes.setStartTime(ro.getCell(3).getStringCellValue());
+		              minutes.setEndTime(ro.getCell(4).getStringCellValue());
+	              }
+	              //From code
+				minutes.setMeetingid(uploadItem.getMeetingId());
+	              meetingminutesService.create(minutes);
+			
+			}  catch(ConstraintViolationException ce) {
+				// In this exception, we are mapping the property path to excel column header to display on UI informing the user that, one
+				// of the data constraint has failed.
+				
+				Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+				for(ConstraintViolation<?> v: cv) {
+					if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+					} else {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+					}	
+					return REDIRECT + MEETING_MINUTES_UPLOAD;
+				}
+			} catch(DataIntegrityViolationException ce) {
+				ce.printStackTrace();
+			}
+		}
+		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
+		return REDIRECT + MEETING_MINUTES_VIEW;
+	}
 
 	public String uploadTasks(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		return "redirect:/app/tasks";
@@ -178,15 +253,27 @@ public class UploadService {
 		return "redirect:/app/LessonsLearned";
 	}
 	
-
+	/**
+	 * This method constructs a map between Java entity and Excel file template Header based on the type of upload.
+	 *
+	 * @param typeOfUpload
+	 */
 	private void constructExcelColumnMap(String typeOfUpload) {
 		switch(typeOfUpload) {
+		
 			case GenericConstants.ISSUES :
 				excelColumnMap.put("name", "Name");
 				excelColumnMap.put("summary", "Summary");
 				excelColumnMap.put("description", "Description");
 				excelColumnMap.put("dateReported", "Date Reported");
 				excelColumnMap.put("dueDate", "Due Date");
+				
+			case GenericConstants.MEETING_MINUTES :
+				excelColumnMap.put("name", "Name");
+				excelColumnMap.put("discussion", "Discussion");
+				excelColumnMap.put("scribe", "Scribe");
+				excelColumnMap.put("startTime", "Start Time");
+				excelColumnMap.put("end_time", "End Time");
 		}
 		
 	}

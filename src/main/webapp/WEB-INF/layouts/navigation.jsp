@@ -234,7 +234,8 @@
 								class="list-icon">&nbsp;</span>Meetings Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-programmeeting">Add Meeting</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/meetings">View Meetings</a></li>				
+									<li><a href="${pageContext.request.contextPath}/app/meetings">View Meetings</a></li>	
+									<li><a href="${pageContext.request.contextPath}/app/meetingminutesupload">Upload Meeting Minutes</a></li>				
 								</ul>
 						</li>						
 						<li><a href="${pageContext.request.contextPath}/app/new-project"><span
