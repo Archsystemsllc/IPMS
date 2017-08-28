@@ -5,7 +5,12 @@
 	<definition name="upload" extends="page">
 		<put-attribute name="content" value="/WEB-INF/views/upload/uploadForm.jsp" />
 	</definition>
-	
+	<definition name="uploadlessonslearned" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/upload/lessonslearnedupload.jsp" />
+	</definition>
+	<definition name="uploadactionitems" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/upload/actionitemsupload.jsp" />
+	</definition>
 	<definition name="uploadIssue" extends="page">
 		<put-attribute name="content" value="/WEB-INF/views/upload/issueupload.jsp" />
 	</definition>

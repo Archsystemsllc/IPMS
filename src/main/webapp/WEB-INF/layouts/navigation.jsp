@@ -242,8 +242,8 @@
 								class="list-icon">&nbsp;</span>Add Project</a></li>						
 					</ul>
 										<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/llupload">Upload Lessons Learned</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/aiupload">Upload ActionItems</a></li>				
+									<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned">Upload Lessons Learned</a></li>										
+									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems">Upload Action Items</a></li>				
 								</ul>
 					
 				</li>

@@ -15,9 +15,10 @@ public class FileUpload {
 	private Date endDate;
 	private List<Task> tasks;
     private Long programId;
+    private Long issueId;
+    private Long meetingId;
     private Map<Integer, String> programs;
     private Long projectId;
-    private Long meetingId;
     
 	public Map<Integer, String> getPrograms() {
 		return programs;
@@ -35,6 +36,20 @@ public class FileUpload {
 
 	public void setProgramId(Long programId) {
 		this.programId = programId;
+	}
+	public Long getissueId() {
+		return issueId;
+	}
+
+	public void setissueId(Long issueId) {
+		this.issueId = issueId;
+	}
+	public Long getmeetingId() {
+		return meetingId;
+	}
+
+	public void setmeetingId(Long meetingId) {
+		this.meetingId = meetingId;
 	}
 
 	public Date getStartDate() {

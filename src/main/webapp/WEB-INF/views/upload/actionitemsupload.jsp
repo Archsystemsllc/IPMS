@@ -11,12 +11,12 @@
             <div class="widget_wrap">
                 <div class="widget_top">
                     <span class="h_icon list_image"></span>
-                    <h6>Lessons Learned Upload</h6>
+                    <h6>Action Items Upload</h6>
                 </div>
                 <form:form modelAttribute="fileUpload" enctype="multipart/form-data" class="form_container left_label"
-                           action="uploadlessonslearned" method="post">
+                           action="uploadactionitems" method="post">
                     <div class="widget_content">
-					<span class="subheader-title">Lessons Learned Upload</span>
+					<span class="subheader-title">Action Items Upload</span>
                          <c:if test="${not empty message }">
 				 			 <div>
 								<h4 class="errorblock"><c:out value="${message}" /></h4>
@@ -42,9 +42,9 @@
 								<spring:message code="${fileUploadError}"></spring:message>
 							</div>
 						 </c:if>
-                         <form:errors path="*" cssClass="errorblock" element="div" />
-                         <ul> 
-                      		 <li>
+                        <form:errors path="*" cssClass="errorblock" element="div" />
+                        <ul>                          
+							  <li>
                                 <div class="form_grid_12">
                                     <label for="issueId" class="field_title">Issue</label>
                                     <div class="form_input">
@@ -63,10 +63,10 @@
                                             </form:select>
                                         </div>
                                     </div>
-                                </li>                      
+                                </li>   	
 							  <li>
                                 <div class="form_grid_12">
-                                    <label for="fileData" class="field_title">LessonsLearned File</label>
+                                    <label for="fileData" class="field_title">ActionItems File</label>
                                     <div class="form_input">
                                         <form:input type="file" id="fileData" name="fileData" path="fileData" />
                                     </div>

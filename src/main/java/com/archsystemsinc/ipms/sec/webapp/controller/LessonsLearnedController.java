@@ -17,6 +17,7 @@ package com.archsystemsinc.ipms.sec.webapp.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,11 +25,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,9 +48,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
+import com.archsystemsinc.ipms.poi.service.UploadService;
 import com.archsystemsinc.ipms.sec.model.Issue;
 import com.archsystemsinc.ipms.sec.model.LessonsLearned;
 import com.archsystemsinc.ipms.sec.model.Meeting;
@@ -86,6 +95,9 @@ public class LessonsLearnedController extends
 
 	@Autowired
 	private DownloadService downloadService;
+	
+	@Autowired
+	private UploadService uploadService;
 	
 	@Autowired
 	private IRevisionHistoryService revisionHistoryService;
@@ -276,6 +288,7 @@ public class LessonsLearnedController extends
 		final Map referenceData = new HashMap();
 		final List<Issue> ilist = issueService.findAll();
 		final Map<Integer, String> iList = new LinkedHashMap<Integer, String>();
+		iList.put(0, "--select issue--");
 		for (int i = 0; i < ilist.size(); i++) {
 			iList.put(ilist.get(i).getId().intValue(), ilist.get(i)
 					.getSummary());
@@ -284,7 +297,7 @@ public class LessonsLearnedController extends
 
 		final List<Meeting> meetingDbList = meetingService.findAll();
 		final Map<Integer, String> meetingList = new LinkedHashMap<Integer, String>();
-		meetingList.put(0, "");
+		meetingList.put(0, "--select meeting--");
 		for (int i = 0; i < meetingDbList.size(); i++) {
 			meetingList.put(meetingDbList.get(i).getId().intValue(),
 					meetingDbList.get(i).getTitle());
@@ -298,5 +311,29 @@ public class LessonsLearnedController extends
 	protected IService<LessonsLearned> getService() {
 		return service;
 	}
-
+	 @RequestMapping(value = "/uploadlessonslearned" , method = RequestMethod.GET)
+		public String actionItem(final Model model) {
+			model.addAttribute(new FileUpload());
+			model.addAttribute(("referenceData"), referenceData());
+			return "uploadlessonslearned";
+		}
+		 @RequestMapping(value = "/uploadlessonslearned", method = RequestMethod.POST)
+			public String uploadLessonsLearned(@ModelAttribute("fileUpload") final FileUpload uploadItem, final Principal principal,
+					final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes, final Model model) throws InvalidFormatException {		
+			
+			 logger.debug("Received request to upload lessonslearned report");
+			final String typeOfUpload = GenericConstants.LESSONS_LEARNED;
+			if(result.hasErrors()) {
+				redirectAttributes.addFlashAttribute("fileUploadError", "error.upload.internal.problem");
+				return "redirect:uploadlessonslearned";
+			} else {
+				//Delegate to UploadService
+				String returnString = uploadService.uploadXLS(uploadItem, typeOfUpload, redirectAttributes);
+				if(returnString.equalsIgnoreCase("fileUploadError")) {
+					return "redirect:uploadlessonslearned";
+				} else {
+					return returnString;
+				}
+			}
+		}	
 }

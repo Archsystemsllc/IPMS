@@ -26,12 +26,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,9 +48,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
+import com.archsystemsinc.ipms.poi.service.UploadService;
 import com.archsystemsinc.ipms.sec.model.ActionItem;
 import com.archsystemsinc.ipms.sec.model.ActionItemPriority;
 import com.archsystemsinc.ipms.sec.model.ActionItemStatus;
@@ -93,6 +97,9 @@ public class ActionItemController extends AbstractController<ActionItem> {
 
 	@Autowired
 	private DownloadService downloadService;
+	
+	@Autowired
+	private UploadService uploadService;
 
 	@Autowired
 	private IRevisionHistoryService revisionHistoryService;
@@ -407,7 +414,7 @@ public class ActionItemController extends AbstractController<ActionItem> {
 
 		final List<Meeting> mlist = meetingService.findAll();
 		final Map<Integer, String> mList = new LinkedHashMap<Integer, String>();
-		mList.put(0, "");
+		mList.put(0, "--select meeting--");
 		for (int i = 0; i < mlist.size(); i++) {
 			mList.put(mlist.get(i).getId().intValue(), mlist.get(i).getTitle());
 		}
@@ -415,7 +422,7 @@ public class ActionItemController extends AbstractController<ActionItem> {
 
 		final List<Issue> ilist = issueService.findAll();
 		final Map<Integer, String> iList = new LinkedHashMap<Integer, String>();
-		iList.put(0, "");
+		iList.put(0, "--select issue--");
 		for (int i = 0; i < ilist.size(); i++) {
 			iList.put(ilist.get(i).getId().intValue(), ilist.get(i)
 					.getSummary());
@@ -445,12 +452,33 @@ public class ActionItemController extends AbstractController<ActionItem> {
 		return referenceData;
 	}
 	
-	
-
-
 	@Override
 	protected IService<ActionItem> getService() {
 		return service;
 	}
-
+	@RequestMapping(value = "/uploadactionitems" , method = RequestMethod.GET)
+	public String actionItem(final Model model) {
+		model.addAttribute(new FileUpload());
+		model.addAttribute("referenceData", referenceData());
+		return "uploadactionitems";
+	} 
+	 @RequestMapping(value = "/uploadactionitems", method = RequestMethod.POST)
+		public String uploadActionItems(@ModelAttribute("fileUpload") final FileUpload uploadItem, final Principal principal,
+				final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes, final Model model) throws InvalidFormatException {		
+		
+		 logger.debug("Received request to upload actionitems report");
+		final String typeOfUpload = GenericConstants.ACTION_ITEMS;
+		if(result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("fileUploadError", "error.upload.internal.problem");
+			return "redirect:uploadactionitems";
+		} else {
+			//Delegate to UploadService
+			String returnString = uploadService.uploadXLS(uploadItem, typeOfUpload, redirectAttributes);
+			if(returnString.equalsIgnoreCase("fileUploadError")) {
+				return "redirect:uploadactionitems";
+			} else {
+				return returnString;
+			}
+		}
+	}
 }

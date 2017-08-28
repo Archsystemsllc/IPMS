@@ -1,6 +1,7 @@
 package com.archsystemsinc.ipms.poi.service;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -20,12 +21,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.archsystemsinc.ipms.sec.model.ActionItem;
 import com.archsystemsinc.ipms.sec.model.Issue;
+
+import com.archsystemsinc.ipms.sec.model.LessonsLearned;
+import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.MeetingMinutes;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
+import com.archsystemsinc.ipms.sec.persistence.service.ILessonsLearnedService;
+import com.archsystemsinc.ipms.sec.persistence.service.IActionItemService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingMinutesService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
@@ -54,6 +61,13 @@ public class UploadService {
 	private IIssueService issueService;
 	
 	@Autowired
+	private ILessonsLearnedService lessonslearnedservice;
+	
+	@Autowired
+	private IActionItemService actionitemservice;
+	
+	@Autowired
+	private IMeetingService meetingservice;
 	private IMeetingService meetingService;
 	
 	@Autowired
@@ -85,6 +99,13 @@ public class UploadService {
 	
 	public final static String ISSUES_UPLOAD = "/app/issues/upload";
 	
+	public final static String LESSONSLEARNED_UPLOAD = "/app/uploadlessonslearned";
+	
+	public final static String LESSONSLEARNED_VIEW = "/app/lessonslearneds";
+	
+	public final static String ACTIONITEMS_UPLOAD = "/app/uploadactionitems";
+	
+	public final static String ACTIONITEMS_VIEW = "/app/actionitems";
 	public final static String MEETING_MINUTES_VIEW = "/app/meetingminutes";
 	
 	public final static String MEETING_MINUTES_UPLOAD = "/app/meetingminutesupload";
@@ -113,6 +134,14 @@ public class UploadService {
 				redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_MISSING);
 				return FILE_UPLOAD_ERROR;
 			} else {
+				if(GenericConstants.ISSUES.equalsIgnoreCase(typeOfUpload)){
+					returnString = uploadIssues(uploadItem, redirectAttributes);
+				}else if(GenericConstants.TASKS.equalsIgnoreCase(typeOfUpload)){
+					returnString = uploadTasks(uploadItem, redirectAttributes);
+				}else if(GenericConstants.LESSONS_LEARNED.equalsIgnoreCase(typeOfUpload)){
+					returnString = uploadLessonsLearned(uploadItem, redirectAttributes);
+				} else if(GenericConstants.ACTION_ITEMS.equalsIgnoreCase(typeOfUpload)){
+					returnString = uploadActionItems(uploadItem, redirectAttributes);
 				fileExcel = WorkbookFactory.create(uploadItem.getFileData().getInputStream());
 				firstFileSheet = fileExcel.getSheetAt(0);
 				//Checking if file contains atleast 1 row of data other than header in 1st row.
@@ -132,7 +161,9 @@ public class UploadService {
 					return FILE_UPLOAD_ERROR;
 				}
 			} 
-		} catch (InvalidFormatException | IOException e1) {
+		
+			}
+			} catch (InvalidFormatException | IOException e1) {
 			redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INVALID_FORMAT);
 			return FILE_UPLOAD_ERROR;
 		} catch (Exception e) {
@@ -142,6 +173,7 @@ public class UploadService {
 		}			
 		return returnString;
 	}
+	
 
 	public String uploadIssues(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 	
@@ -165,6 +197,7 @@ public class UploadService {
 				constructExcelColumnMap(GenericConstants.ISSUES);
 	          //I've Header and I'm ignoring header for that I've +1 in loop
 				for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+					//System.out.println(r);
 					  issue= new Issue();
 		              Row ro=firstFileSheet.getRow(r);
 		              issue.setName(ro.getCell(0).getStringCellValue());
@@ -250,7 +283,103 @@ public class UploadService {
 	}
 	
 	public String uploadLessonsLearned(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
-		return "redirect:/app/LessonsLearned";
+		
+		
+		Issue issue = null;
+		if(0!=uploadItem.getissueId()){
+			issue = issueService.findOne(uploadItem.getissueId());
+		}else {
+			redirectAttributes.addFlashAttribute("issuerequirederror","NotNull.lessonsLearned.issueId");
+			return "redirect:/app/uploadlessonslearned";
+		}
+		Meeting meeting = null;
+		if(0!=uploadItem.getmeetingId()){
+			meeting = meetingservice.findOne(uploadItem.getmeetingId());
+		} else {
+			redirectAttributes.addFlashAttribute("meetingrequirederror","NotNull.lessonsLearned.meetingId");
+			return "redirect:uploadlessonslearned";
+		} 
+		try {
+			LessonsLearned lessonslearned = null;
+			constructExcelColumnMap(GenericConstants.LESSONS_LEARNED);
+          //I've Header and I'm ignoring header for that I've +1 in loop
+			for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+				//System.out.println(r);
+				lessonslearned=new LessonsLearned();
+	              Row ro=firstFileSheet.getRow(r);
+	              lessonslearned.setDate(Calendar.getInstance().getTime());
+	              lessonslearned.setName(ro.getCell(0).getStringCellValue());
+	              lessonslearned.setSummary(ro.getCell(1).getStringCellValue());
+	              lessonslearned.setImpact(ro.getCell(2).getStringCellValue());
+	              lessonslearned.setRecommendation(ro.getCell(3).getStringCellValue());
+	              lessonslearned.setAreasOfImprovement(ro.getCell(4).getStringCellValue());
+	              lessonslearned.setSuccessFactors(ro.getCell(5).getStringCellValue());
+	              lessonslearned.setIssue(issue);
+	              lessonslearned.setMeeting(meeting);
+	              
+	              lessonslearnedservice.create(lessonslearned);
+	            }
+		}catch(ConstraintViolationException ce){
+			Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+			for(ConstraintViolation<?> v: cv) {
+				if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+					redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+				} else {
+					redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+				}	
+				return REDIRECT + LESSONSLEARNED_UPLOAD;
+			}
+		
+	}
+		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
+		return REDIRECT + LESSONSLEARNED_VIEW;	
+		}
+	public String uploadActionItems(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
+
+		Issue issue = null;
+		if(0!=uploadItem.getissueId()){
+			issue = issueService.findOne(uploadItem.getissueId());
+		}else {
+			redirectAttributes.addFlashAttribute("issuerequirederror","NotNull.actionItem.issueId");
+			return "redirect:uploadactionitems";
+		}
+		Meeting meeting = null;
+		if(0!=uploadItem.getmeetingId()){
+			meeting = meetingservice.findOne(uploadItem.getmeetingId());
+		} else {
+			redirectAttributes.addFlashAttribute("meetingrequirederror","NotNull.actionItem.meetingId");
+			return "redirect:uploadactionitems";
+		} 
+		try {
+			ActionItem actionitem = null;
+			constructExcelColumnMap(GenericConstants.ACTION_ITEMS);
+          //I've Header and I'm ignoring header for that I've +1 in loop
+			for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+				actionitem = new ActionItem();
+	              Row ro=firstFileSheet.getRow(r);
+	              actionitem.setName(ro.getCell(0).getStringCellValue());
+	              actionitem.setSummary(ro.getCell(1).getStringCellValue());
+	              //actionitem.setStatus(ro.getCell(2).getStringCellValue());
+	              actionitem.setDateCreated(ro.getCell(2).getDateCellValue());
+	              actionitem.setDueDate(ro.getCell(3).getDateCellValue());
+	              actionitem.setPriority("N/A");	
+	              	              
+	           actionitemservice.create(actionitem);
+	            }
+		}catch(ConstraintViolationException ce){
+			Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+			for(ConstraintViolation<?> v: cv) {
+				if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+					redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+				} else {
+					redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+				}	
+				return REDIRECT + ACTIONITEMS_UPLOAD;
+			}
+		
+	}
+		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
+		return REDIRECT + ACTIONITEMS_VIEW;	
 	}
 	
 	/**
@@ -268,6 +397,20 @@ public class UploadService {
 				excelColumnMap.put("dateReported", "Date Reported");
 				excelColumnMap.put("dueDate", "Due Date");
 				
+			case GenericConstants.LESSONS_LEARNED :
+				excelColumnMap.put("name", "Name");
+				excelColumnMap.put("summary", "Summary");
+				excelColumnMap.put("impact", "Impact");
+				excelColumnMap.put("recommendation", "Recommendation");
+				excelColumnMap.put("areasOfImprovement", "Areas of Improvement");
+				excelColumnMap.put("successFactors","Success Factors");
+				
+			case GenericConstants.ACTION_ITEMS :
+				excelColumnMap.put("name", "Name");
+				excelColumnMap.put("summary", "Summary");
+				excelColumnMap.put("dateCreated", "Date Created");
+				excelColumnMap.put("dueDate", "Due Date");
+				
 			case GenericConstants.MEETING_MINUTES :
 				excelColumnMap.put("name", "Name");
 				excelColumnMap.put("discussion", "Discussion");
@@ -275,8 +418,5 @@ public class UploadService {
 				excelColumnMap.put("startTime", "Start Time");
 				excelColumnMap.put("end_time", "End Time");
 		}
-		
-	}
-
-	
+	}		
 }
