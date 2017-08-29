@@ -206,7 +206,7 @@
 								class="list-icon">&nbsp;</span>Task Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-task">Add Task</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/uploadTask">Upload Tasks</a></li>	
+									<li><a href="${pageContext.request.contextPath}/app/tasks/upload">Upload Tasks</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/tasks">View Tasks</a></li>				
 								</ul>
 						</li>
