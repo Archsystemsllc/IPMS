@@ -19,7 +19,7 @@
                 <form:form modelAttribute="fileUpload" enctype="multipart/form-data" class="form_container left_label"
                            action="meetingminutesupload" method="post">
                     <div class="widget_content">
-                        <h6>Meeting Minutes Upload</h6>
+                        <span class="subheader-title">Meeting Minutes Upload</span>
                          <c:if test="${not empty message}">
                          	<br />
 				  			 <div class="errorblock">
@@ -45,7 +45,7 @@
                                     <label for="meetingId" class="field_title required">Meeting</label>
                                     <div class="form_input">
                                         <form:select id="meetingId" name="meetingId" path="meetingId" class="mid">
-                                             <form:options items="${referenceData.MeetingList}"  />
+                                             <form:options items="${referenceData.currentMeetingList}"  />
                                         </form:select>
                                     </div>
                                 </div>

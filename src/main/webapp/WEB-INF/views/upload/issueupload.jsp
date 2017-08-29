@@ -19,7 +19,7 @@
                 <form:form modelAttribute="fileUpload" enctype="multipart/form-data" class="form_container left_label"
                            action="upload" method="post">
                     <div class="widget_content">
-                        <h6>Issues Upload</h6>
+                    	<span class="subheader-title">Issues Upload</span>
                          <c:if test="${not empty message}">
                          	<br />
 				  			 <div class="errorblock">
@@ -42,7 +42,7 @@
                        	<ul>                          
                              <li>
                                 <div class="form_grid_12">
-                                    <label for="programId" class="field_title required">Program</label>
+                                    <label for="programId" class="field_title required">Vertical Group</label>
                                     <div class="form_input">
                                         <form:select id="programId" name="programId" path="programId" class="mid">
                                              <form:options items="${referenceData.currentUserProgramlist}"  />
@@ -52,7 +52,7 @@
                             </li>
                             <li>
                                 <div class="form_grid_12">
-                                    <label for="projectId" class="field_title required">Project</label>
+                                    <label for="projectId" class="field_title required">Model</label>
                                     <div class="form_input">
                                         <form:select id="projectId" name="projectId" path="projectId" class="mid">
                                             <form:options items="${referenceData.currentUserProjectlist}"  />

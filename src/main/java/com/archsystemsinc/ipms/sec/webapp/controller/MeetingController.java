@@ -855,6 +855,11 @@ public class MeetingController extends AbstractController<Meeting> {
 		}
 		referenceData.put("MeetingList", meetingList);
 		
+		final Map<Integer, String> currentMeetingList = new LinkedHashMap<Integer, String>();
+		currentMeetingList.put(0, "--Select Meeting--");
+		currentMeetingList.putAll(meetingList);
+		referenceData.put("currentMeetingList", currentMeetingList);
+		
 		final Map<Integer, String> typeList = new LinkedHashMap<Integer, String>();
 		typeList.put(0, "Webinar");
 		typeList.put(1, "Conference Call");
