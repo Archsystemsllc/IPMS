@@ -4,21 +4,20 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<script src="${pageContext.request.contextPath}/resources/js/jquery-1.10.2.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/jquery-ui-1.10.4.custom.js"></script>		
-		<script>
-		
-$(function(){
-  $.datepicker.setDefaults(
-    $.extend($.datepicker.regional[''])
-  );
-  $('.datepicker').datepicker();
-});
-
-	</script>
+<script
+	src="${pageContext.request.contextPath}/resources/js/jquery-1.10.2.js"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/js/jquery-ui-1.10.4.custom.js"></script>
+<script>
+	$(function() {
+		$.datepicker.setDefaults($.extend($.datepicker.regional['']));
+		$('.datepicker').datepicker();
+	});
+</script>
 <div id="breadcrumb">
 	<ul>
-		<li><a href="${pageContext.request.contextPath}/app/groupdashboard">Home</a>
+		<li><a
+			href="${pageContext.request.contextPath}/app/groupdashboard">Home</a>
 			<span> >> </span></li>
 		<li><a href="${pageContext.request.contextPath}/app/models">Models</a>
 			<span> >> </span></li>
@@ -32,34 +31,39 @@ $(function(){
 				<div class="widget_top">
 					<span class="h_icon list"></span>
 					<h6>Model</h6>
+					<form:errors path="*" cssClass="errorblock" element="div" />
 				</div>
 				<div class="widget_content">
 					<h6>
-						Edit Model :
+						Edit model :
 						<c:out value='${modelIPMS.name}' />
 					</h6>
-					<form:form modelAttribute="modelIPMS"
-						class="form_container left_label"
-						action="${pageContext.request.contextPath}/app/edit-model"
-						method="post">
-						<form:errors path="*" cssClass="errorblock" element="div" />
-						<c:if test="${not empty success}">
-							<div class="successblock">
-								<spring:message code="${success}"></spring:message>
-							</div>
-						</c:if>
+					<form:form modelAttribute="modelIPMS" class="form_container left_label"
+						action="../edit-model" method="post">
 						<c:if test="${not empty error}">
 							<div class="errorblock">
 								<spring:message code="${error}"></spring:message>
 							</div>
 						</c:if>
+						<form:errors path="*" cssClass="errorblock" element="div" />
 						<form:input type="hidden" name="id" path="id"></form:input>
 						<ul>
 							<li>
 								<fieldset>
 									<legend>Model Information</legend>
-									<%-- <c:if test="${program.active }"> --%>
 									<ul>
+										<li>
+											<div class="form_grid_12">
+												<label for="programId" class="field_title">Program</label>
+
+												<div class="form_input">
+													<form:select id="programId" name="programId"
+														path="programId">
+														<form:options items="${referenceData.programList}" />
+													</form:select>
+												</div>
+											</div>
+										</li>
 										<li>
 											<div class="form_grid_12">
 												<label for="name" class="field_title">Name</label>
@@ -70,8 +74,19 @@ $(function(){
 											</div>
 										</li>
 										<li>
+								<div class="form_grid_12">
+									<label for="managerId" class="field_title">Manager</label>
+
+									<div class="form_input">
+										<form:select id="managerId" name="managerId" path="managerId">
+											<form:options items="${referenceData.principalList}" />
+										</form:select>
+									</div>
+								</div>
+							</li>
+										<li>
 											<div class="form_grid_12">
-												<label class="field_title">Model Description</label>
+												<label class="field_title">Description</label>
 												<div class="form_input">
 													<form:textarea type="text" id="description"
 														name="description" path="description"></form:textarea>
@@ -110,102 +125,7 @@ $(function(){
 												</div>
 											</div>
 										</li>
-										<li>
-											<div class="form_grid_12">
-												<label class="field_title">Status</label>
-												<div class="form_input">
-													<c:if test="${modelIPMS.active }">
-														<span class="uneditable-input mid">Active</span>
-													</c:if>
-													<c:if test="${not modelIPMS.active }">
-														<span class="uneditable-input mid">In-Active</span>
-													</c:if>
-												</div>
-											</div>
-										</li>
-										<li>
-											<div class="form_grid_12">
-												<label for="managerId" class="field_title">Group</label>
-
-												<div class="form_input">
-													<form:select id="programId" name="programId"
-														path="program.id">
-														<form:option value="0">Remove </form:option>
-														<c:forEach items="${referenceData.programList}" var="program">
-                                                           <c:if test="${program.id eq modelIPMS.program.id}">
-                                                           	<form:option selected="selected"  value="${program.id}">${program.name} </form:option>
-                                                           </c:if>
-                                                           <c:if test="${program.id ne modelIPMS.program.id}">
-                                                           	<form:option value="${program.id}">${program.name} </form:option>
-                                                           </c:if>
-                                                        </c:forEach>
-													</form:select>
-												</div>
-											</div>
-										</li>
 									</ul>
-									<%-- </c:if>
-                                    <c:if test="${not program.active }">
-                                    <li>
-			                                <div class="form_grid_12">
-			                                    <label class="field_title">ID</label>
-			                                    <div class="form_input">
-			                                        <span class="uneditable-input mid">${program.id }</span>
-			                                    </div>
-			                                </div>
-			                            </li>
-			                            <li>
-			                                <div class="form_grid_12">
-			                                    <label class="field_title">Name</label>
-			                                    <div class="form_input">
-			                                        <span class="uneditable-input mid">${program.name }</span>
-			                                    </div>
-			                                </div>
-			                            </li>
-			                            <li>
-			                                <div class="form_grid_12">
-			                                    <label class="field_title">Description</label>
-			                                    <div class="form_input">
-			                                        <span class="uneditable-input mid">${program.description }</span>
-			                                    </div>
-			                                </div>
-			                            </li>
-			                            <li>
-			                                <div class="form_grid_12">
-			                                    <label class="field_title">Start Date</label>
-			                                    <div class="form_input">
-			                                        <span class="uneditable-input mid"><fmt:formatDate type="date" value="${program.startDate}" /></span>
-			                                    </div>
-			                                </div>
-			                            </li>
-			                            <li>
-			                                <div class="form_grid_12">
-			                                    <label class="field_title">Due Date</label>
-			                                    <div class="form_input">
-			                                        <span class="uneditable-input mid"><fmt:formatDate type="date" value="${program.endDate}" /></span>
-			                                    </div>
-			                                </div>
-			                            </li>
-			                            <li>
-			                                <div class="form_grid_6">
-			                                    <label class="field_title">Manager</label>
-			                                    <div class="form_input">
-			                                        <span class="uneditable-input mid">${program.managerId}</span>
-			                                    </div>
-			                                </div>
-			                            </li>
-			                            <li>
-			                                <div class="form_grid_12">
-			                                    <label class="field_title">Status</label>
-			                                    <div class="form_input">
-			                                    <c:if test="${program.active }">
-			                                        <span class="uneditable-input mid">${program.active}</span>
-			                                    </c:if>
-			                                    </div>
-			                                </div>
-			                            </li>
-                                    </c:if> --%>
-
 								</fieldset>
 							</li>
 						</ul>
@@ -213,32 +133,30 @@ $(function(){
 						<ul>
 							<li>
 								<div class="form_grid_12">
-									<c:if test="${modelIPMS.active }">
-										<button type="submit" class="btn_small btn_blue"
-											name="btnAction" value="Deactivate">
+									<c:if test="${modelIPMS.active}">
+										<button type="submit" name="btnAction"
+											class="btn_small btn_blue" value="Deactivate">
 											<span>Deactivate</span>
 										</button>
 									</c:if>
-									<c:if test="${not modedlIPMS.active }">
-										<button type="submit" class="btn_small btn_blue"
-											name="btnAction" value="Activate">
+									<c:if test="${not modelIPMS.active}">
+										<button type="submit" name="btnAction"
+											class="btn_small btn_blue" value="Activate">
 											<span>Activate</span>
 										</button>
 									</c:if>
-									<c:if test="${modelIPMS.active }">
-										<button type="submit" class="btn_small btn_blue"
-											name="btnAction" value="End Model">
-											<span>End Program</span>
-										</button>
-										<button type="submit" class="btn_small btn_blue"
-											name="btnAction" value="Update">
-											<span>Update</span>
-										</button>
-										<button type="reset" class="btn_small btn_blue"
-											name="btnAction" value="Update">
-											<span>Reset</span>
-										</button>
-									</c:if>
+									<button type="submit" name="btnAction"
+										class="btn_small btn_blue" value="End Project">
+										<span>End Model</span>
+									</button>
+									<button type="submit" name="btnAction"
+										class="btn_small btn_blue" value="Update">
+										<span>Update</span>
+									</button>
+									<button type="reset" name="btnAction"
+										class="btn_small btn_blue" value="Reset">
+										<span>Reset</span>
+									</button>
 								</div>
 							</li>
 						</ul>

@@ -12,7 +12,7 @@
 				class="stats_icon sitemap_sl"></span><span class="label">Group</span></a></li>
 		<li><a href="${pageContext.request.contextPath}/app/programs"><span
 				class="stats_icon graphic_design_sl"></span><span class="label">Vertical</span></a></li>
-		<li><a href="${pageContext.request.contextPath}/app/projects"><span
+		<li><a href="${pageContext.request.contextPath}/app/models"><span
 				class="stats_icon sign_in_sl"></span><span class="label">Models</span></a></li>
 		<li><a href="${pageContext.request.contextPath}/app/projects"><span
 				class="stats_icon statistics_sl"></span><span class="label">Finances</span></a></li>

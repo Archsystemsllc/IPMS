@@ -41,11 +41,11 @@ $(document).ready(function(){
 			<div class="widget_wrap">
 				<div class="widget_top">
 					<span class="h_icon documents"></span>
-					<h6>Vertical Groups</h6>
+					<h6>Models</h6>
 					<div class="c_actions" id= "table">
 						<ul>
 							<li><a
-								href="${pageContext.request.contextPath}/app/Models/xls"
+								href="${pageContext.request.contextPath}/app/models/xls"
 								title="Export to XLS"> <img
 									src="${pageContext.request.contextPath}/resources/images/table-tools/xls_hover.png"
 									alt="Export to XLS">
@@ -76,30 +76,30 @@ $(document).ready(function(){
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach var="Model" items="${Models}">
-								<c:if test="${not Model.active }">
+							<c:forEach var="model" items="${models}">
+								<c:if test="${not model.active }">
 									<c:set var="linkcolor" value="activeobjectlink" />
 								</c:if>
-								<c:if test="${Model.active }">
+								<c:if test="${model.active }">
 									<c:set var="linkcolor" value="" />
 								</c:if>
 								<tr>
 									<td><a class="${linkcolor }"><c:out
-												value='${Model.id}' /></a></td>
+												value='${model.id}' /></a></td>
 									<td>
 
 										<div class="grid_12">
 											<div class="collapsible_widget">
 												<div class="c_widget_top inactive">
 													<span class="c_h_icon"></span> <a class="${linkcolor }"
-														href="${pageContext.request.contextPath}/app/Model/${Model.id}">
+														href="${pageContext.request.contextPath}/app/Model/${model.id}">
 														<h6>
-															<c:out value='${Model.name}' />
+															<c:out value='${model.name}' />
 														</h6>
 													</a>
 												</div>
 												<div class="widget_content c_content">
-													<c:forEach var="project" items="${Model.projects}">
+													<c:forEach var="project" items="${model.projects}">
 														<a
 															href="${pageContext.request.contextPath}/app/project/<c:out value='${project.id }' />">
 															<span class="c_inner_content"> <c:out
@@ -113,15 +113,15 @@ $(document).ready(function(){
 
 									</td>
 									<td><a class="${linkcolor }"><c:out
-												value='${Model.manager.name}' /></a></td>
+												value='${model.manager.name}' /></a></td>
 									<!--<td><a class="${linkcolor }"><c:out
 												value='${fn:length(Model.issues)}' /></a></td>-->
 									<td><a class="${linkcolor }"><fmt:formatDate
-												type="date" value="${Model.startDate}" /></a></td>
+												type="date" value="${model.startDate}" /></a></td>
 									<td><a class="${linkcolor }"><fmt:formatDate
-												type="date" value="${Model.endDate}" /></a></td>
+												type="date" value="${model.endDate}" /></a></td>
 									<td><span><a class="action-icons c-edit"
-											href="${pageContext.request.contextPath}/app/edit-Model/${Model.id}"
+											href="${pageContext.request.contextPath}/app/edit-model/${model.id}"
 											title="Edit">Edit</a></span><span><a
 											class="action-icons c-approve"
 											href="${pageContext.request.contextPath}/app/new-Model"
