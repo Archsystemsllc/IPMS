@@ -16,9 +16,11 @@
 package com.archsystemsinc.ipms.sec.webapp.controller;
 
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,11 +28,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,10 +52,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
+import com.archsystemsinc.ipms.poi.service.UploadService;
+import com.archsystemsinc.ipms.sec.model.ActionItemPriority;
 import com.archsystemsinc.ipms.sec.model.Issue;
+import com.archsystemsinc.ipms.sec.model.IssueStatus;
 import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
@@ -90,6 +105,9 @@ public class TaskController extends AbstractController<Task> {
 	
 	@Autowired
 	private DownloadService downloadService;
+	@Autowired
+	private UploadService uploadService;
+
 	
 	@Autowired
 	private IRevisionHistoryService revisionHistoryService;
@@ -264,7 +282,6 @@ public class TaskController extends AbstractController<Task> {
 		return "tasksadd";
 	}
 
-	
 	@RequestMapping(value = "/new-programtask/{id}", method = RequestMethod.GET)
 	public String newProgramTask(@PathVariable("id") final Long id,final Model model,
 			final java.security.Principal principal) {
@@ -343,44 +360,62 @@ public class TaskController extends AbstractController<Task> {
 
 	protected Map referenceData() {
 		final Map referenceData = new HashMap();
-
 		final List<Principal> list = principalService.findAll();
 		final Map<Integer, String> aList = new LinkedHashMap<Integer, String>();
 		for (int i = 0; i < list.size(); i++) {
 			aList.put(list.get(i).getId().intValue(), list.get(i).getName());
 		}
-		referenceData.put("assignedToList", aList);
-		referenceData.put("createdByList", aList);
+		referenceData.put("assignList", aList);
 
-		final List<Project> listOfProjects = projectService.findAll();
-		final Map<Integer, String> prList = new LinkedHashMap<Integer, String>();
-
-		for (int i = 0; i < listOfProjects.size(); i++) {
-			prList.put(listOfProjects.get(i).getId().intValue(), listOfProjects
-					.get(i).getName());
+		final List<Project> projectlist = projectService.findActiveProjects();
+		final Map<Integer, String> pList = new LinkedHashMap<Integer, String>();
+		for (int i = 0; i < projectlist.size(); i++) {
+			pList.put(projectlist.get(i).getId().intValue(), projectlist.get(i)
+					.getName());
 		}
-		referenceData.put("projectList", prList);
-
-		final List<Program> listOfPrograms = programService.findAll();
-		final Map<Integer, String> prgList = new LinkedHashMap<Integer, String>();
-		for (int i = 0; i < listOfPrograms.size(); i++) {
-			prgList.put(listOfPrograms.get(i).getId().intValue(),
-					listOfPrograms.get(i).getName());
+		referenceData.put("projectList", pList);
+		
+		final String currentUser = SecurityContextHolder.getContext()
+				.getAuthentication().getName();
+		Principal principal = principalService.findByName(currentUser);
+		final List<Project> currentUserProjectlist = projectService.findActiveUserProjects(principal);
+		final Map<Integer, String> cpList = new LinkedHashMap<Integer, String>();
+		for (int i = 0; i < currentUserProjectlist.size(); i++) {
+			cpList.put(currentUserProjectlist.get(i).getId().intValue(), currentUserProjectlist.get(i)
+					.getName());
 		}
+		referenceData.put("currentUserProjectlist", cpList);
+		
+		final List<Program> currentUserProgramlist = programService.findUserPrograms(principal);
+		final Map<Integer, String> cpgList = new LinkedHashMap<Integer, String>();
+		for (int i = 0; i < currentUserProgramlist.size(); i++) {
+			cpgList.put(currentUserProgramlist.get(i).getId().intValue(), currentUserProgramlist.get(i)
+					.getName());
+		}
+		referenceData.put("currentUserProgramlist", cpgList);
+		
+		final Map<String, String> priorityList = new LinkedHashMap<String, String>();
+		priorityList.put(ActionItemPriority.High.toString(),
+				ActionItemPriority.High.toString());
+		priorityList.put(ActionItemPriority.Medium.toString(),
+				ActionItemPriority.Medium.toString());
+		priorityList.put(ActionItemPriority.Low.toString(),
+				ActionItemPriority.Low.toString());
+		referenceData.put("priorityList", priorityList);
 
-		referenceData.put("programList", prgList);
 		final Map<String, String> sList = new LinkedHashMap<String, String>();
-		sList.put(TaskStatus.Closed.toString(), TaskStatus.Closed.toString());
-
-		sList.put(TaskStatus.Open.toString(), TaskStatus.Open.toString());
-		sList.put(TaskStatus.Pending.toString(), TaskStatus.Pending.toString());
-		sList.put(TaskStatus.In_Progress.toString(),
-				TaskStatus.In_Progress.toString());
-		sList.put(TaskStatus.Resolved.toString(),
-				TaskStatus.Resolved.toString());
-		sList.put(TaskStatus.Reopened.toString(),
-				TaskStatus.Reopened.toString());
+		sList.put(IssueStatus.Closed.toString(), IssueStatus.Closed.toString());
+		sList.put(IssueStatus.Open.toString(), IssueStatus.Open.toString());
+		sList.put(IssueStatus.Pending.toString(),
+				IssueStatus.Pending.toString());
+		sList.put(IssueStatus.In_Progress.toString(),
+				IssueStatus.In_Progress.toString());
+		sList.put(IssueStatus.Reopened.toString(),
+				IssueStatus.Reopened.toString());
+		sList.put(IssueStatus.Resolved.toString(),
+				IssueStatus.Resolved.toString());
 		referenceData.put("statusList", sList);
+
 		return referenceData;
 	}
 	
@@ -389,4 +424,34 @@ public class TaskController extends AbstractController<Task> {
 		return service;
 	}
 
+		@RequestMapping(value = "/tasksupload", method = RequestMethod.GET)
+		public String uploadTask(final Model model) {
+			model.addAttribute(new FileUpload());
+			model.addAttribute("referenceData", referenceData());
+			return "uploadTask";
+		}
+		
+	
+		@RequestMapping(value = "/tasksupload", method = RequestMethod.POST)
+		public String uploadIssue(@ModelAttribute("fileUpload") final FileUpload uploadItem, final Principal principal,
+				final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes) {		
+			
+			logger.debug("Received request to upload issues report");
+			final String typeOfUpload = GenericConstants.TASKS;
+			if(result.hasErrors()) {
+				redirectAttributes.addFlashAttribute("fileUploadError", "error.upload.internal.problem");
+				return "redirect:/app/tasks";
+			} else {
+				//Delegate to UploadService.
+				String returnString = uploadService.uploadXLS(uploadItem, typeOfUpload, redirectAttributes);
+				if(returnString.equalsIgnoreCase("fileUploadError")) {
+					return "redirect:/app/tasksupload";
+				} else {
+					return "redirect:/app/tasks";
+				}
+			}
+		}
+
 }
+
+		
