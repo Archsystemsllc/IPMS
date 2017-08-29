@@ -4,7 +4,9 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
+<style>
+ .required:after { content:" *"; }
+</style>
 <div class="content">
     <div class="grid_container">
         <div class="grid_12 full_block">
@@ -46,7 +48,7 @@
                         <ul>                          
 							  <li>
                                 <div class="form_grid_12">
-                                    <label for="issueId" class="field_title">Issue</label>
+                                    <label for="issueId" class="field_title required">Issue</label>
                                     <div class="form_input">
                                         <form:select id="issueId" name="issueId" path="issueId" class="mid">
                                             <form:options items="${referenceData.issueList}" />
@@ -56,7 +58,7 @@
                           	  </li> 
                           	  <li>
                                     <div class="form_grid_12">
-                                        <label for="meetingId" class="field_title">Meeting</label>
+                                        <label for="meetingId" class="field_title required">Meeting</label>
                                         <div class="form_input">
                                             <form:select id="meetingId" name="meetingId" path="meetingId" class="mid">
                                                 <form:options items="${referenceData.meetingList}" />
@@ -66,7 +68,7 @@
                                 </li>   	
 							  <li>
                                 <div class="form_grid_12">
-                                    <label for="fileData" class="field_title">ActionItems File</label>
+                                    <label for="fileData" class="field_title required">ActionItems File</label>
                                     <div class="form_input">
                                         <form:input type="file" id="fileData" name="fileData" path="fileData" />
                                     </div>

@@ -143,6 +143,8 @@ public class UploadService {
 						returnString = uploadLessonsLearned(uploadItem, redirectAttributes);
 					}else if(GenericConstants.MEETING_MINUTES.equalsIgnoreCase(typeOfUpload)){
 						returnString = uploadMeetingMinutes(uploadItem, redirectAttributes);
+					}else if(GenericConstants.ACTION_ITEMS.equalsIgnoreCase(typeOfUpload)){
+						returnString = uploadActionItems(uploadItem, redirectAttributes);
 					}	
 				} else {
 					redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_MISSING_DATA);
