@@ -17,8 +17,10 @@ package com.archsystemsinc.ipms.sec.webapp.controller;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -190,21 +192,12 @@ public class IssueController extends AbstractController<Issue> {
 				.currentRequestAttributes();
 		return attr.getRequest().getSession(true);
 	}
-
-	@RequestMapping(value = "/edit-issue/{id}", method = RequestMethod.GET)
-	public String editIssue(@PathVariable("id") final Long id, final Model model) {
-		final Issue issue = service.findOne(id);
-		model.addAttribute("issue", issue);
-		model.addAttribute("referenceData", referenceData());
-		
-		final HttpSession session = getSession();
-		session.setAttribute("issue", issue);
-		return "issuesedit";
-	}
 	
 	private List<RevisionHistory> buildRevisionHistory(Issue oldIssue,
 			Issue issue, Principal principal) {
 		List<RevisionHistory> returnList = new ArrayList<RevisionHistory>();
+		final java.util.Date date = new java.util.Date();
+		final Timestamp timeStamp = new Timestamp(date.getTime());
 		RevisionHistory revisionHistory = null;
 		if (!oldIssue.getPriority().equalsIgnoreCase(
 				issue.getPriority())){
@@ -212,10 +205,10 @@ public class IssueController extends AbstractController<Issue> {
 			revisionHistory.setPrincipal(principal);
 			revisionHistory.setPrincipalId(principal.getId());
 			revisionHistory.setIssueId(issue.getId());
-			
 			revisionHistory.setText("Priority String : " + oldIssue.getPriority() + " - "
 					+ oldIssue.getPriority());
 			revisionHistory.setIssue(issue);
+			revisionHistory.setUpdatedAt(timeStamp);
 			returnList.add(revisionHistory);
 		}
 		
@@ -228,6 +221,7 @@ public class IssueController extends AbstractController<Issue> {
 			revisionHistory.setText("Risk Level : " + oldIssue.getStatus() + " - "
 					+ issue.getStatus());
 			revisionHistory.setIssue(issue);
+			revisionHistory.setUpdatedAt(timeStamp);
 			returnList.add(revisionHistory);
 		}
 		return returnList;
@@ -256,6 +250,18 @@ public class IssueController extends AbstractController<Issue> {
 					+ "?page=issues&success=2";
 		}
 		return returnView;
+	}
+	
+
+	@RequestMapping(value = "/edit-issue/{id}", method = RequestMethod.GET)
+	public String editIssue(@PathVariable("id") final Long id, final Model model) {
+		final Issue issue = service.findOne(id);
+		model.addAttribute("issue", issue);
+		model.addAttribute("referenceData", referenceData());
+		
+		final HttpSession session = getSession();
+		session.setAttribute("issue", issue);
+		return "issuesedit";
 	}
 
 	@RequestMapping(value = "/edit-issue", method = RequestMethod.POST)
@@ -288,7 +294,7 @@ public class IssueController extends AbstractController<Issue> {
 				revisionHistoryService.bulkCreate(histList);
 			}
 			model.addAttribute("success", "success.issue.updated");
-			returnView = "redirect:issues";
+			returnView = "redirect:/app/issues";
 		}
 		model.addAttribute("issue", issue);
 		model.addAttribute("referenceData", referenceData());
@@ -303,7 +309,7 @@ public class IssueController extends AbstractController<Issue> {
 		service.delete(id);
 		model.addAttribute("success", "success.issue.deleted");
 		if (returnPage.equalsIgnoreCase("")) {
-			returnView = "forward:issues";
+			returnView = "forward:/app/issues";
 		} else {
 			returnView = "forward:" + returnPage;
 		}
