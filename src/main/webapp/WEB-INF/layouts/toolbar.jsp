@@ -8,7 +8,7 @@
 
 <div class="switch_bar">
 	<ul>
-		<li><a href="${pageContext.request.contextPath}/app/programs"><span
+			<li><a href="${pageContext.request.contextPath}/app/organization-groups"><span
 				class="stats_icon sitemap_sl"></span><span class="label">Group</span></a></li>
 		<li><a href="${pageContext.request.contextPath}/app/programs"><span
 				class="stats_icon graphic_design_sl"></span><span class="label">Vertical</span></a></li>
@@ -30,7 +30,7 @@
 		<li><a
 			href="${pageContext.request.contextPath}/app/issues"><span
 				class="stats_icon issues_sl c_stats_icon"></span><span class="label">Issues</span></a></li>
-		<li><a href="${pageContext.request.contextPath}/app/projects"><span
+		<li><a href="${pageContext.request.contextPath}/app/groupreport"><span
 				class="stats_icon settings_sl"></span><span class="label">Reports</span></a></li>
 		<li>
 		<a href="${pageContext.request.contextPath}/app/upload"

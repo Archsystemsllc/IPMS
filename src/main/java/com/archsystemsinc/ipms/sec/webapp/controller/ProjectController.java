@@ -142,6 +142,9 @@ public class ProjectController extends AbstractController<Project> {
 			} else if(messageId == 2) {
 				model.addAttribute("success","success.issue.created");
 			}
+				else if(messageId == 3) {
+					model.addAttribute("success","success.risk.created");
+			}
 			   
 		}
 			
