@@ -380,6 +380,7 @@ public class TaskController extends AbstractController<Task> {
 		Principal principal = principalService.findByName(currentUser);
 		final List<Project> currentUserProjectlist = projectService.findActiveUserProjects(principal);
 		final Map<Integer, String> cpList = new LinkedHashMap<Integer, String>();
+		cpList.put(0, "--Select Model--");
 		for (int i = 0; i < currentUserProjectlist.size(); i++) {
 			cpList.put(currentUserProjectlist.get(i).getId().intValue(), currentUserProjectlist.get(i)
 					.getName());
@@ -388,6 +389,7 @@ public class TaskController extends AbstractController<Task> {
 		
 		final List<Program> currentUserProgramlist = programService.findUserPrograms(principal);
 		final Map<Integer, String> cpgList = new LinkedHashMap<Integer, String>();
+		cpgList.put(0, "--Select Vertical Group--")
 		for (int i = 0; i < currentUserProgramlist.size(); i++) {
 			cpgList.put(currentUserProgramlist.get(i).getId().intValue(), currentUserProgramlist.get(i)
 					.getName());

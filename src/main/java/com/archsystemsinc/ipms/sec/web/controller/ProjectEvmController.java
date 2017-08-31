@@ -133,5 +133,11 @@ public class ProjectEvmController extends AbstractController< ProjectEvm >{
 	protected final IProjectEvmService getService(){
 		return service;
 	}
+	/*@RequestMapping(value = "/evmprojects", method = RequestMethod.GET)
+	public String viewFinancialPage(final Model model) {
+		System.out.println("projectevmcontroller class: viewFinancialPage method::::::::::::::::::::::::");
+		model.addAttribute("evmprojects", new ProjectEvm());
+		return "evmprojects";
+	}*/
 
 }

@@ -17,7 +17,7 @@
 			<div class="widget_wrap">
 				<div class="widget_top">
 					<span class="h_icon documents"></span>
-					<h6>Projects</h6>
+					<h6>Models</h6>
 					<div class="c_actions">
 						<ul>
 							<li><a

@@ -246,8 +246,7 @@ public class IssueController extends AbstractController<Issue> {
 		} else {
 			service.create(issue);
 			model.addAttribute("success", "success.issue.created");
-			returnView = "redirect:project/" + project.getId()
-					+ "?page=issues&success=2";
+			returnView = "redirect:issues";
 		}
 		return returnView;
 	}

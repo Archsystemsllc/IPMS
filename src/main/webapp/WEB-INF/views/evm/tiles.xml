@@ -9,6 +9,10 @@
 	</definition>  
 	<definition name="evmproject" extends="page">
 		<put-attribute name="content" value="/WEB-INF/views/evm/evmproject.jsp" />
-	</definition>  
+	</definition>
+	  
+	<definition name="viewevms" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/evm/evmprojects.jsp" />
+	</definition>
 	
 </tiles-definitions>
