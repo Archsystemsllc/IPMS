@@ -733,11 +733,14 @@ public class MeetingController extends AbstractController<Meeting> {
 			meeting.setAttendees(attendees);
 			service.update(meeting);
 			emailer.sendMail(meeting.getAttendeesEmails(), "New Meeting: " + meeting.getTitle(), meeting.getMeetingEmailBody(), null, null,null);
-			if(project!=null)
+
+			model.addAttribute("success","success.meeting.created");
+			
+			/*if(project!=null)
 				returnView = "redirect:project/"+project.getId()+"?page=meetings&success=1";
 			else if(program!=null)
-				returnView = "redirect:program/"+program.getId()+"?page=meetings&success=1";
-			else
+				returnView = "redirect:program/"+program.getId()+"?page=meetings&success=1"; 
+			else*/
 			    returnView = "forward:meetings";
 		} 
 
@@ -807,7 +810,7 @@ public class MeetingController extends AbstractController<Meeting> {
 					.getName());
 			final List<Meeting> meetings = service.findAll();
 			model.addAttribute("meetings", meetings);
-			model.addAttribute("success","success.minutes.updated");
+			model.addAttribute("success","success.meeting.updated");
 			meeting.setAttendees(attendees);
 			service.update(meeting);
 			emailer.sendMail(meeting.getAttendeesEmails(), "Meeting: " + meeting.getTitle() + " Edited", meeting.getMeetingEmailBody(), null, null,null);
