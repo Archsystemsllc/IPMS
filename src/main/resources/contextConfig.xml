@@ -18,6 +18,7 @@
 		location="
         classpath*:*persistence-mysql.properties,
         classpath*:*env-${target}.properties,
+        classpath*:sharepoint.properties,
         classpath*:*emailer.properties,
         classpath*:*web-${target}.properties" />
 

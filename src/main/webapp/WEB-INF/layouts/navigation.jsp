@@ -245,7 +245,8 @@
 									<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned">Upload Lessons Learned</a></li>										
 									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems">Upload Action Items</a></li>				
 								</ul>
-					
+					<li><a href="${pageContext.request.contextPath}/app/sharepoint"><span
+								class="list-icon">&nbsp;</span>SharePoint</a></li>
 				</li>
 				</sec:authorize>
 				<sec:authorize
