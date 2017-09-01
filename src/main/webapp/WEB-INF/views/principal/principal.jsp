@@ -63,6 +63,15 @@
                                     </div>
                                 </div>
                             </li>
+                            <li>
+                                <div class="form_grid_12">
+                                    <label class="field_title">JIRA User Name</label>
+                                    <div class="form_input">
+                                        <span class="uneditable-input mid">${principal.jiraUsername}</span>
+                                    </div>
+                                </div>
+                            </li>
+                            
                               <li>
                                 <div class="form_grid_12">
                                     <label class="field_title">Roles</label>

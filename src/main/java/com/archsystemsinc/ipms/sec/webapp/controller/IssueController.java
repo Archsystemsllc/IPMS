@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.archsystemsinc.ipms.jira.service.IJIRASService;
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
 import com.archsystemsinc.ipms.poi.service.UploadService;
@@ -84,6 +86,9 @@ public class IssueController extends AbstractController<Issue> {
 
 	@Autowired
 	private IIssueService service;
+	
+	@Autowired
+	private IJIRASService jiraIssueService;
 
 	@Autowired
 	private IProjectService projectService;
@@ -144,6 +149,8 @@ public class IssueController extends AbstractController<Issue> {
 		final Principal currentUser = principalService.findByName(principal
 				.getName());
 		final List<Issue> issues = service.findCurrentUserIssues(currentUser);
+		if(StringUtils.isNotEmpty(currentUser.getJiraUsername()))
+			issues.addAll(jiraIssueService.findCurrentUserIssues(currentUser));
 		model.addAttribute("issues", issues);
 		return "issues";
 	}
@@ -156,6 +163,15 @@ public class IssueController extends AbstractController<Issue> {
 		final List<RevisionHistory> revisionHist = revisionHistoryService
 				.findByIssue(id);
 		issue.setRevisions(new HashSet<RevisionHistory>(revisionHist));
+		model.addAttribute("issue", issue);
+		model.addAttribute("referenceData", referenceData());
+		return "issue";
+	}
+
+
+	@RequestMapping(value = "/jiraIssue/{id}", method = RequestMethod.GET)
+	public String jiraIssue(@PathVariable("id") final String id, final Model model) {
+		final Issue issue = jiraIssueService.findOne(id);
 		model.addAttribute("issue", issue);
 		model.addAttribute("referenceData", referenceData());
 		return "issue";

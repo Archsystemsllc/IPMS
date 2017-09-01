@@ -98,6 +98,17 @@ $(function(){
                                                 </div>
                                             </div>
                             </li>
+                            
+                             <li>
+                                <div class="form_grid_12">
+                                    <label for="name" class="field_title">JIRA Project Name</label>
+                                    <div class="form_input">
+                                      <form:select id="jiraProjectKey" name="jiraProjectKey" path="jiraProjectKey">
+                                          <form:options items="${referenceData.jiraProjectList}"  />
+                                      </form:select>
+                                      </div>
+                                </div>
+                            </li>
                             <li>
                                 <div class="form_grid_12">
                                     <label for="managerId" class="field_title">Manager</label>

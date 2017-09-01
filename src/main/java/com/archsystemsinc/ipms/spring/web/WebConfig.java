@@ -17,7 +17,7 @@ import com.archsystemsinc.ipms.sec.model.Role;
 import com.archsystemsinc.ipms.sec.model.dto.User;
 
 @Configuration
-@ComponentScan( { "com.archsystemsinc.ipms.web", "com.archsystemsinc.ipms.sec.web", "com.archsystemsinc.ipms.persistence.event" } )
+@ComponentScan( { "com.archsystemsinc.ipms.web", "com.archsystemsinc.ipms.sec.web", "com.archsystemsinc.ipms.persistence.event","com.archsystemsinc.ipms.jira" } )
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter{
 

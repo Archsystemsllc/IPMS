@@ -89,6 +89,9 @@ public class Project implements INameableEntity {
 	@JoinColumn(name = "program_id")
 	private Program program;
 
+	@Column(unique = true, name = "jira_project_key", nullable = true)
+	private String jiraProjectKey;
+
 	@Transient
 	private Long programId;
 
@@ -100,6 +103,10 @@ public class Project implements INameableEntity {
 
 	@Transient
 	private Set<ActionItem> actionItems;
+
+	@Transient
+	private String jiraProjectName;
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "model_id")
@@ -370,5 +377,23 @@ public class Project implements INameableEntity {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String getJiraProjectKey() {
+		return jiraProjectKey;
+	}
+
+	public void setJiraProjectKey(String jiraProjectKey) {
+		this.jiraProjectKey = jiraProjectKey;
+	}
+
+	public String getJiraProjectName() {
+		return jiraProjectName;
+	}
+
+	public void setJiraProjectName(String jiraProjectName) {
+		this.jiraProjectName = jiraProjectName;
+	}
+	
+	
 
 }
