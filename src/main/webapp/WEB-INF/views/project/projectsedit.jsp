@@ -22,7 +22,7 @@ $(function(){
             <a href="${pageContext.request.contextPath}/app/groupdashboard">Home</a> <span> >> </span>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/app/projects">Models</a> <span> >> </span>
+            <a href="${pageContext.request.contextPath}/app/projects">Projects</a> <span> >> </span>
         </li>
         <li>
             <a href="#" style="text-decoration: none;">Edit Model</a>
@@ -35,11 +35,11 @@ $(function(){
             <div class="widget_wrap">
                 <div class="widget_top">
                     <span class="h_icon list"></span>
-                    <h6>Model</h6>
+                    <h6>Project</h6>
                     <form:errors path="*" cssClass="errorblock" element="div" />
                 </div>
                 <div class="widget_content">
-                    <h6>Edit Model : <c:out value='${project.name}' /></h6>
+                    <h6>Edit Project : <c:out value='${project.name}' /></h6>
                     <form:form modelAttribute="project" class="form_container left_label"
                                action="../edit-project" method="post">
                                 <c:if test="${not empty error}">

@@ -240,11 +240,11 @@ public class RiskController extends AbstractController<Risk> {
 			service.create(risk);
 			model.addAttribute("success","success.risk.created");
 			if(risk.getProject()!=null)
-				returnView = "redirect:project/"+risk.getProject().getId()+"?page=risks&success=1";
-			if(risk.getProgram()!=null)
-				returnView = "redirect:program/"+risk.getProgram().getId()+"?page=risks&success=1";
+				returnView = "redirect:project/"+risk.getProject().getId()+"?page=risks&success=3";
+			else if(risk.getProgram()!=null)
+				returnView = "redirect:program/"+risk.getProgram().getId()+"?page=risks&success=3";
 			else
-				returnView = "forward:artifacts";
+				returnView = "redirect:risks";
 		}
 		return returnView;
 	}
