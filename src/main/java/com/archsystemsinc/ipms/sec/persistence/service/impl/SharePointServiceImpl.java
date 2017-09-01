@@ -71,9 +71,6 @@ public class SharePointServiceImpl implements ISharePointService{
 	
 	static String UPLOAD = ROOT+"/PQRS/_api/web/GetFolderByServerRelativeUrl('/PQRS/Shared%20Documents/<SELECTED_FOLDER>')/Files/add(url='<FILE_NAME>',overwrite=true)";
 	
-	//static String userName = "ptotta@archsystemsinc.com";
-	//static String password = "ndfs*123";
-	
 	@Value("${sharepoint.user.name}")
     String userName;
 	@Value("${sharepoint.user.pwd}")
