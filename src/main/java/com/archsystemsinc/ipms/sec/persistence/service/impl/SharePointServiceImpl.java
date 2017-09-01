@@ -9,7 +9,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -62,10 +64,12 @@ public class SharePointServiceImpl implements ISharePointService{
 	static String PQRS_FORMS_URL = ROOT + "/_forms/default.aspx?wa=wsignin1.0";
 	static String PQRS_CTX_URL = ROOT + "/PQRS/_api/contextinfo";
 
-	static String LIST = ROOT
-			+ "/PQRS/_api/web/GetFolderByServerRelativeUrl('/PQRS/Shared%20Documents/IPMS<SELECTED_FOLDER>')/Files";
+	static String LIST_FILES = ROOT
+			+ "/PQRS/_api/web/GetFolderByServerRelativeUrl('/PQRS/Shared%20Documents/<SELECTED_FOLDER>')/Files";
+	static String LIST_FOLDERS = ROOT
+			+ "/PQRS/_api/web/GetFolderByServerRelativeUrl('/PQRS/Shared%20Documents/IPMS')/Folders";
 	
-	static String UPLOAD = ROOT+"/PQRS/_api/web/GetFolderByServerRelativeUrl('/PQRS/Shared%20Documents/IPMS<SELECTED_FOLDER>')/Files/add(url='<FILE_NAME>',overwrite=true)";
+	static String UPLOAD = ROOT+"/PQRS/_api/web/GetFolderByServerRelativeUrl('/PQRS/Shared%20Documents/<SELECTED_FOLDER>')/Files/add(url='<FILE_NAME>',overwrite=true)";
 	
 	//static String userName = "ptotta@archsystemsinc.com";
 	//static String password = "ndfs*123";
@@ -74,60 +78,46 @@ public class SharePointServiceImpl implements ISharePointService{
     String userName;
 	@Value("${sharepoint.user.pwd}")
     String password;
-	@Value("${sharepoint.ipms.folders}")
-	String fodlers;
+	
 	
 	/**
 	 * 	
 	 */
 	public String uploadFile(SharePointFile file) throws Exception {
-		String jsonData = "{'__metadata': { 'type': 'SP.List' }, 'AllowContentTypes': true,'BaseTemplate': 100, 'ContentTypesEnabled': true, 'Description': 'description', 'Title': '"+file.getFileName()+" ' }";
 		String securityToken = receiveSecurityToken();
 		List<String> cookies = getSignInCookies(securityToken);
 		String formDigestValue = getFormDigestValue(cookies);
-		LinkedMultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+		LinkedMultiValueMap<String, Object> data = new LinkedMultiValueMap<String, Object>();
 		final String filename = file.getFileName();
-		ByteArrayResource contentsAsResource = new ByteArrayResource(file.getFileData().getFileItem().get()){
+		ByteArrayResource contentsAsResource = new ByteArrayResource(file.getFileData().getBytes()){
             @Override
             public String getFilename(){
                 return filename;
             }
         };
-        headers.add("file", contentsAsResource);
-		headers.add("body", jsonData);
+        data.add("file", contentsAsResource);
 		
 		HttpHeaders httph = new HttpHeaders();
 		httph.setContentType(MediaType.MULTIPART_FORM_DATA);
 		httph.add("Content-type",file.getFileData().getContentType());
-		httph.add("Content-type", "application/json;odata=verbose");
 		httph.add("Cookie", Joiner.on(';').join(cookies));
 		httph.add("X-RequestDigest", formDigestValue);
 	
 		String folderName = file.getFolderName();
-		if("Root".equals(folderName)) {
-			folderName = "";
-		}else {
-			folderName = "/"+folderName;
-		}
 		
+		if(folderName == null || "".equals(folderName.trim())) {
+			folderName = "IPMS";
+		}
 		String path = UPLOAD.replace("<SELECTED_FOLDER>", folderName);
 		path = path.replace("<FILE_NAME>", filename);
-		
+		path = path.replaceAll(" ", "%20");
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(
-				headers, httph);
+				data, httph);
 		ResponseEntity<String> responseEntity = restTemplate.exchange(new URI(path), HttpMethod.POST, requestEntity,
 				String.class);
 
 		return responseEntity.getBody();
-	}
-
-	public String getFodlers() {
-		return fodlers;
-	}
-
-	public void setFodlers(String fodlers) {
-		this.fodlers = fodlers;
 	}
 
 	/**
@@ -139,12 +129,11 @@ public class SharePointServiceImpl implements ISharePointService{
 		String formDigestValue = getFormDigestValue(cookies);
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		HttpHeaders headers = new HttpHeaders();
-		if("Root".equals(folderName)) {
-			folderName = "";
-		}else {
-			folderName = "/"+folderName;
+		if(folderName == null || "".equals(folderName.trim())) {
+			folderName = "IPMS";
 		}
-		String path = LIST.replace("<SELECTED_FOLDER>", folderName);
+		String path = LIST_FILES.replace("<SELECTED_FOLDER>", folderName);
+		path = path.replaceAll(" ", "%20");
 		log.debug("Path:" + path);
 		headers.add("Cookie", Joiner.on(';').join(cookies));
 		headers.add("Content-type", "application/json;odata=verbose");
@@ -156,10 +145,34 @@ public class SharePointServiceImpl implements ISharePointService{
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> responseEntity = restTemplate.exchange(new URI(path), HttpMethod.GET, requestEntity,
 				String.class);
-		JSONObject json = new JSONObject(responseEntity.getBody());
+		
 		return parseFileListReponse(responseEntity.getBody());
 	}
 
+	/**
+	 * 
+	 */
+	public Map<String,String> listFolders() throws Exception {
+		String securityToken = receiveSecurityToken();
+		List<String> cookies = getSignInCookies(securityToken);
+		String formDigestValue = getFormDigestValue(cookies);
+		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		HttpHeaders headers = new HttpHeaders();
+		
+		
+		headers.add("Cookie", Joiner.on(';').join(cookies));
+		headers.add("Content-type", "application/json;odata=verbose");
+		headers.add("X-RequestDigest", formDigestValue);
+		headers.add("Accept", "application/json;odata=verbose");
+		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(
+				map, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> responseEntity = restTemplate.exchange(new URI(LIST_FOLDERS), HttpMethod.GET, requestEntity,
+				String.class);
+		
+		return getFoldersList(responseEntity.getBody());
+	}
 	private List<SharePointFile> parseFileListReponse(String jsonReponse) {
 		List<SharePointFile> list = new ArrayList<SharePointFile>();
 		try {
@@ -186,6 +199,30 @@ public class SharePointServiceImpl implements ISharePointService{
 		}
 
 		return list;
+	}
+	
+	private Map<String,String> getFoldersList(String jsonReponse) {
+		Map<String,String> results = new LinkedHashMap<String,String>();
+		results.put("IPMS", "IPMS");
+		try {
+			JSONObject json = new JSONObject(jsonReponse);
+			JSONArray files = json.getJSONObject("d").getJSONArray("results");
+			JSONObject obj = null;
+			String serverRelativeUrl = null;
+			String folderName = null;
+			
+			for (int index = 0; index < files.length(); index++) {
+				obj = files.getJSONObject(index);
+				serverRelativeUrl = (String) obj.get("ServerRelativeUrl");
+				folderName = serverRelativeUrl.substring(serverRelativeUrl.lastIndexOf("/") + 1,
+						serverRelativeUrl.length());
+				results.put("IPMS/"+folderName, "IPMS/"+folderName);
+			}
+		} catch (Exception ex) {
+
+		}
+
+		return results;
 	}
 	
 	private String receiveSecurityToken() throws URISyntaxException, TransformerFactoryConfigurationError,

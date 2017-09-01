@@ -3,6 +3,7 @@
  */
 package com.archsystemsinc.ipms.sec.webapp.controller;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,14 +57,14 @@ public class SharePointController {
 	}
 
 	private void populateSharePointFolders(final Model model) {
-		Map<String,String> country = new LinkedHashMap<String,String>();
-		
-		String folders = sharePointService.getFodlers();
-		String[] temp = folders.split(",");
-		for(int index=0; index < temp.length; index++) {
-			country.put(temp[index],temp[index]);
+		try {
+			model.addAttribute("foldersList", sharePointService.listFolders());
+		} catch (Exception e) {
+			log.error("Error occured while Listing Folders!",e);
+			Map<String,String> results = new LinkedHashMap<String,String>();
+			results.put("IPMS", "IPMS");
+			model.addAttribute("foldersList",results);
 		}
-		model.addAttribute("foldersList", country);
 	}
 	
 	/**
@@ -108,6 +109,7 @@ public class SharePointController {
 			sharePointService.uploadFile(sharePointFile);
 			model.addAttribute("success","success.sharepoint.upload");
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("Error occured while Listing Files!",e);
 			model.addAttribute("success","error.sharepoint.upload");
 		}
