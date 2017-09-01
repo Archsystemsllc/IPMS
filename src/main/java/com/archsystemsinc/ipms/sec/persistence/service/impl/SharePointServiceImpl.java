@@ -81,25 +81,22 @@ public class SharePointServiceImpl implements ISharePointService{
 	 * 	
 	 */
 	public String uploadFile(SharePointFile file) throws Exception {
-		String jsonData = "{'__metadata': { 'type': 'SP.List' }, 'AllowContentTypes': true,'BaseTemplate': 100, 'ContentTypesEnabled': true, 'Description': 'description', 'Title': '"+file.getFileName()+" ' }";
 		String securityToken = receiveSecurityToken();
 		List<String> cookies = getSignInCookies(securityToken);
 		String formDigestValue = getFormDigestValue(cookies);
-		LinkedMultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+		LinkedMultiValueMap<String, Object> data = new LinkedMultiValueMap<String, Object>();
 		final String filename = file.getFileName();
-		ByteArrayResource contentsAsResource = new ByteArrayResource(file.getFileData().getFileItem().get()){
+		ByteArrayResource contentsAsResource = new ByteArrayResource(file.getFileData().getBytes()){
             @Override
             public String getFilename(){
                 return filename;
             }
         };
-        headers.add("file", contentsAsResource);
-		headers.add("body", jsonData);
+        data.add("file", contentsAsResource);
 		
 		HttpHeaders httph = new HttpHeaders();
 		httph.setContentType(MediaType.MULTIPART_FORM_DATA);
 		httph.add("Content-type",file.getFileData().getContentType());
-		httph.add("Content-type", "application/json;odata=verbose");
 		httph.add("Cookie", Joiner.on(';').join(cookies));
 		httph.add("X-RequestDigest", formDigestValue);
 	
@@ -115,7 +112,7 @@ public class SharePointServiceImpl implements ISharePointService{
 		
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(
-				headers, httph);
+				data, httph);
 		ResponseEntity<String> responseEntity = restTemplate.exchange(new URI(path), HttpMethod.POST, requestEntity,
 				String.class);
 
@@ -156,7 +153,7 @@ public class SharePointServiceImpl implements ISharePointService{
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> responseEntity = restTemplate.exchange(new URI(path), HttpMethod.GET, requestEntity,
 				String.class);
-		JSONObject json = new JSONObject(responseEntity.getBody());
+		
 		return parseFileListReponse(responseEntity.getBody());
 	}
 
