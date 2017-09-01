@@ -24,12 +24,7 @@
 								<h4 class="errorblock"><c:out value="${message}" /></h4>
   							 </div>  
 			   			 </c:if>
-			   			 <c:if test="${not empty issuerequirederror}">
-							<div class="errorblock">
-								<spring:message code="${issuerequirederror}"></spring:message>
-							</div>
-						</c:if>
-						<c:if test="${not empty meetingrequirederror}">
+			   			<c:if test="${not empty meetingrequirederror}">
 							<div class="errorblock">
 								<spring:message code="${meetingrequirederror}"></spring:message>
 							</div>

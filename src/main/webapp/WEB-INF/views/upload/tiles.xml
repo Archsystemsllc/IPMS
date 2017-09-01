@@ -23,5 +23,4 @@
 	<definition name="uploadfinancial" extends="page">
 		<put-attribute name="content" value="/WEB-INF/views/upload/financialupload.jsp" />
 	</definition>
-	
 </tiles-definitions>

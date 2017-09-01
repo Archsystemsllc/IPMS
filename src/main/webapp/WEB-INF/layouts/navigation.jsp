@@ -206,12 +206,16 @@
 								class="list-icon">&nbsp;</span>Task Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-task">Add Task</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/tasks/upload">Upload Tasks</a></li>	
+									<li><a href="${pageContext.request.contextPath}/app/tasksupload">Upload Tasks</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/tasks">View Tasks</a></li>				
 								</ul>
 						</li>
 						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
-								class="list-icon">&nbsp;</span>Financial Management</a></li>
+								class="list-icon">&nbsp;</span>Financial Management</a>
+								<ul style="text-indent:10px">					
+									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">Upload Financial</a></li>
+								</ul>
+						</li>
 						<li><a href="${pageContext.request.contextPath}/app/risks"><span
 								class="list-icon">&nbsp;</span>Risk Management</a>
 								<ul style="text-indent:10px">					
@@ -245,7 +249,8 @@
 									<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned">Upload Lessons Learned</a></li>										
 									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems">Upload Action Items</a></li>				
 								</ul>
-					
+					<li><a href="${pageContext.request.contextPath}/app/sharepoint"><span
+								class="list-icon">&nbsp;</span>SharePoint</a></li>
 				</li>
 				</sec:authorize>
 				<sec:authorize
