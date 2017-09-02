@@ -116,7 +116,8 @@ public class PrivilegeController extends AbstractController<Privilege> {
 			model.addAttribute("referenceData", referenceData());
 		} else {
 			service.update(privilege);
-			returnView = "redirect:privileges";
+			model.addAttribute("success","success.privilege.updated");
+			returnView = "forward:privileges";
 		}		
 		model.addAttribute("privilege", privilege);
 		model.addAttribute("referenceData", referenceData());
