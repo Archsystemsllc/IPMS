@@ -6,5 +6,7 @@ import com.archsystemsinc.ipms.sec.model.Principal;
 public interface IPrincipalService extends IService< Principal >{
 
 	Principal findByName( final String name );
+	
+	Principal findByEmail( final String email );
 
 }

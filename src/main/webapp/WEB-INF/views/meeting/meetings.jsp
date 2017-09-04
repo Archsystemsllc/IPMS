@@ -56,14 +56,21 @@
                             <th>Project</th>
                             <th>Model</th>
                             <th>Status</th>
-                            <th>Manage></th>
+                            <th>Manage</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="meeting" items="${meetings}">
                             <tr>
                                 <td>${meeting.id }</td>
-                                <td><a href="meeting/${meeting.id }">${meeting.title }</a></td>
+                                 <c:if test="${not empty meeting.id}">
+                                	<td><a href="meeting/${meeting.id }">${meeting.title }</a></td>
+                                </c:if>
+                                
+                                 <c:if test="${empty meeting.id}">
+                                	<td><a href="#" disabled="disabled">${meeting.title }</a></td>
+                                </c:if>
+                                
                                 <td>${meeting.organizer.name }</td>
                                 <td><fmt:formatDate type="date" value="${meeting.date}"/></td>
                                 <td>${meeting.time}</td>
@@ -76,10 +83,12 @@
                                     <span class="badge_style b_${fn:toLowerCase(meeting.status)}">${meeting.status}</span></td>
                                 </c:if>
                                 <td style="white-space: nowrap;">
+                                <c:if test="${not empty meeting.id}">
                                     <span><a class="action-icons c-edit" href="${pageContext.request.contextPath}/app/edit-meeting/${meeting.id}" title="Edit">Edit</a></span>
                                    <!--  <span><a class="action-icons c-delete" href="#" title="delete">Delete</a></span> -->
                                     <span><a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-programmeeting" title="Create">Create</a></span>
                                 </td>
+                                </c:if>
                             </tr>
                         </c:forEach>
                         </tbody>

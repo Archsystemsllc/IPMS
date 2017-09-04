@@ -19,6 +19,7 @@
         classpath*:*persistence-mysql.properties,
         classpath*:*env-${target}.properties,
         classpath*:*jira-${target}.properties,
+        classpath*:*outlook-${target}.properties,
         classpath*:sharepoint.properties,
         classpath*:*emailer.properties,
         classpath*:*web-${target}.properties" />

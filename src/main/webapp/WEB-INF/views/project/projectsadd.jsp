@@ -109,6 +109,14 @@ $(function(){
                                       </div>
                                 </div>
                             </li>
+                              <li>
+                                 <div class="form_grid_12">
+                                     <label for="name" class="field_title">Meeting EMail</label>
+                                     <div class="form_input">
+                                      <form:input type="text" id="email" name="email" path="email" ></form:input>
+                                       </div>
+                                 </div>
+                             </li>
                             <li>
                                 <div class="form_grid_12">
                                     <label for="managerId" class="field_title">Manager</label>

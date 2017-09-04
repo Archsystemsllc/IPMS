@@ -89,8 +89,11 @@ public class Project implements INameableEntity {
 	@JoinColumn(name = "program_id")
 	private Program program;
 
-	@Column(unique = true, name = "jira_project_key", nullable = true)
+	@Column(name = "jira_project_key", nullable = true)
 	private String jiraProjectKey;
+	
+	@Column(name = "email", nullable = true)
+	private String email;
 
 	@Transient
 	private Long programId;
@@ -393,7 +396,14 @@ public class Project implements INameableEntity {
 	public void setJiraProjectName(String jiraProjectName) {
 		this.jiraProjectName = jiraProjectName;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
 
 }
