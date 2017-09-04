@@ -71,4 +71,14 @@ public class PrincipalServiceImpl extends AbstractService< Principal > implement
 	protected JpaSpecificationExecutor< Principal > getSpecificationExecutor(){
 		return dao;
 	}
+
+	@Override
+	public Principal findByEmail(String email) {
+		List<Principal> principals = dao.findByEmail(email);
+		if(principals.size()>0)
+			return principals.get(0);
+		else
+			return null;
+	}
+	
 }

@@ -1,10 +1,8 @@
 package com.archsystemsinc.ipms.poi.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,7 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,15 +24,15 @@ import com.archsystemsinc.ipms.sec.model.Issue;
 import com.archsystemsinc.ipms.sec.model.LessonsLearned;
 import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.MeetingMinutes;
-import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
+import com.archsystemsinc.ipms.sec.model.Task;
 import com.archsystemsinc.ipms.sec.persistence.service.IActionItemService;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
+import com.archsystemsinc.ipms.sec.persistence.service.ITaskService;
 import com.archsystemsinc.ipms.sec.persistence.service.ILessonsLearnedService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingMinutesService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingService;
-import com.archsystemsinc.ipms.sec.persistence.service.IPrincipalService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 import com.archsystemsinc.ipms.sec.util.GenericConstants;
@@ -59,9 +56,6 @@ public class UploadService {
 	private IProgramService programService;
 	
 	@Autowired
-	private IPrincipalService principalService;
-	
-	@Autowired
 	private IIssueService issueService;
 	
 	@Autowired
@@ -72,6 +66,9 @@ public class UploadService {
 	
 	@Autowired
 	private IMeetingService meetingservice;
+	
+	@Autowired
+	private ITaskService taskservice;
 	
 	@Autowired
 	private IMeetingMinutesService meetingminutesService;
@@ -151,6 +148,8 @@ public class UploadService {
 						returnString = uploadLessonsLearned(uploadItem, redirectAttributes);
 					}else if(GenericConstants.MEETING_MINUTES.equalsIgnoreCase(typeOfUpload)){
 						returnString = uploadMeetingMinutes(uploadItem, redirectAttributes);
+					}else if(GenericConstants.ACTION_ITEMS.equalsIgnoreCase(typeOfUpload)){
+						returnString = uploadActionItems(uploadItem, redirectAttributes);
 					}	
 				} else {
 					redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_MISSING_DATA);
@@ -172,12 +171,12 @@ public class UploadService {
 	public String uploadIssues(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 	
 		boolean reqFieldsEmpty = false;
-		if(uploadItem.getProgramId() == null || uploadItem.getProgramId().compareTo(0L) == 0) {
-			redirectAttributes.addFlashAttribute("programMessage", "Please select value for Vertical Group.");
+		if(uploadItem.getProgramId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Program");
 			reqFieldsEmpty = true;
 		}
-		if(uploadItem.getProjectId() == null || uploadItem.getProjectId().compareTo(0L) == 0) {
-			redirectAttributes.addFlashAttribute("projectMessage"," Please select value for Model.");
+		if(uploadItem.getProjectId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Project");
 			reqFieldsEmpty = true;
 		} 
 		if(reqFieldsEmpty) {
@@ -186,9 +185,6 @@ public class UploadService {
 		else {
 			Project project = projectService.findOne(uploadItem.getProjectId());
 			Program program = programService.findOne(uploadItem.getProgramId());
-			final String currentUser = SecurityContextHolder.getContext()
-					.getAuthentication().getName();
-			Principal assigned = principalService.findByName(currentUser);
 			try {
 				Issue issue = null;
 				constructExcelColumnMap(GenericConstants.ISSUES);
@@ -208,8 +204,6 @@ public class UploadService {
 				  issue.setPriority("N/A");
 				  issue.setProject(project);
 				  issue.setProgram(program);
-				  //Set logged in user as assigned id
-				  issue.setAssigned(assigned);
 	              issueService.create(issue);
 			
 			}  catch(ConstraintViolationException ce) {
@@ -231,7 +225,7 @@ public class UploadService {
 	public String uploadMeetingMinutes(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		
 		boolean reqFieldsEmpty = false;
-		if(uploadItem.getMeetingId() == null || uploadItem.getMeetingId().compareTo(0L) == 0) {
+		if(uploadItem.getMeetingId() == null) {
 			redirectAttributes.addFlashAttribute("message", "Please select value for Meeting");
 			reqFieldsEmpty = true;
 		}
@@ -276,7 +270,53 @@ public class UploadService {
 	}
 
 	public String uploadTasks(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
+		boolean reqFieldsEmpty = false;
+		if(uploadItem.getProgramId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Program");
+			reqFieldsEmpty = true;
+		}
+		if(uploadItem.getProjectId() == null) {
+			redirectAttributes.addFlashAttribute("message", "Please select value for Project");
+			reqFieldsEmpty = true;
+		} 
+		if(reqFieldsEmpty) {
+			return "redirect:/app/tasks";
+		}
+		else {
+			Project project = projectService.findOne(uploadItem.getProjectId());
+			Program program = programService.findOne(uploadItem.getProgramId());
+			try {
+				Task task = null;
+				constructExcelColumnMap(GenericConstants.TASKS);
+	          //I've Header and I'm ignoring header for that I've +1 in loop
+				for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+					  task= new Task();
+		              Row ro=firstFileSheet.getRow(r);
+		              task.setName(ro.getCell(0).getStringCellValue());
+		              task.setDescription(ro.getCell(1).getStringCellValue());
+		              task.setDueDate(ro.getCell(2).getDateCellValue());
+		              task.setDateCreated(Calendar.getInstance().getTime());
+	              }
+	              //From code
+				  task.setProject(project);
+				  task.setProgram(program);
+	              taskservice.create(task);
+			
+			}  catch(ConstraintViolationException ce) {
+				Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+				for(ConstraintViolation<?> v: cv) {
+					if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+					} else {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+					}	
+					return "redirect:/app/tasks";
+				}
+			}
+		}
+		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
 		return "redirect:/app/tasks";
+	
 	}
 	
 	public String uploadLessonsLearned(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
@@ -414,6 +454,13 @@ public class UploadService {
 				excelColumnMap.put("scribe", "Scribe");
 				excelColumnMap.put("startTime", "Start Time");
 				excelColumnMap.put("end_time", "End Time");
+				
+			case GenericConstants.TASKS :
+				excelColumnMap.put("name", "Name");
+				excelColumnMap.put("summary", "Summary");
+				excelColumnMap.put("description", "Description");
+				excelColumnMap.put("dateReported", "Date Reported");
+				excelColumnMap.put("dueDate", "Due Date");
 		}
 	}		
 }

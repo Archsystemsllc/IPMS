@@ -181,7 +181,7 @@ public class RoleController extends AbstractController<Role> {
 				role.setPrivileges(priviligesToSet);
 				service.update(role);
 				model.addAttribute("success","success.role.updated");
-				returnView = "redirect:roles";
+				returnView = "forward:roles";
 			} else if ("reset".equals(action)) {
 				role.setPrivilegesIds(new ArrayList<Long>());
 				service.update(role);

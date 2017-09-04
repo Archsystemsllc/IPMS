@@ -21,5 +21,7 @@ public interface IProjectService extends IService<Project> {
 	List<Project> findByManager(Principal manager);
 	
 	List<Project> findByProgram(Program program);
+	
+	Project findByJiraProjectKey(String jiraProjectKey);
 
 }

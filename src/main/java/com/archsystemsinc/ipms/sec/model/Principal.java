@@ -51,6 +51,9 @@ public class Principal implements INameableEntity{
 	@Column(nullable = true)
 	@Email
 	private String email;
+	
+	@Column(name = "jira_username", nullable = true)
+	private String jiraUsername;
 
 	@Transient
 	@Size(min = 4, max = 10)
@@ -301,6 +304,14 @@ public class Principal implements INameableEntity{
 
 	public void setPrivilegesList(List<Long> privilegesList) {
 		this.privilegesList = privilegesList;
+	}
+
+	public String getJiraUsername() {
+		return jiraUsername;
+	}
+
+	public void setJiraUsername(String jiraUsername) {
+		this.jiraUsername = jiraUsername;
 	}
 
 	

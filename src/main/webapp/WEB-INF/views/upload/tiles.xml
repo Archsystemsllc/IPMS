@@ -20,5 +20,7 @@
 	<definition name="meetingminutesupload" extends="page">
 		<put-attribute name="content" value="/WEB-INF/views/upload/meetingminutesupload.jsp" />
 	</definition>
-	
+	<definition name="uploadfinancial" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/upload/financialupload.jsp" />
+	</definition>
 </tiles-definitions>

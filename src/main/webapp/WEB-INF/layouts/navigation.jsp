@@ -211,7 +211,11 @@
 								</ul>
 						</li>
 						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
-								class="list-icon">&nbsp;</span>Financial Management</a></li>
+								class="list-icon">&nbsp;</span>Financial Management</a>
+								<ul style="text-indent:10px">					
+									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">Upload Financial</a></li>
+								</ul>
+						</li>
 						<li><a href="${pageContext.request.contextPath}/app/risks"><span
 								class="list-icon">&nbsp;</span>Risk Management</a>
 								<ul style="text-indent:10px">					
