@@ -214,6 +214,7 @@
 								class="list-icon">&nbsp;</span>Financial Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">Upload Financial</a></li>
+									<li><a href="${pageContext.request.contextPath}/app/choosefinancialreport">Financial Report</a></li>
 								</ul>
 						</li>
 						<li><a href="${pageContext.request.contextPath}/app/risks"><span
