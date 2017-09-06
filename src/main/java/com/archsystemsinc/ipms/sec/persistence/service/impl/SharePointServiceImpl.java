@@ -29,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -75,8 +74,7 @@ public class SharePointServiceImpl implements ISharePointService{
     String userName;
 	@Value("${sharepoint.user.pwd}")
     String password;
-	
-	
+		
 	/**
 	 * 	
 	 */
@@ -84,18 +82,8 @@ public class SharePointServiceImpl implements ISharePointService{
 		String securityToken = receiveSecurityToken();
 		List<String> cookies = getSignInCookies(securityToken);
 		String formDigestValue = getFormDigestValue(cookies);
-		LinkedMultiValueMap<String, Object> data = new LinkedMultiValueMap<String, Object>();
-		final String filename = file.getFileName();
-		ByteArrayResource contentsAsResource = new ByteArrayResource(file.getFileData().getBytes()){
-            @Override
-            public String getFilename(){
-                return filename;
-            }
-        };
-        data.add("file", contentsAsResource);
-		
+		final String filename = file.getFileName();		
 		HttpHeaders httph = new HttpHeaders();
-		httph.setContentType(MediaType.MULTIPART_FORM_DATA);
 		httph.add("Content-type",file.getFileData().getContentType());
 		httph.add("Cookie", Joiner.on(';').join(cookies));
 		httph.add("X-RequestDigest", formDigestValue);
@@ -109,8 +97,7 @@ public class SharePointServiceImpl implements ISharePointService{
 		path = path.replace("<FILE_NAME>", filename);
 		path = path.replaceAll(" ", "%20");
 		RestTemplate restTemplate = new RestTemplate();
-		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(
-				data, httph);
+		HttpEntity<byte[]> requestEntity = new HttpEntity<byte[]>(file.getFileData().getBytes(), httph);
 		ResponseEntity<String> responseEntity = restTemplate.exchange(new URI(path), HttpMethod.POST, requestEntity,
 				String.class);
 
