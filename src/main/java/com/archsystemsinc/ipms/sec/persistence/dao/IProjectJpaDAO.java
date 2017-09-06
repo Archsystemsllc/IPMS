@@ -17,4 +17,6 @@ JpaSpecificationExecutor<Project> {
 	List<Project> findByManager(Principal manager);
 	
 	List<Project> findByProgram(Program program);
+	
+	Project findByJiraProjectKey(final String jiraProjectKey);
 }

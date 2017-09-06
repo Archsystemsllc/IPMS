@@ -104,6 +104,12 @@ INameableEntity {
 
 	@Transient
 	private Long projectId;
+	
+	@Transient 
+	private String jiraId;
+	
+	@Transient 
+	private String source ="IPMS";
 
 	public Issue() {
 		super();
@@ -319,5 +325,23 @@ INameableEntity {
 	public void setRevisions(Set<RevisionHistory> revisions) {
 		this.revisions = revisions;
 	}
+
+	public String getJiraId() {
+		return jiraId;
+	}
+
+	public void setJiraId(String jiraId) {
+		this.jiraId = jiraId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+	
+	
 
 }

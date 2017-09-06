@@ -36,28 +36,39 @@
                         <tr>
 								<th>Summary</th>
 								<th>ID</th>
+								<th>Source</th>
 								<th>Project</th>
 								<th>Reported By</th>
 								<th>Assigned To</th>
 								<th>Date Due</th>
 								<th>Priority</th>
 								<th>Status</th>	
-								<th>Manage></th>							
+								<th>Manage</th>							
 							</tr>
 						</thead>
 						<tbody>
 						   <c:forEach var="issue" items="${issues}">
 							<tr>
-								<td><a href="${pageContext.request.contextPath}/app/issue/${issue.id}"><c:out value="${issue.summary}" /></a></td>
-								<td><c:out value="${issue.id}" /></td>
-								<td><c:out value="${issue.project.name}" /></td>
+								<c:if test="${issue.source =='IPMS'}">
+									<td><a href="${pageContext.request.contextPath}/app/issue/${issue.id}"><c:out value="${issue.summary}" /></a></td>
+									<td><c:out value="${issue.id}" /></td>
+								</c:if>
+								<c:if test="${issue.source == 'JIRA'}">
+									<td><a href="${pageContext.request.contextPath}/app/jiraIssue/${issue.jiraId}"><c:out value="${issue.summary}" /></a></td>	
+									<td nowrap="nowrap"><c:out value="${issue.jiraId}" /></td>
+								</c:if>
+								<td><c:out value="${issue.source}" /></td>
+								<td nowrap="nowrap"><c:out value="${issue.project.name}" /></td>
 								<td><c:out value="${issue.assignee.name}" /></td>
 								<td><c:out value="${issue.assigned.name}" /></td>
-								<td><fmt:formatDate type="date" value="${issue.dueDate}" /></td>
+								<td nowrap="nowrap"><fmt:formatDate type="date" value="${issue.dueDate}" /></td>
 								<td><span class="badge_style b_${fn:toLowerCase(issue.priority)}">${issue.priority}</span></td>
 							    <td><span class="badge_style b_${fn:toLowerCase(issue.status)}">${issue.status}</span></td>
-							    <td>
-                                    <span><a class="action-icons c-edit" href="${pageContext.request.contextPath}/app/edit-issue/${issue.id}" title="Edit">Edit</a></span><span><a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-issue" title="Create">Create</a></span>
+							    <td nowrap="nowrap">
+							    	<c:if test="${issue.source =='IPMS'}">
+                                   	 <span><a class="action-icons c-edit" href="${pageContext.request.contextPath}/app/edit-issue/${issue.id}" title="Edit">Edit</a></span>
+                                    <span><a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-issue" title="Create">Create</a></span>
+                                   	</c:if>
                                 </td>						    
 							</tr>
 							</c:forEach>

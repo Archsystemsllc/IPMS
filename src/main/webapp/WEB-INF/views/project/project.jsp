@@ -126,6 +126,25 @@
 									</div>
 								</div>
 							</li>
+							
+							
+							<li>
+								<div class="form_grid_12">
+									<label class="field_title">JIRA Project Name</label>
+									<div class="form_input">
+										<span class="uneditable-input">${project.jiraProjectName }</span>
+									</div>
+								</div>
+							</li>
+							
+                              <li>
+                                 <div class="form_grid_12">
+                                     <label for="name" class="field_title">Meeting EMail</label>
+                                     <div class="form_input">
+										<span class="uneditable-input">${project.email }</span>
+                                       </div>
+                                 </div>
+                             </li>
 							<li>
 								<div class="form_grid_12">
 									<label class="field_title">Start Date</label>

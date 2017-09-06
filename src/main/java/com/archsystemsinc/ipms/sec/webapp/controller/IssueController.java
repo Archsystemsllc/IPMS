@@ -17,10 +17,8 @@ package com.archsystemsinc.ipms.sec.webapp.controller;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +50,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.archsystemsinc.ipms.jira.service.IJIRASService;
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
 import com.archsystemsinc.ipms.poi.service.UploadService;
@@ -86,6 +86,9 @@ public class IssueController extends AbstractController<Issue> {
 
 	@Autowired
 	private IIssueService service;
+	
+	@Autowired
+	private IJIRASService jiraIssueService;
 
 	@Autowired
 	private IProjectService projectService;
@@ -146,6 +149,8 @@ public class IssueController extends AbstractController<Issue> {
 		final Principal currentUser = principalService.findByName(principal
 				.getName());
 		final List<Issue> issues = service.findCurrentUserIssues(currentUser);
+		if(StringUtils.isNotEmpty(currentUser.getJiraUsername()))
+			issues.addAll(jiraIssueService.findCurrentUserIssues(currentUser));
 		model.addAttribute("issues", issues);
 		return "issues";
 	}
@@ -158,6 +163,15 @@ public class IssueController extends AbstractController<Issue> {
 		final List<RevisionHistory> revisionHist = revisionHistoryService
 				.findByIssue(id);
 		issue.setRevisions(new HashSet<RevisionHistory>(revisionHist));
+		model.addAttribute("issue", issue);
+		model.addAttribute("referenceData", referenceData());
+		return "issue";
+	}
+
+
+	@RequestMapping(value = "/jiraIssue/{id}", method = RequestMethod.GET)
+	public String jiraIssue(@PathVariable("id") final String id, final Model model) {
+		final Issue issue = jiraIssueService.findOne(id);
 		model.addAttribute("issue", issue);
 		model.addAttribute("referenceData", referenceData());
 		return "issue";
@@ -192,12 +206,21 @@ public class IssueController extends AbstractController<Issue> {
 				.currentRequestAttributes();
 		return attr.getRequest().getSession(true);
 	}
+
+	@RequestMapping(value = "/edit-issue/{id}", method = RequestMethod.GET)
+	public String editIssue(@PathVariable("id") final Long id, final Model model) {
+		final Issue issue = service.findOne(id);
+		model.addAttribute("issue", issue);
+		model.addAttribute("referenceData", referenceData());
+		
+		final HttpSession session = getSession();
+		session.setAttribute("issue", issue);
+		return "issuesedit";
+	}
 	
 	private List<RevisionHistory> buildRevisionHistory(Issue oldIssue,
 			Issue issue, Principal principal) {
 		List<RevisionHistory> returnList = new ArrayList<RevisionHistory>();
-		final java.util.Date date = new java.util.Date();
-		final Timestamp timeStamp = new Timestamp(date.getTime());
 		RevisionHistory revisionHistory = null;
 		if (!oldIssue.getPriority().equalsIgnoreCase(
 				issue.getPriority())){
@@ -205,10 +228,10 @@ public class IssueController extends AbstractController<Issue> {
 			revisionHistory.setPrincipal(principal);
 			revisionHistory.setPrincipalId(principal.getId());
 			revisionHistory.setIssueId(issue.getId());
+			
 			revisionHistory.setText("Priority String : " + oldIssue.getPriority() + " - "
 					+ oldIssue.getPriority());
 			revisionHistory.setIssue(issue);
-			revisionHistory.setUpdatedAt(timeStamp);
 			returnList.add(revisionHistory);
 		}
 		
@@ -221,7 +244,6 @@ public class IssueController extends AbstractController<Issue> {
 			revisionHistory.setText("Risk Level : " + oldIssue.getStatus() + " - "
 					+ issue.getStatus());
 			revisionHistory.setIssue(issue);
-			revisionHistory.setUpdatedAt(timeStamp);
 			returnList.add(revisionHistory);
 		}
 		return returnList;
@@ -246,21 +268,10 @@ public class IssueController extends AbstractController<Issue> {
 		} else {
 			service.create(issue);
 			model.addAttribute("success", "success.issue.created");
-			returnView = "redirect:issues";
+			returnView = "redirect:project/" + project.getId()
+					+ "?page=issues&success=2";
 		}
 		return returnView;
-	}
-	
-
-	@RequestMapping(value = "/edit-issue/{id}", method = RequestMethod.GET)
-	public String editIssue(@PathVariable("id") final Long id, final Model model) {
-		final Issue issue = service.findOne(id);
-		model.addAttribute("issue", issue);
-		model.addAttribute("referenceData", referenceData());
-		
-		final HttpSession session = getSession();
-		session.setAttribute("issue", issue);
-		return "issuesedit";
 	}
 
 	@RequestMapping(value = "/edit-issue", method = RequestMethod.POST)
@@ -293,7 +304,7 @@ public class IssueController extends AbstractController<Issue> {
 				revisionHistoryService.bulkCreate(histList);
 			}
 			model.addAttribute("success", "success.issue.updated");
-			returnView = "redirect:/app/issues";
+			returnView = "redirect:issues";
 		}
 		model.addAttribute("issue", issue);
 		model.addAttribute("referenceData", referenceData());
@@ -308,7 +319,7 @@ public class IssueController extends AbstractController<Issue> {
 		service.delete(id);
 		model.addAttribute("success", "success.issue.deleted");
 		if (returnPage.equalsIgnoreCase("")) {
-			returnView = "forward:/app/issues";
+			returnView = "forward:issues";
 		} else {
 			returnView = "forward:" + returnPage;
 		}

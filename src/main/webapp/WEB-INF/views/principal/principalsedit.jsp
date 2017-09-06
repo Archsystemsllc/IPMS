@@ -73,6 +73,14 @@
                                         </li>
                                         
                                         <li>
+                                            <div class="form_grid_12">
+                                                <label for="email" class="field_title">JIRA User Name</label>
+                                                <div class="form_input">
+                                                    <form:input type="text" id="jiraUsername" class="mid" name="jiraUsername" path="jiraUsername" ></form:input>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
                                 <div class="form_grid_12">
                                   
 							   <table>

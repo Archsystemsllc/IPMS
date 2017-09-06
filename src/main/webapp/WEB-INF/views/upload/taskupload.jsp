@@ -42,7 +42,7 @@
                        	<ul>                          
                              <li>
                                 <div class="form_grid_12">
-                                    <label for="programId" class="field_title required">Vertical Groups</label>
+                                    <label for="programId" class="field_title required">Program</label>
                                     <div class="form_input">
                                         <form:select id="programId" name="programId" path="programId" class="mid">
                                              <form:options items="${referenceData.currentUserProgramlist}"  />
@@ -52,7 +52,7 @@
                             </li>
                             <li>
                                 <div class="form_grid_12">
-                                    <label for="projectId" class="field_title required">Models</label>
+                                    <label for="projectId" class="field_title required">Project</label>
                                     <div class="form_input">
                                         <form:select id="projectId" name="projectId" path="projectId" class="mid">
                                             <form:options items="${referenceData.currentUserProjectlist}"  />

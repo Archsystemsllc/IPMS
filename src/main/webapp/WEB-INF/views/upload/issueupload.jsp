@@ -20,14 +20,10 @@
                            action="upload" method="post">
                     <div class="widget_content">
                     	<span class="subheader-title">Issues Upload</span>
-                         <c:if test="${not empty programMessage}">
+                         <c:if test="${not empty message}">
+                         	<br />
 				  			 <div class="errorblock">
-								<c:out value="${programMessage}" />
-				    		</div>  
-			    		 </c:if>
-			    		 <c:if test="${not empty projectMessage}">
-				  			 <div class="errorblock">
-								<c:out value="${projectMessage}" />
+								<c:out value="${message}" />
 				    		</div>  
 			    		 </c:if>
                    		<c:if test="${not empty fileUploadSuccess}">

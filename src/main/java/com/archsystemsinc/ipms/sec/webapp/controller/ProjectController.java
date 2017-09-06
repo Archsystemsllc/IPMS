@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.archsystemsinc.ipms.jira.service.IJIRASService;
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
 import com.archsystemsinc.ipms.sec.model.Principal;
@@ -96,6 +98,10 @@ public class ProjectController extends AbstractController<Project> {
     @Autowired
     private IRiskService riskService;
 
+
+    @Autowired
+    private IJIRASService jiraService;
+
 	@Override
 	@InitBinder
 	public void initBinder(final WebDataBinder binder) {
@@ -131,6 +137,7 @@ public class ProjectController extends AbstractController<Project> {
 		model.addAttribute("currentUser", currentUser);
         try{
 		final Project project = service.findOne(id);
+		project.setJiraProjectName(jiraService.getJIRAProjectName(project.getJiraProjectKey()));
         List<ProjectEvm> projectEvmList = projectEvmService.findByProjectOrderByDateAsc(project);
 		model.addAttribute("project", project);
 		String messageString = request.getParameter("success");
@@ -141,9 +148,6 @@ public class ProjectController extends AbstractController<Project> {
 				model.addAttribute("success","success.meeting.created");
 			} else if(messageId == 2) {
 				model.addAttribute("success","success.issue.created");
-			}
-				else if(messageId == 3) {
-					model.addAttribute("success","success.risk.created");
 			}
 			   
 		}
@@ -329,6 +333,14 @@ public class ProjectController extends AbstractController<Project> {
 					.get(i).getName());
 		}
 		referenceData.put("programList", prList);
+		
+		final Map<String, String> jiraProjectList = new TreeMap<>();
+		jiraProjectList.put("", "");
+		for(net.rcarz.jiraclient.Project project:jiraService.findAllProjects()) {
+			jiraProjectList.put(project.getKey(), project.getName());
+		}
+		referenceData.put("jiraProjectList", jiraProjectList);
+		
 		return referenceData;
 	}
 

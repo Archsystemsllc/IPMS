@@ -212,6 +212,15 @@
 						</li>
 						<li><a href="${pageContext.request.contextPath}/app/projectevm/evmprojects"><span
 								class="list-icon">&nbsp;</span>Financial Management</a></li>
+=======
+						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
+								class="list-icon">&nbsp;</span>Financial Management</a>
+								<ul style="text-indent:10px">					
+									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">Upload Financial</a></li>
+									<li><a href="${pageContext.request.contextPath}/app/choosefinancialreport">Financial Report</a></li>
+								</ul>
+						</li>
+>>>>>>> branch 'master' of https://github.com/Archsystemsllc/ipms.git
 						<li><a href="${pageContext.request.contextPath}/app/risks"><span
 								class="list-icon">&nbsp;</span>Risk Management</a>
 								<ul style="text-indent:10px">					
@@ -251,7 +260,8 @@
 											class="list-icon">&nbsp;</span>Upload Action Items</a></li>
 									<li><a href="${pageContext.request.contextPath}/app/actionitems">View Action items</a></li>				
 								</ul>
-					
+					<li><a href="${pageContext.request.contextPath}/app/sharepoint"><span
+								class="list-icon">&nbsp;</span>SharePoint</a></li>
 				</li>
 				</sec:authorize>
 				<sec:authorize

@@ -34,7 +34,12 @@
                                 <div class="form_grid_12">
                                     <label class="field_title">ID</label>
                                     <div class="form_input">
-                                        <span class="uneditable-input mid">${issue.id }</span>
+                                    	<c:if test="${issue.source =='IPMS'}">
+                                        	<span class="uneditable-input mid">${issue.id }</span>
+                                       	</c:if>
+                                    	<c:if test="${issue.source =='JIRA'}">
+                                        	<span class="uneditable-input mid">${issue.jiraId }</span>
+                                       	</c:if>
                                     </div>
                                 </div>
                             </li>

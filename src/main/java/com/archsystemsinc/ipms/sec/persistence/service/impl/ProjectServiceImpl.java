@@ -110,4 +110,8 @@ IProjectService {
 		return dao.findByProgram(program);
 	}
 
+	@Override
+	public Project findByJiraProjectKey(String jiraProjectKey) {
+		return dao.findByJiraProjectKey(jiraProjectKey);
+	}
 }

@@ -14,7 +14,11 @@
 			<version>5.3.4</version>
 		</dependency>
 
-
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20170516</version>
+</dependency>
 
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -415,7 +419,35 @@
 			<artifactId>poi</artifactId>
 			<version>3.15</version>
 		</dependency>
-
+		
+		<!-- JIRA -->
+		<dependency>
+			<groupId>net.rcarz</groupId>
+			<artifactId>jira-client</artifactId>
+			<version>0.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!--  Outlook -->
+		<dependency>
+			<groupId>com.microsoft.ews-java-api</groupId>
+			<artifactId>ews-java-api</artifactId>
+			<version>2.0</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
