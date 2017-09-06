@@ -156,7 +156,7 @@ $(function(){
                             <c:if test="${not meeting.projectMeeting}">
                                 <li>
                                     <div class="form_grid_12">
-                                        <label for="programId" class="field_title">Program</label>
+                                        <label for="programId" class="field_title">Vertical Group</label>
                                         <div class="form_input">
                                             <c:if test="${empty meeting.program }">
                                                 <form:select id="programId" name="programId"

@@ -63,6 +63,7 @@
                                                     <form:select id="assignedToId" name="assignedToId" path="assignedToId" class="mid">
                                                         <form:options items="${referenceData.assignedToList}"  />
                                                     </form:select>
+                                                    <%-- <form:textarea type="text" class="mid" id="assignedToId" name="assignedToId" path="assignedToId" ></form:textarea> --%>
                                                 </div>
                                             </div>
                                         </li>
@@ -72,8 +73,9 @@
 
                                                 <div class="form_input">
                                                     <form:select id="createdById" name="createdById" path="createdById" class="mid">
-                                                        <form:options items="${referenceData.createdByList}"  />
+                                                        <form:options items="${referenceData.currentUserProjectlist}"  />
                                                     </form:select>
+                                                    <%-- <form:textarea type="text" class="mid" id="createdById" name="createdById" path="createdById" ></form:textarea> --%>
                                                 </div>
                                             </div>
                                         </li>

@@ -87,7 +87,6 @@ public class RevisionHistoryServiceImpl extends
 	@Override
 	public void bulkCreate(Iterable<RevisionHistory> itms) {
 		dao.save(itms);
-		
 	}
 
 	@Override

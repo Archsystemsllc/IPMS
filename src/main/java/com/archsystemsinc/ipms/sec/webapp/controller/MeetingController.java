@@ -736,7 +736,8 @@ public class MeetingController extends AbstractController<Meeting> {
 			if(project!=null)
 				returnView = "redirect:project/"+project.getId()+"?page=meetings&success=1";
 			else if(program!=null)
-				returnView = "redirect:program/"+program.getId()+"?page=meetings&success=1";
+				returnView = "redirect:program";
+				/*returnView = "redirect:program/"+program.getId()+"?page=meetings&success=1";*/
 			else
 			    returnView = "forward:meetings";
 		} 

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan({ "com.archsystemsinc.ipms.util.webapp" })
+@ComponentScan({ "com.archsystemsinc.ipms.util.webapp"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Bean

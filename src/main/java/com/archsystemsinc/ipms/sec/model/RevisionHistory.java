@@ -70,7 +70,7 @@ public class RevisionHistory implements INameableEntity {
 	@Column(unique = true, nullable = true)
 	private String name;
 
-	@Column(name = "updated_at", nullable = false)
+	@Column(name = "updated_at", nullable = true)
 	private Timestamp updatedAt;
 	
 	@Column(name = "principal_id")

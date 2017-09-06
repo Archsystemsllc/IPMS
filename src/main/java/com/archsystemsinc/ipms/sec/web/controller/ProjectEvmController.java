@@ -9,6 +9,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ import com.archsystemsinc.ipms.util.SearchCommonUtil;
 import com.archsystemsinc.ipms.web.common.AbstractController;
 
 @Controller
-@RequestMapping( value = "projectevm" )
+@RequestMapping( value = "/projectevm" )
 public class ProjectEvmController extends AbstractController< ProjectEvm >{
 
 	@Autowired private IProjectEvmService service;
@@ -133,11 +134,11 @@ public class ProjectEvmController extends AbstractController< ProjectEvm >{
 	protected final IProjectEvmService getService(){
 		return service;
 	}
-	/*@RequestMapping(value = "/evmprojects", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/evmprojects", method = RequestMethod.GET)
 	public String viewFinancialPage(final Model model) {
-		System.out.println("projectevmcontroller class: viewFinancialPage method::::::::::::::::::::::::");
 		model.addAttribute("evmprojects", new ProjectEvm());
 		return "evmprojects";
-	}*/
+	}
 
 }

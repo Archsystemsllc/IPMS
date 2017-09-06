@@ -47,7 +47,7 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Program Name</th>
+                            <th>Vertical Group Name</th>
                             <th>Project Name</th>
                             <th>Created By</th>
                             <th>Assigned To</th>

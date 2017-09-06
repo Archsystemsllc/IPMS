@@ -210,7 +210,7 @@
 									<li><a href="${pageContext.request.contextPath}/app/tasks">View Tasks</a></li>				
 								</ul>
 						</li>
-						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
+						<li><a href="${pageContext.request.contextPath}/app/projectevm/evmprojects"><span
 								class="list-icon">&nbsp;</span>Financial Management</a></li>
 						<li><a href="${pageContext.request.contextPath}/app/risks"><span
 								class="list-icon">&nbsp;</span>Risk Management</a>
@@ -241,9 +241,15 @@
 						<li><a href="${pageContext.request.contextPath}/app/new-project"><span
 								class="list-icon">&nbsp;</span>Add Project</a></li>						
 					</ul>
+						
+						<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned"><span
+											class="list-icon">&nbsp;</span>Upload Lessons Learned</a></li>	
 										<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned">Upload Lessons Learned</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems">Upload Action Items</a></li>				
+									
+									<li><a href="${pageContext.request.contextPath}/app/lessonslearned">View Lessons Learned</a></li>
+									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems"><span
+											class="list-icon">&nbsp;</span>Upload Action Items</a></li>
+									<li><a href="${pageContext.request.contextPath}/app/actionitems">View Action items</a></li>				
 								</ul>
 					
 				</li>

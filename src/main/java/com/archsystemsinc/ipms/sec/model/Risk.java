@@ -56,7 +56,7 @@ public class Risk implements INameableEntity {
 	@NotEmpty
 	private String likelihood;
 
-	@Column(nullable = true)
+	@Column(name="impact", nullable = true)
 	@NotEmpty
 	private String impact;
 

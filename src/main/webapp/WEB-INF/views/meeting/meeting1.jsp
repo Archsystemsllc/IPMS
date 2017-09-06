@@ -126,7 +126,7 @@
 										<c:if test="${not empty(meeting.program) }">
 											<li>
 												<div class="form_grid_12">
-													<label class="field_title">Program</label>
+													<label class="field_title">Vertical Group</label>
 													<div class="form_input">
 														<span class="uneditable-input mid">${meeting.program.name
 															}</span>

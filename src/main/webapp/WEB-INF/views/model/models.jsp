@@ -69,7 +69,7 @@ $(document).ready(function(){
 								<th class="center" title="Model Id">ID</th>
 								<th title="Model Names with project dropdown">Model Name</th>
 								<th title="User Assigned to the Model">Manager</th>
-								<th title="User Assigned to the Model">Program Name</th>
+								<th title="User Assigned to the Model">Vertical Group Name</th>
 								<!--<th title="No of Issues"># of Issues</th>-->
 								<th title="Model Start Date">Start Date</th>
 								<th title="Model End Date">End Date</th>

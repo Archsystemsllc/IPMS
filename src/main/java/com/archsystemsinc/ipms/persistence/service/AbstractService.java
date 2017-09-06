@@ -141,13 +141,13 @@ public abstract class AbstractService<T extends INameableEntity> implements ISer
 
 	@Override
 	public void update(final T entity) {
-		Preconditions.checkNotNull(entity);
+		Preconditions.checkNotNull(entity);	
 
 		getDao().save(entity);
 		final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-
 		eventPublisher.publishEvent(new EntityUpdatedEvent<T>(this, clazz,
 				entity, emailer, iUserActivityJpaDAO, currentUser));
+
 	}
 
 	// delete

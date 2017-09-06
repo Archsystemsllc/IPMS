@@ -42,7 +42,7 @@ import org.springframework.web.servlet.view.tiles2.TilesView;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan({ "com.archsystemsinc.ipms.sec.webapp.controller" })
+@ComponentScan({ "com.archsystemsinc.ipms.sec.webapp.controller","com.archsystemsinc.ipms.sec.web" })
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired

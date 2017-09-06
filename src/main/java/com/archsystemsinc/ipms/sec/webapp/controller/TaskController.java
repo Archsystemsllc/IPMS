@@ -215,7 +215,7 @@ public class TaskController extends AbstractController<Task> {
 			revisionHistory.setPrincipalId(principal.getId());
 			revisionHistory.setTaskId(task.getId());
 			
-			revisionHistory.setText("Risk Level : " + oldTask.getStatus() + " - "
+			revisionHistory.setText("Task Level : " + oldTask.getStatus() + " - "
 					+ task.getStatus());
 			revisionHistory.setTask(task);
 			long time = (new Date()).getTime();
@@ -316,16 +316,17 @@ public class TaskController extends AbstractController<Task> {
 	}
 
 	@RequestMapping(value = "/edit-task", method = RequestMethod.POST)
-	public String updateTask(@Valid @ModelAttribute("task") final Task task,
-			final BindingResult result, final Model model) {
+	public String updateTask(@Valid @ModelAttribute("task") final Task task, final BindingResult result, final Model model) {
 		String returnView = "";
 		// using name as long --bad idea
+		
 		final Principal assignedTo = principalService.findOne(task
 				.getAssignedToId());
+		
 		final Principal createdBy = principalService.findOne(task
 				.getCreatedById());
 		if (task.getProgramId() != null) {
-
+			
 			final Program program = programService.findOne(task.getProgramId());
 			final Project project = projectService.findOne(task.getProgramId());
 
@@ -355,9 +356,10 @@ public class TaskController extends AbstractController<Task> {
 		}		
 		model.addAttribute("task", task);
 		model.addAttribute("referenceData", referenceData());
+		
 		return returnView;
 	}
-
+	
 	protected Map referenceData() {
 		final Map referenceData = new HashMap();
 		final List<Principal> list = principalService.findAll();
@@ -365,7 +367,7 @@ public class TaskController extends AbstractController<Task> {
 		for (int i = 0; i < list.size(); i++) {
 			aList.put(list.get(i).getId().intValue(), list.get(i).getName());
 		}
-		referenceData.put("assignList", aList);
+		referenceData.put("assignedToList", aList);
 
 		final List<Project> projectlist = projectService.findActiveProjects();
 		final Map<Integer, String> pList = new LinkedHashMap<Integer, String>();
@@ -394,7 +396,8 @@ public class TaskController extends AbstractController<Task> {
 			cpgList.put(currentUserProgramlist.get(i).getId().intValue(), currentUserProgramlist.get(i)
 					.getName());
 		}
-		referenceData.put("currentUserProgramlist", cpgList);
+		/*referenceData.put("currentUserProgramlist", cpgList);*/
+		referenceData.put("programList", cpgList);
 		
 		final Map<String, String> priorityList = new LinkedHashMap<String, String>();
 		priorityList.put(ActionItemPriority.High.toString(),
@@ -418,6 +421,16 @@ public class TaskController extends AbstractController<Task> {
 				IssueStatus.Resolved.toString());
 		referenceData.put("statusList", sList);
 
+		
+		/*for created by dropdown list*/
+		
+		/*final Map<String, String> cList = new LinkedHashMap<String, String>();
+		cList.put(CreatedStatus.admin.toString(), CreatedStatus.admin.toString());
+		cList.put(CreatedStatus.user.toString(), CreatedStatus.user.toString());
+		cList.put(CreatedStatus.others.toString(),CreatedStatus.others.toString());
+		referenceData.put("createdByList", cList);*/
+		
+		
 		return referenceData;
 	}
 	

@@ -223,7 +223,8 @@ public class LessonsLearnedController extends
 			model.addAttribute("success", "success.lessonsLearned.created");
 			if (meeting != null) {
 				model.addAttribute("page", "lessons");
-				returnView = "redirect:/app/meeting/" + meeting.getId();
+				returnView = "redirect:/app/issues/";
+				/*returnView = "redirect:/app/meeting/" + meeting.getId();*/
 			} else {
 				returnView = "redirect:artifacts";
 			}

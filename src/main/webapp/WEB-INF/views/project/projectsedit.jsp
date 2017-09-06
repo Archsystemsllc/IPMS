@@ -22,7 +22,7 @@ $(function(){
             <a href="${pageContext.request.contextPath}/app/groupdashboard">Home</a> <span> >> </span>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/app/projects">Projects</a> <span> >> </span>
+            <a href="${pageContext.request.contextPath}/app/projects">Vertical Groups</a> <span> >> </span>
         </li>
         <li>
             <a href="#" style="text-decoration: none;">Edit Model</a>
@@ -55,7 +55,7 @@ $(function(){
                                     <ul>
                                         <li>
                                             <div class="form_grid_12">
-                                                <label for="programId" class="field_title">Program</label>
+                                                <label for="programId" class="field_title">Vertical Group</label>
 
                                                 <div class="form_input">
                                                     <form:select id="programId" name="programId" path="programId">
