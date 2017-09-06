@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.poi.service.UploadService;
 import com.archsystemsinc.ipms.sec.model.FinancialExpenses;
 import com.archsystemsinc.ipms.sec.model.FinancialHours;
 import com.archsystemsinc.ipms.sec.model.FinancialReportType;
+import com.archsystemsinc.ipms.sec.model.FinancialsUpload;
 import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.model.dto.FinancialReportSearchParams;
@@ -93,14 +96,28 @@ public class FinancialController {
 	
 	@RequestMapping(value = "/uploadfinancial" , method = RequestMethod.GET)
 	public String uploadFinancial(final Model model) {
-		//final Issue issue = new Issue();
-		//final Metrics metrics = new Metrics();
-		model.addAttribute(new FileUpload());
-		//model.addAttribute("metrics", metrics);
+		model.addAttribute(new FinancialsUpload());
 		model.addAttribute(("referenceData"), referenceData());
 		return "uploadfinancial";
 	}
 	
+	@RequestMapping(value = "/uploadfinancial", method = RequestMethod.POST)
+	public String uploadFinancial(@ModelAttribute("financialsUpload") final FinancialsUpload uploadItem, final Principal principal,
+			final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes, final Model model) throws InvalidFormatException {		
+				
+	if(result.hasErrors()) {
+		redirectAttributes.addFlashAttribute("fileUploadError", "error.upload.internal.problem");
+		return "redirect:uploadfinancial";
+	} else {
+		//Delegate to UploadService
+		String returnString = uploadService.uploadXLS(uploadItem, redirectAttributes);
+		if(returnString.equalsIgnoreCase("fileUploadError")) {
+			return "redirect:uploadfinancial";
+		} else {
+			return returnString;
+		}
+	}
+  }
 	
 	private void chooseReport(FinancialReportSearchParams searchParam,Model model) {
 		Map referenceData = referenceData();
