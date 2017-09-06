@@ -16,25 +16,33 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.archsystemsinc.ipms.sec.model.ActionItem;
+import com.archsystemsinc.ipms.sec.model.FinancialsUpload;
+import com.archsystemsinc.ipms.sec.model.Forecast;
 import com.archsystemsinc.ipms.sec.model.Issue;
 import com.archsystemsinc.ipms.sec.model.LessonsLearned;
 import com.archsystemsinc.ipms.sec.model.Meeting;
 import com.archsystemsinc.ipms.sec.model.MeetingMinutes;
+import com.archsystemsinc.ipms.sec.model.OrganizationCategory;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.model.Task;
+import com.archsystemsinc.ipms.sec.model.WBSBudget;
 import com.archsystemsinc.ipms.sec.persistence.service.IActionItemService;
+import com.archsystemsinc.ipms.sec.persistence.service.IForecastService;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
+import com.archsystemsinc.ipms.sec.persistence.service.IOrganizationCategoryService;
 import com.archsystemsinc.ipms.sec.persistence.service.ITaskService;
 import com.archsystemsinc.ipms.sec.persistence.service.ILessonsLearnedService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingMinutesService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
+import com.archsystemsinc.ipms.sec.persistence.service.IWBSBudgetService;
 import com.archsystemsinc.ipms.sec.util.GenericConstants;
 import com.archsystemsinc.ipms.sec.webapp.controller.FileUpload;
 
@@ -69,6 +77,15 @@ public class UploadService {
 	
 	@Autowired
 	private ITaskService taskservice;
+	
+	@Autowired
+	private IForecastService forecastService;
+	
+	@Autowired
+	private IOrganizationCategoryService orgcatService;
+	
+	@Autowired
+	private IWBSBudgetService wbsbudgetService;
 	
 	@Autowired
 	private IMeetingMinutesService meetingminutesService;
@@ -110,6 +127,10 @@ public class UploadService {
 	public final static String MEETING_MINUTES_VIEW = "/app/meetingminutes";
 	
 	public final static String MEETING_MINUTES_UPLOAD = "/app/meetingminutesupload";
+	
+	public final static String EVM_UPLOAD = "/app/uploadfinancial";
+
+		
 	
 	
 	/**
@@ -418,6 +439,176 @@ public class UploadService {
 		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
 		return REDIRECT + ACTIONITEMS_VIEW;	
 	}
+	
+	public String uploadXLS(FinancialsUpload uploadItem, final RedirectAttributes redirectAttributes) {
+		String returnString = "";
+		try {
+						
+			if(uploadItem.getProjectId()== 0){
+				redirectAttributes.addFlashAttribute("projectrequirederror","NotNull.financial.projectId");
+				return "redirect:/app/uploadfinancial";
+			}else {
+				if(uploadItem.getForecastFileData().getSize()!=0){
+					returnString = uploadForecast(uploadItem,redirectAttributes);
+				}
+				if(uploadItem.getOrganizationcategoryFileData().getSize()!= 0){
+					returnString = uploadOrganizatinCategory(uploadItem,redirectAttributes);
+				}
+				if(uploadItem.getWbsFileData().getSize()!=0){
+					returnString = uploadWBSBudget(uploadItem,redirectAttributes);
+				}
+				if(uploadItem.getForecastFileData().getSize()==0 && uploadItem.getOrganizationcategoryFileData().getSize()==0 && uploadItem.getWbsFileData().getSize()==0) {
+					redirectAttributes.addFlashAttribute("fileUploadNull", "error.upload.missing");
+					return REDIRECT + EVM_UPLOAD;
+				}
+			}
+		}
+		catch (Exception e) {
+			logger.debug(e.getStackTrace());
+			System.out.println(e.getStackTrace());
+			System.out.println("error");
+			redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INTERNAL_PROBLEM);
+			return FILE_UPLOAD_ERROR;
+		}
+		return returnString;
+	}
+
+	public String uploadForecast(FinancialsUpload uploadItem,final RedirectAttributes redirectAttributes) {
+		
+			Project project = projectService.findOne(uploadItem.getProjectId());
+			final String currentUser = SecurityContextHolder.getContext()
+					.getAuthentication().getName();
+			try {
+				fileExcel = WorkbookFactory.create(uploadItem.getForecastFileData().getInputStream());
+				firstFileSheet = fileExcel.getSheetAt(0);
+				if(firstFileSheet.getFirstRowNum()  < firstFileSheet.getLastRowNum())
+				{
+				Forecast forecast = null;
+			 for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+					forecast= new Forecast();
+		              Row ro=firstFileSheet.getRow(r);
+		              forecast.setTotalAmount(ro.getCell(0).getNumericCellValue());
+		              forecast.setStartAmount(ro.getCell(1).getNumericCellValue());
+		              forecast.setSpentAmount(ro.getCell(2).getNumericCellValue());
+		              forecast.setLeftAmount(ro.getCell(3).getNumericCellValue());
+		              forecast.setDate(ro.getCell(4).getDateCellValue());
+		              forecast.setDatecreated(ro.getCell(5).getDateCellValue());
+		              forecast.setDateupdated(ro.getCell(6).getDateCellValue());
+           			  forecast.setProject(project);
+				  forecastService.create(forecast);
+			 }
+			}  
+				else {
+					redirectAttributes.addFlashAttribute("forecastUploadError", "forecast.upload.error");
+					return REDIRECT + EVM_UPLOAD ;
+				}
+			}catch(ConstraintViolationException ce) {
+				Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+				for(ConstraintViolation<?> v: cv) {
+					if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+					} else {
+						redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+					}	
+				 return REDIRECT + EVM_UPLOAD;
+				}
+			 }catch (InvalidFormatException | IOException e1) {
+				 System.out.println("Error in I/O");
+					redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INVALID_FORMAT);
+					return FILE_UPLOAD_ERROR;
+				} 
+		redirectAttributes.addFlashAttribute("forecastUploadSuccess", "forecast.upload.success");
+		 return REDIRECT + EVM_UPLOAD;
+		
+	}
+	public String uploadOrganizatinCategory(FinancialsUpload uploadItem,
+			RedirectAttributes redirectAttributes) {
+		
+		Project project = projectService.findOne(uploadItem.getProjectId());
+		 try {
+			 	//Principal resource = principalService.findOne(2);
+				fileExcel = WorkbookFactory.create(uploadItem.getOrganizationcategoryFileData().getInputStream());
+				firstFileSheet = fileExcel.getSheetAt(0);
+				if(firstFileSheet.getFirstRowNum()  < firstFileSheet.getLastRowNum())
+				{
+				OrganizationCategory orgcat= null;
+				for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+					orgcat = new OrganizationCategory();
+		              Row ro=firstFileSheet.getRow(r);
+		                orgcat.setRate(ro.getCell(0).getNumericCellValue());
+		                orgcat.setCategory(ro.getCell(1).getStringCellValue());
+		                orgcat.setDateupdated(ro.getCell(2).getDateCellValue());
+		                orgcat.setDatecreated(ro.getCell(3).getDateCellValue());
+				        orgcat.setProject(project);
+				     //   orgcat.setResourceId(resource);
+		              orgcatService.create(orgcat);
+				}      
+			}
+			else {
+					redirectAttributes.addFlashAttribute("orgcatUploadError", "orgcat.upload.error");
+					return REDIRECT + EVM_UPLOAD ;
+				}
+		 	}catch(ConstraintViolationException ce) {
+	  				Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+					for(ConstraintViolation<?> v: cv) {
+						if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+							redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+						} else {
+							redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+						}	
+					 return REDIRECT + EVM_UPLOAD;
+					}
+				 }catch (InvalidFormatException | IOException e1) {
+						redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INVALID_FORMAT);
+						return FILE_UPLOAD_ERROR;
+					} 
+				redirectAttributes.addFlashAttribute("orgcatUploadSuccess", "orgcat.upload.success");
+				return REDIRECT + EVM_UPLOAD;
+			}
+		
+	public String uploadWBSBudget(FinancialsUpload uploadItem,final RedirectAttributes redirectAttributes) {
+		try {
+		//Project project = projectService.findOne(uploadItem.getProjectId());
+		//Task task = taskService.findOne(26);
+		final String currentUser = SecurityContextHolder.getContext()
+				.getAuthentication().getName();
+		
+			fileExcel = WorkbookFactory.create(uploadItem.getWbsFileData().getInputStream());
+			firstFileSheet = fileExcel.getSheetAt(0);
+			if(firstFileSheet.getFirstRowNum()  < firstFileSheet.getLastRowNum())
+			{
+			WBSBudget wbsbudget = null;
+			for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
+				wbsbudget = new WBSBudget();
+				Row ro=firstFileSheet.getRow(r);
+				wbsbudget.setDatecreated(ro.getCell(0).getDateCellValue());
+				wbsbudget.setDateupdated(ro.getCell(1).getDateCellValue());
+              // wbsbudget.setTask(task);
+				wbsbudgetService.create(wbsbudget);
+			}
+		  } else {
+				redirectAttributes.addFlashAttribute("wbsUploadError", "wbs.upload.error");
+				return REDIRECT + EVM_UPLOAD ;
+			}
+		   
+		}catch(ConstraintViolationException ce) {
+			Set<ConstraintViolation<?>> cv = ce.getConstraintViolations();
+			for(ConstraintViolation<?> v: cv) {
+				if(v.getPropertyPath() == null || v.getPropertyPath().toString().isEmpty()) {
+					redirectAttributes.addFlashAttribute("message", "Constraint Violation ! Please resolve : " +v.getMessage());
+				} else {
+					redirectAttributes.addFlashAttribute("message", "Constraint Violation for " +excelColumnMap.get(v.getPropertyPath().toString()) + " ! Please resolve : " + v.getMessage());
+				}	
+				return REDIRECT + EVM_UPLOAD;
+		   }
+		}catch (InvalidFormatException | IOException e1) {
+		redirectAttributes.addFlashAttribute(FILE_UPLOAD_ERROR, ERROR_UPLOAD_INVALID_FORMAT);
+		return FILE_UPLOAD_ERROR;
+	} 
+		
+	redirectAttributes.addFlashAttribute("wbsUploadSuccess", "wbs.upload.success");
+	return REDIRECT + EVM_UPLOAD;
+	} 
 	
 	/**
 	 * This method constructs a map between Java entity and Excel file template Header based on the type of upload.

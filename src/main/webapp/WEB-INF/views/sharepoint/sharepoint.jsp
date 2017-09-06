@@ -70,6 +70,18 @@ $(function(){
         window.location.href = $(this).data('url');
     });
 	
+	
+	$('#uploadForm').submit(function() {
+		var fileName = $("#fileData").val().split('\\').pop();
+		if(fileName == ""){
+			alert("Please select a file to upload!");
+			return false;
+		}else{
+			var c = confirm("Do you want to upload file "+fileName+" ?");
+		    return c; //you can just return c because it will be true or false
+		}
+	    
+	});
 	});
 </script>
 <div id="breadcrumb">
@@ -156,7 +168,7 @@ $(function(){
                     <h6>Upload File</h6>
                 </div>
                 <form:form modelAttribute="sharePointFile" enctype="multipart/form-data" class="form_container left_label"
-                           action="${pageContext.request.contextPath}/app/uploadFile" method="post">
+                           action="${pageContext.request.contextPath}/app/uploadFile" method="post" id="uploadForm">
                     <div class="widget_content">
                      
                     <form:input type="hidden" id="folderName" name="folderName" path="folderName" value="${selectedFolder}"/>

@@ -13,30 +13,65 @@
             <div class="widget_wrap">
                 <div class="widget_top">
                     <span class="h_icon list_image"></span>
-                    <h6>Financial Upload</h6>
+                    <h6>EVM Upload</h6>
                 </div>
-                <form:form modelAttribute="fileUpload" enctype="multipart/form-data" class="form_container left_label"
+                <form:form modelAttribute="financialsUpload" enctype="multipart/form-data" class="form_container left_label"
                            action="uploadfinancial" method="post">
                     <div class="widget_content">
-					<span class="subheader-title">Financial Upload</span>
+					<span class="subheader-title">EVM Upload</span>
                          <c:if test="${not empty message }">
 				 			 <div>
 								<h4 class="errorblock"><c:out value="${message}" /></h4>
   							 </div>  
 			   			 </c:if>
-			   			<c:if test="${not empty meetingrequirederror}">
+			   			 <c:if test="${not empty projectrequirederror}">
 							<div class="errorblock">
-								<spring:message code="${meetingrequirederror}"></spring:message>
+								<spring:message code="${projectrequirederror}"></spring:message>
 							</div>
 						</c:if>
-			   			 <c:if test="${not empty fileUploadSuccess}">
+			   			 <c:if test="${not empty forecastUploadSuccess}">
+							<div class="successblock">
+								<spring:message code="${forecastUploadSuccess}"></spring:message>
+							</div>
+						</c:if>
+						<c:if test="${not empty forecastUploadError}">
 							<div class="errorblock">
+								<spring:message code="${forecastUploadError}"></spring:message>
+							</div>
+						</c:if>
+						<c:if test="${not empty orgcatUploadSuccess}">
+							<div class="successblock">
+								<spring:message code="${orgcatUploadSuccess}"></spring:message>
+							</div>
+						</c:if>
+						<c:if test="${not empty orgcatUploadError}">
+							<div class="errorblock">
+								<spring:message code="${orgcatUploadError}"></spring:message>
+							</div>
+						</c:if>
+			   			<c:if test="${not empty wbsUploadSuccess}">
+							<div class="successblock">
+								<spring:message code="${wbsUploadSuccess}"></spring:message>
+							</div>
+						</c:if>
+						<c:if test="${not empty wbsUploadError}">
+							<div class="errorblock">
+								<spring:message code="${wbsUploadError}"></spring:message>
+							</div>
+						</c:if>
+						<c:if test="${not empty fileUploadError}">
+							<div class="errorblock">
+								<spring:message code="${fileUploadError}"></spring:message>
+							</div>
+						 </c:if>
+			   			 <c:if test="${not empty fileUploadSuccess}">
+							<div class="successblock">
 								<spring:message code="${fileUploadSuccess}"></spring:message>
 							</div>
 						 </c:if>
-					     <c:if test="${not empty fileUploadError}">
+					     <c:if test="${not empty fileUploadNull}">
 							<div class="errorblock">
-								<spring:message code="${fileUploadError}"></spring:message>
+								<spring:message code="${fileUploadNull}"></spring:message>
 							</div>
 						 </c:if>
                          <form:errors path="*" cssClass="errorblock" element="div" />
@@ -51,27 +86,28 @@
                                     </div>
                                 </div>
                             </li>
-                      		<li>
+                            
+                             <li>
                                 <div class="form_grid_12">
-                                    <label for="fileData" class="field_title required">WBS File</label>
+                                    <label for="forecastFileData" class="field_title">Forecast File</label>
                                     <div class="form_input">
-                                        <form:input type="file" id="fileData" name="fileData" path="fileData" />
+                                        <form:input type="file" id="forecastFileData" name="forecastFileData" path="forecastFileData" />
                                     </div>
                                 </div>
                             </li>
-                          	  <li>
+                            <li>
                                 <div class="form_grid_12">
-                                    <label for="fileData" class="field_title required">Organization Category File</label>
+                                    <label for="organizationcategoryFileData" class="field_title">Organization Category File</label>
                                     <div class="form_input">
-                                        <form:input type="file" id="fileData" name="fileData" path="fileData" />
+                                        <form:input type="file" id="organizationcategoryFileData" name="organizationcategoryFileData" path="organizationcategoryFileData" />
                                     </div>
                                 </div>
-                            </li>                     
-							  <li>
+                            </li>
+                            <li>
                                 <div class="form_grid_12">
-                                    <label for="fileData" class="field_title required">Forecast File</label>
+                                    <label for="wbsFileData" class="field_title">Work Breakdown Structure File</label>
                                     <div class="form_input">
-                                        <form:input type="file" id="fileData" name="fileData" path="fileData" />
+                                        <form:input type="file" id="wbsFileData" name="wbsFileData" path="wbsFileData" />
                                     </div>
                                 </div>
                             </li>
