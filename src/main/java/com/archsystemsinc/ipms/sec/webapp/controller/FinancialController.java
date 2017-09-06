@@ -96,10 +96,7 @@ public class FinancialController {
 	
 	@RequestMapping(value = "/uploadfinancial" , method = RequestMethod.GET)
 	public String uploadFinancial(final Model model) {
-		//final Issue issue = new Issue();
-		//final Metrics metrics = new Metrics();
-		model.addAttribute(new FileUpload());
-		//model.addAttribute("metrics", metrics);
+		model.addAttribute(new FinancialsUpload());
 		model.addAttribute(("referenceData"), referenceData());
 		return "uploadfinancial";
 	}
