@@ -1,6 +1,7 @@
 package com.archsystemsinc.ipms.sec.persistence.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -28,9 +29,9 @@ IFinancialHeaderService {
 
 	@Override
 	public Date findInceptionEndtDate(Long projectId) {
-		FinancialHeader header = headerDao.findRecentHeader(projectId);
+		List<FinancialHeader> header = headerDao.findRecentHeader(projectId);
 		if(header != null)
-			return header.getEndDate();
+			return header.get(0).getEndDate();
 		
 		return null;
 	}
@@ -39,9 +40,9 @@ IFinancialHeaderService {
 
 	@Override
 	public Date findInceptionStartDate(Long projectId) {
-		FinancialHeader header = headerDao.findOldestHeader(projectId);
-		if(header != null)
-			return header.getStartDate();
+		List<FinancialHeader> header = headerDao.findOldestHeader(projectId);
+		if(header != null && header.size()>0)
+			return header.get(0).getStartDate();
 		
 		return null;
 	

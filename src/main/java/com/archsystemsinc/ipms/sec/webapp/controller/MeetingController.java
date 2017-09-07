@@ -18,6 +18,7 @@ package com.archsystemsinc.ipms.sec.webapp.controller;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.archsystemsinc.ipms.outlook.service.IOutlookService;
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.poi.service.DownloadService;
 import com.archsystemsinc.ipms.poi.service.UploadService;
@@ -73,6 +76,7 @@ import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 import com.archsystemsinc.ipms.sec.util.GenericConstants;
 import com.archsystemsinc.ipms.sec.util.email.Emailer;
+import com.archsystemsinc.ipms.util.DateUtil;
 import com.archsystemsinc.ipms.web.common.AbstractController;
 
 @Controller
@@ -116,6 +120,9 @@ public class MeetingController extends AbstractController<Meeting> {
 	
 	@Autowired
 	private UploadService uploadService;
+	
+	@Autowired
+	private IOutlookService outlookService;
 
 	@Override
 	@InitBinder
@@ -343,10 +350,30 @@ public class MeetingController extends AbstractController<Meeting> {
 		final Principal currentUser = principalService.findByName(principal
 				.getName());
 		final List<Meeting> meetings = service.findAll();
+		
+		Date startDate = DateUtil.getDateOnly(new Date());
+		Date endDate = DateUtil.addDate(startDate, 10);
+	
+		for(Project project :projectService.findActiveProjects()) {
+			if(StringUtils.isNotEmpty(project.getEmail())) {
+				List<Meeting> outlookMeetings = outlookService.findAppointments(project, startDate,endDate);
+				meetings.addAll(outlookMeetings);
+			}
+		}
+		
 		model.addAttribute("meetings", meetings);
 		return "meetings";
 	}
 
+	public static Calendar date_only(Calendar datetime) {
+	    final long LENGTH_OF_DAY = 24*60*60*1000;
+	    long millis = datetime.getTimeInMillis();
+	    long offset = datetime.getTimeZone().getOffset(millis);
+	    millis = millis - ((millis + offset) % LENGTH_OF_DAY);
+	    datetime.setTimeInMillis(millis);
+	    return datetime;
+	}
+	
 	@RequestMapping(value = "/meeting/{id}", method = RequestMethod.GET)
 	public String meeting(@PathVariable("id") final Long id, final Model model,
 			final Principal principal, final HttpServletRequest request) {
@@ -733,11 +760,13 @@ public class MeetingController extends AbstractController<Meeting> {
 			meeting.setAttendees(attendees);
 			service.update(meeting);
 			emailer.sendMail(meeting.getAttendeesEmails(), "New Meeting: " + meeting.getTitle(), meeting.getMeetingEmailBody(), null, null,null);
+
+			model.addAttribute("success","success.meeting.created");
+			
 			if(project!=null)
 				returnView = "redirect:project/"+project.getId()+"?page=meetings&success=1";
 			else if(program!=null)
-				returnView = "redirect:program";
-				/*returnView = "redirect:program/"+program.getId()+"?page=meetings&success=1";*/
+				returnView = "redirect:program"; 
 			else
 			    returnView = "forward:meetings";
 		} 
@@ -808,7 +837,7 @@ public class MeetingController extends AbstractController<Meeting> {
 					.getName());
 			final List<Meeting> meetings = service.findAll();
 			model.addAttribute("meetings", meetings);
-			model.addAttribute("success","success.minutes.updated");
+			model.addAttribute("success","success.meeting.updated");
 			meeting.setAttendees(attendees);
 			service.update(meeting);
 			emailer.sendMail(meeting.getAttendeesEmails(), "Meeting: " + meeting.getTitle() + " Edited", meeting.getMeetingEmailBody(), null, null,null);
