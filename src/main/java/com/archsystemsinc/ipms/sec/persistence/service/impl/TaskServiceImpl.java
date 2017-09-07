@@ -1,5 +1,6 @@
 package com.archsystemsinc.ipms.sec.persistence.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -110,5 +111,19 @@ ITaskService {
 	@Override
 	public List<Task> findByMsProjectParentTaskId(Integer id) {
 		return dao.findByMsProjectParentTaskId(id);
+	}
+	
+	
+	@Override
+	public List<Task> findResolvedTasksBetweenForProject(Date startDate, Date endDate, Project project) {
+		return dao.findAll(Specifications.where
+				//due_date > start_date
+				(TaskSpecifications.greaterThanDueDate(startDate)).and
+				//created_dt < end_date
+				(TaskSpecifications.lessThanDateCreated(endDate)).and
+				//due_date < end_date
+				(TaskSpecifications.lessThanDueDate(endDate)).and
+				(TaskSpecifications.tasksForProject(project)).and
+				(TaskSpecifications.resolvedTasks()));
 	}
 }

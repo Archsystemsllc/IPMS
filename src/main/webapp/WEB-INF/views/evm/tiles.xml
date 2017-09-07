@@ -14,5 +14,9 @@
 	<definition name="viewevms" extends="page">
 		<put-attribute name="content" value="/WEB-INF/views/evm/evmprojects.jsp" />
 	</definition>
+ 
+	<definition name="evmMetrics" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/evm/mapandchartdisplay.jsp" />
+	</definition>  
 	
 </tiles-definitions>

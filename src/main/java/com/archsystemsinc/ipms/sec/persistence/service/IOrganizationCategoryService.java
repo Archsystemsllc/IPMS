@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.archsystemsinc.ipms.persistence.service.IService;
 import com.archsystemsinc.ipms.sec.model.OrganizationCategory;
+import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Project;
 
 public interface IOrganizationCategoryService extends IService<OrganizationCategory>{
@@ -12,5 +13,7 @@ public interface IOrganizationCategoryService extends IService<OrganizationCateg
 	//OrganizationCategory findById(final long id);
 
 	OrganizationCategory findById(Long id);
+	
+	List<OrganizationCategory> findByResourceProject(Project project, Principal resourceId);
 }
 

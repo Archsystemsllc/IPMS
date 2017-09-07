@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.archsystemsinc.ipms.common.ClientOperation;
+import com.archsystemsinc.ipms.persistence.search.OrganizationCategorySpecifications;
 import com.archsystemsinc.ipms.persistence.service.AbstractService;
 import com.archsystemsinc.ipms.sec.model.LessonsLearned;
 import com.archsystemsinc.ipms.sec.model.OrganizationCategory;
+import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.persistence.dao.IOrganizationCategoryJpaDAO;
 import com.archsystemsinc.ipms.sec.persistence.service.IOrganizationCategoryService;
@@ -30,16 +32,6 @@ public class OrganizationCategoryServiceImpl extends AbstractService<Organizatio
 	public OrganizationCategoryServiceImpl(){
 		super(OrganizationCategory.class);
 	}
-	// API
-
-		// search
-
-		
-		// find
-
-
-
-		// Spring
 	
 	@Override
 	protected final IOrganizationCategoryJpaDAO getDao(){
@@ -57,15 +49,17 @@ public class OrganizationCategoryServiceImpl extends AbstractService<Organizatio
 		return dao;
 	}
 	
-	/*@Override
-	public List<OrganizationCategory> findOrganizationCategoryByProjectId(final Project project){
-		return dao.findOrganizationCategoryByProjectId(project);
-		}*/
-	
 	@Override
 	public OrganizationCategory findById(Long id){
 		return getDao().findById(id);
 	}
 	
+	@Override
+	public List<OrganizationCategory> findByResourceProject(Project project, Principal resourceId) {
+		
+		return dao.findAll(Specifications.where
+				(OrganizationCategorySpecifications.organizationCategorysForProject(project)).and
+				(OrganizationCategorySpecifications.organizationCategorysForAssigned(resourceId)));
+	}
 }
 

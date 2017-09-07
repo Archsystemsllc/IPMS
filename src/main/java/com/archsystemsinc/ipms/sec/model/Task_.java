@@ -20,5 +20,5 @@ public abstract class Task_ {
 	public static volatile SingularAttribute<Task, Principal> assignedTo;
 	public static volatile SingularAttribute<Task, Principal> createdBy;
 	public static volatile SetAttribute<Task, RevisionHistory> revisions;
-
+	public static volatile SingularAttribute<Task, Project> project;
 }

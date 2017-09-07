@@ -218,6 +218,7 @@
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">EVM Upload</a></li>
 									<li><a href="${pageContext.request.contextPath}/app/choosefinancialreport">Financial Report</a></li>
+								    <li><a href="${pageContext.request.contextPath}/app/evmMetrics">EVM Metrics</a></li>
 								</ul>
 						</li>
 
