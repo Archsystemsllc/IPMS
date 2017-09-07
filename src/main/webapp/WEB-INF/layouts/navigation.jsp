@@ -212,7 +212,7 @@
 						</li>
 						<li><a href="${pageContext.request.contextPath}/app/projectevm/evmprojects"><span
 								class="list-icon">&nbsp;</span>Financial Management</a></li>
-=======
+
 						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
 								class="list-icon">&nbsp;</span>Financial Management</a>
 								<ul style="text-indent:10px">					
@@ -220,7 +220,7 @@
 									<li><a href="${pageContext.request.contextPath}/app/choosefinancialreport">Financial Report</a></li>
 								</ul>
 						</li>
->>>>>>> branch 'master' of https://github.com/Archsystemsllc/ipms.git
+
 						<li><a href="${pageContext.request.contextPath}/app/risks"><span
 								class="list-icon">&nbsp;</span>Risk Management</a>
 								<ul style="text-indent:10px">					
