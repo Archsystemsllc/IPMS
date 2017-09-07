@@ -42,7 +42,7 @@
                        	<ul>                          
                              <li>
                                 <div class="form_grid_12">
-                                    <label for="programId" class="field_title required">Program</label>
+                                    <label for="programId" class="field_title required">Vertical Group</label>
                                     <div class="form_input">
                                         <form:select id="programId" name="programId" path="programId" class="mid">
                                              <form:options items="${referenceData.currentUserProgramlist}"  />
