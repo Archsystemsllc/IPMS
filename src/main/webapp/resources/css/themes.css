@@ -162,3 +162,14 @@ body#theme-default {
 	border-top-right-radius:3px;
 	-moz-border-radius-topright:3px;
 }
+
+#theme-default .widget_top1 {
+	height:78px;
+	border-bottom:#e1e1e1 1px solid;
+	background-position:0 -368px;
+	position:relative;
+	border-top-left-radius:3px;
+	-moz-border-radius-topleft:3px;
+	border-top-right-radius:3px;
+	-moz-border-radius-topright:3px;
+}

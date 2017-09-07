@@ -31,14 +31,19 @@
     <div class="grid_container">
         <div class="grid_12">
             <div class="widget_wrap">
-                <div class="widget_top">
-	                <div class="widget_content">
-		                <h6>Project:&nbsp${searchParam.projectName }</h6>
-		                <h6>Inception Date:&nbsp${searchParam.inceptionStartDate}</h6>
-		                <h6>Report:&nbsp${searchParam.reportTypeName}</h6>
-		                <h6>Start Date:&nbsp${searchParam.startDate}</h6>
-		                <h6>End Date:&nbsp${searchParam.endDate}</h6>
-		            </div>
+                <div class="widget_top1">
+                	<table>
+                		<tr>
+	                		<td><h6>Project:&nbsp${searchParam.projectName }</h6><td>
+			                <td><h6>Period of Performance Start Date:&nbsp${searchParam.inceptionStartDate}</h6><td>
+			                <td><h6>Period of Performance End Date:&nbsp${searchParam.inceptionEndDate}</h6><td>
+			            </tr>
+			            <tr>
+	                		<td><h6>Report Type :&nbsp${searchParam.reportTypeName}</h6><td>
+			                <td><h6>Report Start Date:&nbsp${searchParam.startDate}</h6><td>
+			                <td><h6>Report End Date:&nbsp${searchParam.endDate}</h6><td>
+			            </tr>
+		            </table>
                 </div>
                 <div class="widget_content">
 						<form:errors path="*" cssClass="errorblock" element="div" />
