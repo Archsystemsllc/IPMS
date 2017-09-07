@@ -3,24 +3,18 @@ package com.archsystemsinc.ipms.sec.model;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.codehaus.jackson.map.annotate.JsonView;
-
 /**
  * @author Ramz
  *
  */
 public class BudgetTimeOutputJSON {
 
-	@JsonView(Views.Public.class)
 	List<String> label;
 
-	@JsonView(Views.Public.class)
 	List<String> data;
 	
-	@JsonView(Views.Public.class)
 	BigDecimal maxBudget;
 	
-	@JsonView(Views.Public.class)
 	String projectName;
 	
 	public BudgetTimeOutputJSON() {

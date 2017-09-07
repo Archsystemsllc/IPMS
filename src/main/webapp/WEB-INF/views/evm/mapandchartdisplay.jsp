@@ -146,8 +146,8 @@ function displayGraph() {
                  },
 	             ticks: {
 	                 min: 0,
-	                 max: lineChartData.maxBudget,
-	                 stepSize: 	((lineChartData.maxBudget%10 > 500) ? lineChartData.maxBudget%10 : 500)
+	                 max: lineChartData.maxBudget + 1000,
+	                 stepSize: ((lineChartData.maxBudget%10) > 0 ? 500 : lineChartData.maxBudget%10)
 	             }
              }]
          }

@@ -449,10 +449,10 @@ public class MapAndChartDisplayController {
 					ObjectError fromDtError = new ObjectError("fromDate", "Future date not allowed for From Date");
 					errorList.add(fromDtError);
 				}
-				if(fromDate.before(proj.getStartDate())) {
+				/*if(proj.getStartDate() != null &&  fromDate.before(proj.getStartDate())) {
 					ObjectError fromDtError = new ObjectError("fromDate", "Given From date is earlier than selected Project creation Date.");
 					errorList.add(fromDtError);
-				}
+				}*/
 			} catch (ParseException e) {
 				logger.debug("Error while parsing from date");
 			}

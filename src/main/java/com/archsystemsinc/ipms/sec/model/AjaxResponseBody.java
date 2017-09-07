@@ -1,9 +1,5 @@
 package com.archsystemsinc.ipms.sec.model;
 
-import java.util.List;
-
-import org.codehaus.jackson.map.annotate.JsonView;
-
 /**
  * @author Ramz
  *
