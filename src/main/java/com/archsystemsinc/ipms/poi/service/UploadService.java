@@ -1,3 +1,6 @@
+/**
+* Copyright (c) 2017, Archsystems Inc and/or its affiliates. All rights reserved.
+*/
 package com.archsystemsinc.ipms.poi.service;
 
 import java.io.IOException;
@@ -50,9 +53,9 @@ import com.archsystemsinc.ipms.sec.webapp.controller.FileUpload;
  * Service for processing Apache POI-based reports
  * 
  * @author Ramya Gaddam
+ * @version 1.0
  */
 @Service
-//@Transactional
 public class UploadService {
 
 	private static Logger logger = Logger.getLogger("UploadService");
@@ -189,6 +192,13 @@ public class UploadService {
 	}
 	
 
+	/***
+	 * This method will validate for required fields to upload Issues and connect to database to insert data in it.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadIssues(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 	
 		boolean reqFieldsEmpty = false;
@@ -243,6 +253,13 @@ public class UploadService {
 		return REDIRECT + ISSUES_VIEW;
 	}
 	
+	/***
+	 * This method will validate for required fields to upload Meeting minutes and connect to database to insert data in it.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadMeetingMinutes(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		
 		boolean reqFieldsEmpty = false;
@@ -289,12 +306,7 @@ public class UploadService {
 		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
 		return REDIRECT + MEETING_MINUTES_VIEW;
 	}
-/***
- * this is a method for reading the xlsl file and for Exception handling
- * @param uploadItem
- * @param redirectAttributes
- * @return
- */
+
 	public String uploadTasks(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		boolean reqFieldsEmpty = false;
 		if(uploadItem.getProgramId() == null) {
@@ -345,6 +357,13 @@ public class UploadService {
 	
 	}
 	
+	/***
+	 * This method will validate for required fields to upload lessons learned and connect to database to insert data in it.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadLessonsLearned(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		
 		
@@ -397,6 +416,14 @@ public class UploadService {
 		redirectAttributes.addFlashAttribute(FILE_UPLOAD_SUCCESS, SUCCESS_UPLOAD_MESSAGE);
 		return REDIRECT + LESSONSLEARNED_VIEW;	
 		}
+	
+	/***
+	 * This method will validate for required fields to upload Action Items and connect to database to insert data in it.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadActionItems(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 
 		Issue issue = null;
@@ -445,6 +472,13 @@ public class UploadService {
 		return REDIRECT + ACTIONITEMS_VIEW;	
 	}
 	
+	/***
+	 * This method provisions to upload Financial documents into database.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadXLS(FinancialsUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		String returnString = "";
 		try {
@@ -478,6 +512,13 @@ public class UploadService {
 		return returnString;
 	}
 
+	/***
+	 * This method provisions to upload Forecast documents into database.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadForecast(FinancialsUpload uploadItem,final RedirectAttributes redirectAttributes) {
 		
 			Project project = projectService.findOne(uploadItem.getProjectId());
@@ -526,6 +567,14 @@ public class UploadService {
 		 return REDIRECT + EVM_UPLOAD;
 		
 	}
+	
+	/***
+	 * This method provisions to upload Organization Category documents into database.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadOrganizatinCategory(FinancialsUpload uploadItem,
 			RedirectAttributes redirectAttributes) {
 		
@@ -569,8 +618,15 @@ public class UploadService {
 					} 
 				redirectAttributes.addFlashAttribute("orgcatUploadSuccess", "orgcat.upload.success");
 				return REDIRECT + EVM_UPLOAD;
-			}
+	}
 		
+	/***
+	 * This method provisions to upload WBS documents into database.
+	 * 
+	 * @param uploadItem
+	 * @param redirectAttributes
+	 * @return
+	 */
 	public String uploadWBSBudget(FinancialsUpload uploadItem,final RedirectAttributes redirectAttributes) {
 		try {
 		//Project project = projectService.findOne(uploadItem.getProjectId());
