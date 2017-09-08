@@ -1,3 +1,6 @@
+/**
+* Copyright (c) 2017, Archsystems Inc and/or its affiliates. All rights reserved.
+*/
 package com.archsystemsinc.ipms.sec.model;
 
 import java.sql.Date;
@@ -21,6 +24,11 @@ import com.archsystemsinc.ipms.sec.model.constraint.CheckDateRange;
 import com.archsystemsinc.ipms.sec.model.constraint.ObjectTypeEnum;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+/**
+* This is the Financial Header Model class. Mapped to financial_header table
+* @author Benigna
+* @version 0.2.1
+*/
 @Entity
 @XmlRootElement
 @XStreamAlias("FinancialHeader")
@@ -31,51 +39,92 @@ INameableEntity {
 
 	
 	private static final long serialVersionUID = 1L;
-
+	/**
+	 * The header id
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "header_id")
 	private Long id;
 
+	/**
+	 * The Project Id
+	 */
 	@ManyToOne
 	@JoinColumn(name = "project_id")
 	private Project project;
 	
+	/**
+	 * The Start Date
+	 */
 	@Column(name = "start_dt", nullable = true)
 	@NotNull
 	private Date startDate;
 	
+	/**
+	 * The End Date
+	 */
 	@Column(name = "end_dt", nullable = true)
 	@NotNull
 	private Date endDate;
 
+	/**
+	 * The FinancialExpenses for the given header
+	 */
 	@OneToMany( mappedBy = "financialHeader")
 	private Set<FinancialExpenses> financialExpenses = new HashSet<FinancialExpenses>();
 
+	/**
+	 * Returns the header Id
+	 * @return the header Id
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the header Id
+	 * @param id the id to be set
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	/**
+	 * Returns the Project associated with this <code>FinancialHeader</code>
+	 * @return The <code>Project</code>
+	 */
 	public Project getProject() {
 		return project;
 	}
 
+	/**
+	 * Set the Project
+	 * @param project the project to be set
+	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
 
+	/**
+	 * Returns the start Date
+	 * @return the start Date
+	 */
 	public Date getStartDate() {
 		return startDate;
 	}
 
+	/** Sets the Start Date
+	 * 
+	 * @param startDate The StartDate to be set
+	 */
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
+	/**
+	 * Returns the End Date
+	 * @return The End Date
+	 */
 	public Date getEndDate() {
 		return endDate;
 	}
@@ -84,7 +133,7 @@ INameableEntity {
 		this.endDate = endDate;
 	}
 	
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

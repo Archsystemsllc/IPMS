@@ -1,3 +1,6 @@
+/**
+* Copyright (c) 2017, Archsystems Inc and/or its affiliates. All rights reserved.
+*/
 package com.archsystemsinc.ipms.sec.model;
 
 import java.util.Date;
@@ -19,6 +22,11 @@ import com.archsystemsinc.ipms.sec.model.constraint.CheckDateRange;
 import com.archsystemsinc.ipms.sec.model.constraint.ObjectTypeEnum;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+/**
+* This is the Financial Hours Model class. Mapped to financial_hours table
+* @author Benigna
+* @version 0.2.1
+*/
 @Entity
 @XmlRootElement
 @XStreamAlias("FinancialHours")
@@ -30,59 +38,102 @@ INameableEntity {
 	
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The reporting ID for this financial hours
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "reporting_id")
 	private Long id;
 
+	/**
+	 * The Reporting Date
+	 */
 	@Column(name = "reporting_dt")
 	@NotNull
 	private Date reportingDate;
 	
+	/** 
+	 * The description about the hours
+	 */
 	@Column(name = "description")
 	@NotNull
 	private String description;
 	
+	/**
+	 * The financial header for this financial hours
+	 */
 	@ManyToOne
 	@JoinColumn(name = "header_id")
 	private FinancialHeader financialHeader;
 	
+	/**
+	 * The total hours planned
+	 */
 	@Column(name = "total_hours_planned")
 	@NotNull
 	private Long totalHoursPlanned;
 	
+	/**
+	 * The Current Hours
+	 */
 	@Column(name = "current_hours")
 	@NotNull
 	private Long currentHours;
 	
+	/**
+	 * The Cumulative total hours
+	 */
 	@Column(name = "cumulative_total_actual_hours")
 	@NotNull
 	private Long cumulativeTotalActualHours;
 	
+	/**
+	 * The total hours remaining
+	 */
 	@Column(name = "total_hours_remaining")
 	@NotNull
 	private Long totalHoursRemaining;
 	
+	/**
+	 * The Curretn used Percent
+	 */
 	@Column(name = "current_used_percent")
 	@NotNull
 	private Float currentUsedPercent;
 	
+	/**
+	 * Estimated Hours of Completion
+	 */
 	@Column(name = "est_hours_completion")
 	@NotNull
 	private Long estHoursCompletion;
 
+	/**
+	 * Variance From Baseline
+	 */
 	@Column(name = "variance_from_baseline")
 	@NotNull
 	private Long varianceFromBaseline;
 
+	/**
+	 * The Projected Spent
+	 */
 	@Column(name = "prj_spent")
 	@NotNull
 	private Float projectedSpent;
 
+	/**
+	 * Returns the Id
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the Financial Hours Id
+	 * the id to be set
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}

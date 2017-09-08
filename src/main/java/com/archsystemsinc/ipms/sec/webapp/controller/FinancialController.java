@@ -1,3 +1,6 @@
+/**
+* Copyright (c) 2017, Archsystems Inc and/or its affiliates. All rights reserved.
+*/
 package com.archsystemsinc.ipms.sec.webapp.controller;
 
 import java.text.SimpleDateFormat;
@@ -37,27 +40,55 @@ import com.archsystemsinc.ipms.sec.persistence.service.IFinancialHoursService;
 import com.archsystemsinc.ipms.sec.persistence.service.IPrincipalService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 
+/**
+* The Financial Controller for an financial related end points
+* @author Benigna
+* @version 0.2.1
+*/
 @Controller
 public class FinancialController {
 	
+	/**
+	 * The Autowired ProjectService
+	 */
 	@Autowired
 	private IProjectService projectService;
 	
+	/**
+	 * The Autowired PrincipalService
+	 */
 	@Autowired
 	private IPrincipalService principalService;
 	
+	/**
+	 * The Autowired FinancialHeaderService
+	 */
 	@Autowired
 	private IFinancialHeaderService financialHeaderService;
 	
+	/**
+	 * The Financial Expenses service
+	 */
 	@Autowired
 	private IFinancialExpensesService financialExpensesService;
 	
+	/**
+	 * The financial Hours Service
+	 */
 	@Autowired
 	private IFinancialHoursService financialHoursService;
 	
+	/**
+	 * The upload service
+	 */
 	@Autowired
 	private UploadService uploadService;
 	
+	/**
+	 * This methods finds all reference datas
+	 * 
+	 * @return The reference data to attach on the model
+	 */
 	protected Map referenceData() {
 		final Map referenceData = new HashMap();
 		final List<Project> projectlist = projectService.findActiveProjects();
@@ -94,6 +125,11 @@ public class FinancialController {
 	}
 
 	
+	/**
+	 * The end point to upload the financial data
+	 * @param model The <code>Model</code>
+	 * @return The tiles definition
+	 */
 	@RequestMapping(value = "/uploadfinancial" , method = RequestMethod.GET)
 	public String uploadFinancial(final Model model) {
 		model.addAttribute(new FinancialsUpload());
@@ -119,6 +155,11 @@ public class FinancialController {
 	}
   }
 	
+	/**
+	 * An utility method to load the reference data for the financial search
+	 * @param searchParam
+	 * @param model
+	 */
 	private void chooseReport(FinancialReportSearchParams searchParam,Model model) {
 		Map referenceData = referenceData();
 		if(searchParam.getReportTypeId() != null && searchParam.getReportTypeId() != 0l) {
@@ -136,6 +177,14 @@ public class FinancialController {
 		model.addAttribute("referenceData", referenceData);
 	}
 	
+	/**
+	 * Search for a financial report
+	 * @param searchParam The search param
+	 * @param result the <code>BindingResult</code>
+	 * @param model the <code>Model</code>
+	 * @param request the <code>HttpServletRequest</code>
+	 * @return the tiles definition for this endpoint
+	 */
 	@RequestMapping(value = "/choosefinancialreport", method = {RequestMethod.GET, RequestMethod.POST})
 	public String choosefinancialreport(@Valid @ModelAttribute("searchParam") final FinancialReportSearchParams searchParam,
 			final BindingResult result, final Model model, HttpServletRequest request) {
@@ -144,7 +193,16 @@ public class FinancialController {
 		return "choosefinancialreport";
 		
 	}
-		
+	
+	/**
+	 * Search Results (Financial Report) for the given search param	
+	 * @param searchParam The search param
+	 * @param result <code>BindingResult</code>
+	 * @param model <code>Model</code>
+	 * @param request <code>HttpServletRequest</code>
+	 * @return the tiles definition for the financial results page
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/financialreport" , method = RequestMethod.POST)
 	public String financialreport(@ModelAttribute("searchParam") final FinancialReportSearchParams searchParam,
 			final BindingResult result, final Model model, HttpServletRequest request) throws Exception {
@@ -185,6 +243,13 @@ public class FinancialController {
 	}
 	
 
+	/**
+	 * An utility method that returns the date rate in the id format
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @param months no of months to split for the given date ranage
+	 * @return the slplitted id's
+	 */
 	private Map<String, String> getReportIds(Date startDate, Date endDate, int months) {
 		
 		SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
