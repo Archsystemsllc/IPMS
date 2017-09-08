@@ -787,6 +787,7 @@ public class MeetingController extends AbstractController<Meeting> {
 			attendees = new HashSet<Principal>();
 		String returnView = "";
 		if (result.hasErrors()){
+			//navigates back to meeting page
 			returnView = "meetingsedit";
 		}
 		if (request.getParameter("btnAction")

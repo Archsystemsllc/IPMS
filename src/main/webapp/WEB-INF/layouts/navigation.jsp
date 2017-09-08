@@ -204,7 +204,8 @@
 								class="list-icon">&nbsp;</span>View Projects</a></li>
 						<li><a href="${pageContext.request.contextPath}/app/tasks"><span
 								class="list-icon">&nbsp;</span>Task Management</a>
-								<ul style="text-indent:10px">					
+								<ul style="text-indent:10px">		
+								<!-- Added Upload Functionality Buttons-->			
 									<li><a href="${pageContext.request.contextPath}/app/new-task">Add Task</a></li>
 									<li><a href="${pageContext.request.contextPath}/app/tasksupload">Upload Tasks</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/tasks">View Tasks</a></li>				
