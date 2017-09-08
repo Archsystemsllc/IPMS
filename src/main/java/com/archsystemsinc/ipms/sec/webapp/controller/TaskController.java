@@ -438,7 +438,11 @@ public class TaskController extends AbstractController<Task> {
 	protected IService<Task> getService() {
 		return service;
 	}
-
+/***
+ * this is a Get and Method will serve for calling the taskUpload.jsp page
+ * @param model
+ * @return
+ */
 		@RequestMapping(value = "/tasksupload", method = RequestMethod.GET)
 		public String uploadTask(final Model model) {
 			model.addAttribute(new FileUpload());
@@ -446,7 +450,15 @@ public class TaskController extends AbstractController<Task> {
 			return "uploadTask";
 		}
 		
-	
+	/***
+	 * Post method for Task Upload Functionality- this method will serve the post request for upload of task by delegating to upload service
+	 * @param uploadItem
+	 * @param principal
+	 * @param result
+	 * @param request
+	 * @param redirectAttributes
+	 * @return
+	 */
 		@RequestMapping(value = "/tasksupload", method = RequestMethod.POST)
 		public String uploadIssue(@ModelAttribute("fileUpload") final FileUpload uploadItem, final Principal principal,
 				final BindingResult result, final HttpServletRequest request, final RedirectAttributes redirectAttributes) {		

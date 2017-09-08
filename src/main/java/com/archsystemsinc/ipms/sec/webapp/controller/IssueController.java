@@ -268,6 +268,7 @@ public class IssueController extends AbstractController<Issue> {
 		} else {
 			service.create(issue);
 			model.addAttribute("success", "success.issue.created");
+			// 
 			returnView = "redirect:issues/";
 			/*returnView = "redirect:project/" + project.getId()
 					+ "?page=issues&success=2"*/;
@@ -305,6 +306,7 @@ public class IssueController extends AbstractController<Issue> {
 				revisionHistoryService.bulkCreate(histList);
 			}
 			model.addAttribute("success", "success.issue.updated");
+			// page navigates back to list of issues page
 			returnView = "redirect:issues";
 		}
 		model.addAttribute("issue", issue);

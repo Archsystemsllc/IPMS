@@ -234,6 +234,7 @@ public class RiskController extends AbstractController<Risk> {
 			service.create(risk);
 			model.addAttribute("success", "success.risk.created");
 			if (risk.getProject() != null)
+				// page navigates back to view Risks page
 				returnView = "redirect:risks";
 				/*returnView = "redirect:project/" + risk.getProject().getId() + "?page=risks&success=3";*/
 			else if (risk.getProgram() != null)
