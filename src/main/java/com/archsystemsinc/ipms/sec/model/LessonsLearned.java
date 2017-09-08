@@ -1,5 +1,9 @@
 package com.archsystemsinc.ipms.sec.model;
-
+/**
+* This is model class for lessons learned   
+ * @author Nikhil Dasari
+* @version 1.1
+*/
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -73,12 +77,67 @@ public class LessonsLearned implements INameableEntity {
 	
 	@OneToMany( mappedBy = "lessonsLearned")
 	private Set<RevisionHistory> revisions = new HashSet<RevisionHistory>();
-
+	
+	@Column(name="category",nullable = true)
+	private String category;
+	
+	@Column(name = "life_cycle_phase",nullable = true)
+	private String lifeCyclePhase;
+	
+	@Column(name = "lesson_owner",nullable = true)
+	private String lessonsOwner;
+	
+	@Column(name = "ll_id_from_excel",nullable = true)
+	private String llIdFromExcel;
+	
+	@Column(name="color_code",nullable = true)
+	private String colorCode;
+	
 	@Transient
 	private Long issueId;
 	
 	@Transient
 	private Long meetingId;
+
+	public String getColorCode() {
+		return colorCode;
+	}
+
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getLifeCyclePhase() {
+		return lifeCyclePhase;
+	}
+
+	public void setLifeCyclePhase(String lifeCyclePhase) {
+		this.lifeCyclePhase = lifeCyclePhase;
+	}
+
+	public String getLessonsOwner() {
+		return lessonsOwner;
+	}
+
+	public void setLessonsOwner(String lessonsOwner) {
+		this.lessonsOwner = lessonsOwner;
+	}
+
+	public String getLlIdFromExcel() {
+		return llIdFromExcel;
+	}
+
+	public void setLlIdFromExcel(String llIdFromExcel) {
+		this.llIdFromExcel = llIdFromExcel;
+	}
 
 	public Long getMeetingId() {
 		return meetingId;

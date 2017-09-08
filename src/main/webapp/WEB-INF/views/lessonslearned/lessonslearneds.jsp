@@ -19,7 +19,7 @@
 									src="${pageContext.request.contextPath}/resources/images/table-tools/xls_hover.png"
 									alt="Export to XLS">
 							</a>
-							<a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-lessonslearned" title="Create">Create</a></li>
+							<a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-lessonslearned" title="Create"></a></li>
 							<!--<li><a href="#" title="Export to PDF"> <img
 									src="${pageContext.request.contextPath}/resources/images/table-tools/pdf_hover.png"
 									alt="Export to PDF">
@@ -36,27 +36,34 @@
 					<table class="display data_tbl">
 						<thead>
 							<tr>
-								<th>Summary</th>
 								<th>ID</th>
-								<th>Impact</th>
-								<th>Recommendation</th>
-								<th>Manage></th>
+								<th>Life Cycle Phase</th>
+								<th>Category</th>
+								<th>Success Factors</th>
+								<th>Areas of Improvement</th>
+								<th>Recommendations</th>
+								<th>Manage</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="lessonsLearned" items="${lessonsLearneds}">
 								<tr>
-									<td><a href="lessonslearned/${lessonsLearned.id}"><c:out
-												value="${lessonsLearned.summary}" /></a></td>
-									<td><c:out value="${lessonsLearned.id}" /></td>
-									<td><c:out value="${lessonsLearned.impact}" /></td>
-									<td><c:out value="${lessonsLearned.recommendation}" /></td>
-									<td style="white-space: nowrap;">
+								
+								<td><a href="lessonslearned/${lessonsLearned.llIdFromExcel}"><c:out
+												value="${lessonsLearned.llIdFromExcel}" /></a></td>
+								<td><c:out value="${lessonsLearned.lifeCyclePhase}" /></td>
+								<td><c:out value="${lessonsLearned.category}" /></td>
+								<td><c:out value="${lessonsLearned.successFactors}" /></td>
+								<td><c:out value="${lessonsLearned.areasOfImprovement}" /></td>
+								<td><c:out value="${lessonsLearned.recommendation}" /></td>
+								<td style="white-space: nowrap;">
                                                 <span><a class="action-icons c-edit" href="${pageContext.request.contextPath}/app/edit-lessonslearned/${lessonsLearned.id}" title="Edit">Edit</a></span><span><a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-lessonslearned" title="Create">Create</a></span>
                                             </td>
                                         </tr>
 								</c:forEach>
+								
 						</tbody>
+						
 					</table>
 				</div>
 			</div>

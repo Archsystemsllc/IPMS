@@ -141,7 +141,7 @@ public class ActionItemController extends AbstractController<ActionItem> {
 				coloumnNames);
 	}
 
-	@RequestMapping(value = "/actionitems")
+	/*@RequestMapping(value = "/actionitems")
 	public String actionItem(final Model model,
 			final java.security.Principal principal) {
 		final Principal currentUser = principalService.findByName(principal
@@ -155,6 +155,17 @@ public class ActionItemController extends AbstractController<ActionItem> {
 		final String icurrentUser = SecurityContextHolder.getContext()
 				.getAuthentication().getName();
 		model.addAttribute("currentUser", icurrentUser);
+		return "actionitems";
+	}*/
+	/**
+	* This class consists service methods for ActionItems View page.*   
+	 * @author Nikhil Dasari
+	* @version 1.1
+	*/
+	@RequestMapping(value = "/actionitems")
+	public String actionItemstest(final Model model) {
+		final List<ActionItem> actionItems = service.findAll();
+		model.addAttribute("actionItems", actionItems);
 		return "actionitems";
 	}
 

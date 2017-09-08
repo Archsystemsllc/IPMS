@@ -1,5 +1,9 @@
 package com.archsystemsinc.ipms.sec.model;
-
+/**
+* This is Model Class for Action Items  
+ * @author Nikhil Dasari
+* @version 1.0
+*/
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -70,7 +74,7 @@ public class ActionItem implements INameableEntity, Comparable<ActionItem> {
 	@OrderBy("dateCreated asc")
 	private Date dateCreated;
 
-	@Column(nullable = true)
+	@Column(name="name",nullable = true)
 	private String name;
 
 	@ManyToOne
@@ -91,6 +95,69 @@ public class ActionItem implements INameableEntity, Comparable<ActionItem> {
 
 	@Transient
 	private Long meetingId;
+	
+	@Column(name = "notes",nullable = true)
+	private String notes;
+	
+	@Column(name="description",nullable = true)
+	private String description;
+	
+	@Column(name = "responsible_party",nullable = true)
+	private String responsibleParty;
+	
+	@Column(name = "ainumber_from_excel",nullable = true)
+	private String aiNumberFromExcel;
+	
+	@Column(name = "date_completed", nullable = true)
+	private Date dateCompleted;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getResponsibleParty() {
+		return responsibleParty;
+	}
+
+	public void setResponsibleParty(String responsibleParty) {
+		this.responsibleParty = responsibleParty;
+	}
+
+	public String getAiNumberFromExcel() {
+		return aiNumberFromExcel;
+	}
+
+	public void setAiNumberFromExcel(String aiNumberFromExcel) {
+		this.aiNumberFromExcel = aiNumberFromExcel;
+	}
+
+	public Date getDateCompleted() {
+		return dateCompleted;
+	}
+
+	public void setDateCompleted(Date dateCompleted) {
+		this.dateCompleted = dateCompleted;
+	}
+
 
 	@Override
 	public int compareTo(final ActionItem actionItem) {
@@ -204,15 +271,6 @@ public class ActionItem implements INameableEntity, Comparable<ActionItem> {
 	@Override
 	public void setId(final Long id1) {
 		id = id1;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public void setName(final String name1) {
-		name = name1;
 	}
 
 	public String getPriority() {

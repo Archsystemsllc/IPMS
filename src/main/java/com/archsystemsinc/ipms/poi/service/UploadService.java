@@ -345,7 +345,7 @@ public class UploadService {
 	
 	}
 	
-	public String uploadLessonsLearned(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
+public String uploadLessonsLearned(FileUpload uploadItem, final RedirectAttributes redirectAttributes) {
 		
 		
 		Issue issue = null;
@@ -371,12 +371,14 @@ public class UploadService {
 				lessonslearned=new LessonsLearned();
 	              Row ro=firstFileSheet.getRow(r);
 	              lessonslearned.setDate(Calendar.getInstance().getTime());
-	              lessonslearned.setName(ro.getCell(0).getStringCellValue());
-	              lessonslearned.setSummary(ro.getCell(1).getStringCellValue());
-	              lessonslearned.setImpact(ro.getCell(2).getStringCellValue());
-	              lessonslearned.setRecommendation(ro.getCell(3).getStringCellValue());
+	              lessonslearned.setLlIdFromExcel(ro.getCell(0).getStringCellValue());
+	              lessonslearned.setLifeCyclePhase(ro.getCell(1).getStringCellValue());
+	              lessonslearned.setCategory(ro.getCell(2).getStringCellValue());
+	              lessonslearned.setSuccessFactors(ro.getCell(3).getStringCellValue());
 	              lessonslearned.setAreasOfImprovement(ro.getCell(4).getStringCellValue());
-	              lessonslearned.setSuccessFactors(ro.getCell(5).getStringCellValue());
+	              lessonslearned.setRecommendation(ro.getCell(5).getStringCellValue());
+	              lessonslearned.setLessonsOwner(ro.getCell(6).getStringCellValue());
+	              lessonslearned.setColorCode(ro.getCell(7).getStringCellValue());
 	              lessonslearned.setIssue(issue);
 	              lessonslearned.setMeeting(meeting);
 	              
@@ -420,13 +422,17 @@ public class UploadService {
 			for(int r=firstFileSheet.getFirstRowNum()+1;r<=firstFileSheet.getLastRowNum();r++){
 				actionitem = new ActionItem();
 	              Row ro=firstFileSheet.getRow(r);
-	              actionitem.setName(ro.getCell(0).getStringCellValue());
-	              actionitem.setSummary(ro.getCell(1).getStringCellValue());
-	              //actionitem.setStatus(ro.getCell(2).getStringCellValue());
-	              actionitem.setDateCreated(ro.getCell(2).getDateCellValue());
-	              actionitem.setDueDate(ro.getCell(3).getDateCellValue());
-	              actionitem.setPriority("N/A");	
-	              	              
+	              actionitem.setAiNumberFromExcel(ro.getCell(0).getStringCellValue());
+	              actionitem.setDateCreated(ro.getCell(1).getDateCellValue());
+	              actionitem.setDescription(ro.getCell(2).getStringCellValue());
+	              actionitem.setPriority(ro.getCell(3).getStringCellValue());
+	              actionitem.setResponsibleParty(ro.getCell(4).getStringCellValue());
+	              actionitem.setDueDate(ro.getCell(5).getDateCellValue());
+	              actionitem.setDateCompleted(ro.getCell(6).getDateCellValue());
+	              actionitem.setNotes(ro.getCell(7).getStringCellValue());
+	              actionitem.setStatus(ro.getCell(8).getStringCellValue());
+	              actionitem.setIssue(issue);
+	              actionitem.setMeeting(meeting);
 	           actionitemservice.create(actionitem);
 	            }
 		}catch(ConstraintViolationException ce){
