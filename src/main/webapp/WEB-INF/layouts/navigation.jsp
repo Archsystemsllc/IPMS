@@ -204,14 +204,16 @@
 								class="list-icon">&nbsp;</span>View Projects</a></li>
 						<li><a href="${pageContext.request.contextPath}/app/tasks"><span
 								class="list-icon">&nbsp;</span>Task Management</a>
-								<ul style="text-indent:10px">		
-								<!-- Added Upload Functionality Buttons-->			
+								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-task">Add Task</a></li>
 									<li><a href="${pageContext.request.contextPath}/app/tasksupload">Upload Tasks</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/tasks">View Tasks</a></li>				
 								</ul>
 						</li>
-						<li><a href="${pageContext.request.contextPath}/app/evmprojects"><span
+						<li><a href="${pageContext.request.contextPath}/app/projectevm/evmprojects"><span
+								class="list-icon">&nbsp;</span>Financial Management</a></li>
+
+						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
 								class="list-icon">&nbsp;</span>Financial Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">EVM Upload</a></li>
@@ -233,6 +235,7 @@
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-issue">Add Issue</a></li>
 									<li><a href="${pageContext.request.contextPath}/app/issues/upload">Upload Issues</a></li>	
+									<li><a href="${pageContext.request.contextPath}/app/searchissue">Search Issues(JIRA)</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/issues">View Issues</a></li>				
 								</ul>
 						</li>
@@ -242,31 +245,27 @@
 								class="list-icon">&nbsp;</span>Meetings Management</a>
 								<ul style="text-indent:10px">					
 									<li><a href="${pageContext.request.contextPath}/app/new-programmeeting">Add Meeting</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/meetings">View Meetings</a></li>	
+									<li><a href="${pageContext.request.contextPath}/app/meetings">View Meetings</a></li>								
+									<li><a href="${pageContext.request.contextPath}/app/searchmeeting">Search Meetings</a></li>	
 									<li><a href="${pageContext.request.contextPath}/app/meetingminutesupload">Upload Meeting Minutes</a></li>				
-								</ul>
-						</li>	
-						<li><a href="${pageContext.request.contextPath}/app/lessonslearneds"><span
-								class="list-icon">&nbsp;</span>Lessons Management</a>
-								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/new-lessonslearned">Add Lessons Learned</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/lessonslearneds">View Lessons Learned</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned">Upload Lessons Learned</a></li>				
-								</ul>
-						</li>
-						<li><a href="${pageContext.request.contextPath}/app/actionitems"><span
-								class="list-icon">&nbsp;</span>Action Items Management</a>
-								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/new-actionitem">Add Action Items</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/actionitems">View Action Items</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems">Upload Action Items</a></li>				
 								</ul>
 						</li>						
 						<li><a href="${pageContext.request.contextPath}/app/new-project"><span
 								class="list-icon">&nbsp;</span>Add Project</a></li>						
 					</ul>
+						
+						<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned"><span
+											class="list-icon">&nbsp;</span>Upload Lessons Learned</a></li>	
+										<ul style="text-indent:10px">					
+									
+									<li><a href="${pageContext.request.contextPath}/app/lessonslearned">View Lessons Learned</a></li>
+									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems"><span
+											class="list-icon">&nbsp;</span>Upload Action Items</a></li>
+									<li><a href="${pageContext.request.contextPath}/app/actionitems">View Action items</a></li>				
+								</ul>
 					<li><a href="${pageContext.request.contextPath}/app/sharepoint"><span
 								class="list-icon">&nbsp;</span>SharePoint</a></li>
+				</li>
 				</sec:authorize>
 				<sec:authorize
 						access="hasRole('ROLE_PROJECT_MANAGER') or hasRole('AdminOfSecurityService') or hasRole('EXECUTIVE')">
