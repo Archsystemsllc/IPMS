@@ -70,6 +70,9 @@ $(function(){
         window.location.href = $(this).data('url');
     });
 	
+	$( "#cancelId" ).click(function() {
+		$("#fileData").val("");
+	});
 	
 	$('#uploadForm').submit(function() {
 		var fileName = $("#fileData").val().split('\\').pop();
@@ -185,7 +188,7 @@ $(function(){
                                 <div class="form_grid_12">
                                     <div class="form_input">
                                         <button type="submit" class="btn_small btn_blue"><span id="sub">Upload</span></button>
-                                       
+                                        <button type="button" class="btn_small btn_blue" id="cancelId"><span id="sub">Cancel</span></button>
                                     </div>
                                 </div>
                             </li>
