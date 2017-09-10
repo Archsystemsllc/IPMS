@@ -211,7 +211,7 @@ public class RoleController extends AbstractController<Role> {
 		final List<Privilege> list = privilegeService.findAll();
 		final Map<Integer, String> pList = new LinkedHashMap<Integer, String>();
 		for (int i = 0; i < list.size(); i++) {
-			pList.put(list.get(i).getId().intValue(), list.get(i).getName());
+			pList.put(list.get(i).getId().intValue(), list.get(i).getDescription());
 		}
 		referenceData.put("privilegeList", pList);
 

@@ -20,6 +20,9 @@ public class SecurityUtil {
 	 */
 	public static boolean isAdminUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null)
+			return true;
+		
 		if(authentication != null) {
 			for(GrantedAuthority ga:authentication.getAuthorities()) {
 				if(ga.getAuthority().equals("AdminOfSecurityService")) {
@@ -48,8 +51,11 @@ public class SecurityUtil {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			if(authentication != null) {	
 				for(GrantedAuthority ga:authentication.getAuthorities()) {
-					if(resource.matches(ga.getAuthority())) {
-						return true;
+					String authorities[] = ga.getAuthority().split(",");
+					for (String authority : authorities) {
+						if(resource.matches(authority.trim())) {
+							return true;
+						}
 					}
 				}
 			}

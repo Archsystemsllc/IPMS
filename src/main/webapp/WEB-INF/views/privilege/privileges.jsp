@@ -51,18 +51,18 @@ $(document).ready(function(){
                         <div class="successblock"><spring:message code="${success}"></spring:message>
                         </div>
                         </c:if>
-                    <table class="display" id="data_tbl_tools" id="table">
+                     <table class="display" id="data_tbl_tools" id="table">
                         <thead>
                         <tr>
-                            <th title="Previlege Id">ID</th>
-                            <th title="Previlege Name">Name</th>     
+                            <th title="Previlege Name">Name</th>    
+                            <th title="Description">Resource</th>     
                             <th title="Edit or Create Previlege">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="privilege" items="${privileges}">
                             <tr>
-                                <td><c:out value="${privilege.id}" /></td>
+                                <td><a href="privilege/${privilege.id}"><c:out value="${privilege.description}" /></a></td>
                                 <td><a href="privilege/${privilege.id}"><c:out value="${privilege.name}" /></a></td>
                                 <td>
                                     <span><a class="action-icons c-edit" href="${pageContext.request.contextPath}/app/edit-privilege/${privilege.id}" title="Edit">Edit</a></span><span><a class="action-icons c-approve" href="${pageContext.request.contextPath}/app/new-privilege" title="Create">Create</a></span>

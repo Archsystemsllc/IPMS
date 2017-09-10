@@ -240,7 +240,7 @@
 						<div class="errorblock">Login failed, try again.Caused :
 							${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}</div>
 					</c:if>
-					<a href="${pageContext.request.contextPath}/app/groupdashboard"><input
+					<a href="${pageContext.request.contextPath}/util/login"><input
 						class="login_btn blue_lgel" name="" value="Login" type="button">
 					</a>
 				</div>

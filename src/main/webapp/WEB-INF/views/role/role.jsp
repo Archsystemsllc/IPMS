@@ -52,8 +52,9 @@
                                     <div class="form_input">
                                         <span class="uneditable-input mid">
                                         <c:forEach var="privilege" items="${role.privileges}">
-									 	<c:out value="${privilege.name}" />
+									 	<c:out value="${privilege.description}" /><br>
 										</c:forEach>
+										<br>
 										</span>
                                     </div>
                                 </div>

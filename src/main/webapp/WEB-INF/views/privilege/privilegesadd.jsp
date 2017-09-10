@@ -38,12 +38,20 @@
                                 <div class="form_grid_12">
                                     <label for="name" class="field_title">Privilege Name</label>
                                     <div class="form_input">
-                                        <form:input type="text" id="name" name="name" path="name" ></form:input>
+                                        <form:input type="text" id="description" name="description" path="description" ></form:input>
                                     </div>
                                 </div>
                             </li>
 							
 						
+                            <li>
+                                <div class="form_grid_12">
+                                    <label for="name" class="field_title">Resource</label>
+                                    <div class="form_input">
+                                        <form:input type="text" id="name" name="name" path="name" ></form:input>
+                                    </div>
+                                </div>
+                            </li>
 							
 							<li>
                                 <div class="form_grid_12">

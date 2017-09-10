@@ -12,6 +12,8 @@
 			authentication-failure-url="/util/loginfailed" />
 		<logout logout-success-url="/util/logout" />
         
+        <custom-filter ref="authorizationFilter" after="SECURITY_CONTEXT_FILTER" />  
+        
     </http>
 	
 	<global-method-security secured-annotations="enabled" />
@@ -32,7 +34,8 @@
 	<authentication-provider>
 		<jdbc-user-service data-source-ref="restDataSource" 
 							users-by-username-query="select name, password, true from principal where username = ?"
-							authorities-by-username-query="SELECT u.username, r.name FROM principal u, role r, principal_role ur WHERE u.principal_id=ur.principal_id AND r.role_id=ur.role_id AND u.username=?"/>
+							authorities-by-username-query="SELECT u.username, r.name FROM principal u, role r, principal_role ur WHERE u.principal_id=ur.principal_id AND r.role_id=ur.role_id AND u.username=?"
+							group-authorities-by-username-query="select p.username, r.name, v.name from principal p,principal_role pr,role r,role_privilege rp, privilege v where p.principal_id = pr.principal_id and pr.role_id = r.role_id and r.role_id = rp.role_id and rp.priv_id = v.priv_id and username = ?"/>
 		</authentication-provider>
 	</authentication-manager>
 

@@ -38,7 +38,15 @@
 							<div class="form_grid_12">
 								<label for="type" class="field_title">Name</label>
 								<div class="form_input">
-									<span class="uneditable-input mid">${privilege.name}</span>
+									<span class="uneditable-input mid">${privilege.description}</span>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="form_grid_12">
+								<label for="type" class="field_title">Resource</label>
+								<div class="form_input">
+									<span class="uneditable-input mid">${privilege.formattedName}</span>
 								</div>
 							</div>
 						</li>

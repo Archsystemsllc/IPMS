@@ -61,7 +61,7 @@
                                 <div class="form_grid_12">
                                     <label for="privileges" class="field_title">Privileges</label>
                                     <div class="form_input">
-                                        <form:select mulitiple="true" id="privileges" name="privilegesIds" path="privilegesIds">
+                                        <form:select mulitiple="true" id="privileges" name="privilegesIds" path="privilegesIds" size="${fn:length(referenceData.privilegeList)}">
 										<form:options items="${referenceData.privilegeList}"  />
 									</form:select></div>
                                 </div>

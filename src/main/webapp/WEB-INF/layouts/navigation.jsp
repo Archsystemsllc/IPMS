@@ -3,8 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib uri="/WEB-INF/tlds/ipms.tld" prefix="ipms"%>
 
 <!-- Live chat demo Javascript 
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -118,10 +118,10 @@
 					<span class="start_icon">Quick Menu</span>
 				</div>
 				<ul class="black_gel">
-					<li><a
+					<li><ipms:a
 						href="${pageContext.request.contextPath}/app/projectreport"><span
 							class="list-icon graph_b">&nbsp;</span>Analytics<span
-							class="mnu_tline">Tagline</span></a></li>
+							class="mnu_tline">Tagline</span></ipms:a></li>
 					<li><a href="#"><span class="list-icon cog_4_b">&nbsp;</span>Settings<span
 							class="mnu_tline">Tagline</span></a></li>
 					<li><a href="#"><span class="list-icon vault_b">&nbsp;</span>The
@@ -156,160 +156,126 @@
 						class="up_down_arrow">&nbsp;</span></a>
 
 					<ul class="acitem">
-					<sec:authorize
-						access="hasRole('AdminOfSecurityService') or hasRole('EXECUTIVE')"  >
-						<li><a
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/groupdashboard"><span
-								class="list-icon">&nbsp;</span>Horizontal Groups Dashboard</a></li>
-					</sec:authorize>
-					<sec:authorize
-						access="hasRole('AdminOfSecurityService')  or hasRole('EXECUTIVE')">
-						<li><a
+								class="list-icon">&nbsp;</span>Horizontal Groups Dashboard</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/groupdashboard/business"><span
-								class="list-icon">&nbsp;</span>Vertical Groups Dashboard</a></li>
-					</sec:authorize>
-					<sec:authorize
-						access="hasRole('AdminOfSecurityService')  or hasRole('EXECUTIVE')">
-						<li><a
+								class="list-icon">&nbsp;</span>Vertical Groups Dashboard</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/modeldashboard"><span
-								class="list-icon">&nbsp;</span>Model Dashboard</a></li>
-					</sec:authorize>
-					<sec:authorize
-						access="hasRole('AdminOfSecurityService')  or hasRole('ROLE_PROJECT_MANAGER')">
-						<li><a
+								class="list-icon">&nbsp;</span>Model Dashboard</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/project/36"><span
-								class="list-icon">&nbsp;</span>Project Manager Dashboard</a></li>	
-					</sec:authorize>							
+								class="list-icon">&nbsp;</span>Project Manager Dashboard</ipms:a></li>	
 					</ul></li>
-				<sec:authorize
-						access="hasRole('AdminOfSecurityService')  or hasRole('EXECUTIVE')">
 				<li><a href="#"><span class="nav_icon frames"></span>
 						Model Management<span class="up_down_arrow">&nbsp;</span></a>
 					<ul class="acitem">
 					
-						<li><a href="${pageContext.request.contextPath}/app/models"><span
-								class="list-icon">&nbsp;</span>View Models</a></li>
-						<li><a
+						<li><ipms:a href="${pageContext.request.contextPath}/app/models"><span
+								class="list-icon">&nbsp;</span>View Models</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/new-Model"><span
-								class="list-icon">&nbsp;</span>Add New Model</a></li>					
+								class="list-icon">&nbsp;</span>Add New Model</ipms:a></li>					
 					</ul></li>
-				</sec:authorize>
-				<sec:authorize
-						access="hasRole('ROLE_PROJECT_MANAGER') or hasRole('AdminOfSecurityService')">
 				<li><a href="#" title="Manage Projects"><span
 						class="nav_icon frames"></span> Project Management<span
 						class="up_down_arrow">&nbsp;</span></a>
 					<ul class="acitem">
-						<li><a href="${pageContext.request.contextPath}/app/projects"><span
-								class="list-icon">&nbsp;</span>View Projects</a></li>
-						<li><a href="${pageContext.request.contextPath}/app/tasks"><span
-								class="list-icon">&nbsp;</span>Task Management</a>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/projects"><span
+								class="list-icon">&nbsp;</span>View Projects</ipms:a></li>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/tasks"><span
+								class="list-icon">&nbsp;</span>Task Management</ipms:a>
 								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/new-task">Add Task</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/tasksupload">Upload Tasks</a></li>	
-									<li><a href="${pageContext.request.contextPath}/app/tasks">View Tasks</a></li>				
+									<li><ipms:a href="${pageContext.request.contextPath}/app/new-task">Add Task</ipms:a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/tasksupload">Upload Tasks</ipms:a></li>	
+									<li><ipms:a href="${pageContext.request.contextPath}/app/tasks">View Tasks</ipms:a></li>				
 								</ul>
 						</li>
-						<li><a href="${pageContext.request.contextPath}/app/projectevm/evmprojects"><span
-								class="list-icon">&nbsp;</span>Financial Management</a></li>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/projectevm/evmprojects"><span
+								class="list-icon">&nbsp;</span>Financial Management</ipms:a></li>
 
-						<li><a href="${pageContext.request.contextPath}/app/evmproject"><span
-								class="list-icon">&nbsp;</span>Financial Management</a>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/evmproject"><span
+								class="list-icon">&nbsp;</span>Financial Management</ipms:a>
 								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/uploadfinancial">EVM Upload</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/choosefinancialreport">Financial Report</a></li>
-								    <li><a href="${pageContext.request.contextPath}/app/evmMetrics">EVM Metrics</a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/uploadfinancial">EVM Upload</ipms:a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/choosefinancialreport">Financial Report</ipms:a></li>
+								    <li><ipms:a href="${pageContext.request.contextPath}/app/evmMetrics">EVM Metrics</ipms:a></li>
 								</ul>
 						</li>
 
-						<li><a href="${pageContext.request.contextPath}/app/risks"><span
-								class="list-icon">&nbsp;</span>Risk Management</a>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/risks"><span
+								class="list-icon">&nbsp;</span>Risk Management</ipms:a>
 								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/new-risk">Add Risk</a></li>
-									<li><a href="#">Upload Risks</a></li>	
-									<li><a href="${pageContext.request.contextPath}/app/risks">View Risks</a></li>				
+									<li><ipms:a href="${pageContext.request.contextPath}/app/new-risk">Add Risk</ipms:a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/risks">View Risks</ipms:a></li>				
 								</ul>
 						</li>
-						<li><a href="${pageContext.request.contextPath}/app/issues"><span
-								class="list-icon">&nbsp;</span>Issue Management</a>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/issues"><span
+								class="list-icon">&nbsp;</span>Issue Management</ipms:a>
 								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/new-issue">Add Issue</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/issues/upload">Upload Issues</a></li>	
-									<li><a href="${pageContext.request.contextPath}/app/searchissue">Search Issues(JIRA)</a></li>	
-									<li><a href="${pageContext.request.contextPath}/app/issues">View Issues</a></li>				
+									<li><ipms:a href="${pageContext.request.contextPath}/app/new-issue">Add Issue</ipms:a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/issues/upload">Upload Issues</ipms:a></li>	
+									<li><ipms:a href="${pageContext.request.contextPath}/app/searchissue">Search JIRA Issues</ipms:a></li>	
+									<li><ipms:a href="${pageContext.request.contextPath}/app/issues">View Issues</ipms:a></li>				
 								</ul>
 						</li>
-						<li><a href="${pageContext.request.contextPath}/app/upload"><span
-								class="list-icon">&nbsp;</span>MS Project Integration</a></li>
-						<li><a href="${pageContext.request.contextPath}/app/meetings"><span
-								class="list-icon">&nbsp;</span>Meetings Management</a>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/upload"><span
+								class="list-icon">&nbsp;</span>MS Project Integration</ipms:a></li>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/meetings"><span
+								class="list-icon">&nbsp;</span>Meetings Management</ipms:a>
 								<ul style="text-indent:10px">					
-									<li><a href="${pageContext.request.contextPath}/app/new-programmeeting">Add Meeting</a></li>										
-									<li><a href="${pageContext.request.contextPath}/app/meetings">View Meetings</a></li>								
-									<li><a href="${pageContext.request.contextPath}/app/searchmeeting">Search Meetings</a></li>	
-									<li><a href="${pageContext.request.contextPath}/app/meetingminutesupload">Upload Meeting Minutes</a></li>				
+									<li><ipms:a href="${pageContext.request.contextPath}/app/new-programmeeting">Add Meeting</ipms:a></li>										
+									<li><ipms:a href="${pageContext.request.contextPath}/app/meetings">View Meetings</ipms:a></li>								
+									<li><ipms:a href="${pageContext.request.contextPath}/app/searchmeeting">Search Meetings</ipms:a></li>	
+									<li><ipms:a href="${pageContext.request.contextPath}/app/meetingminutesupload">Upload Meeting Minutes</ipms:a></li>				
 								</ul>
 						</li>						
-						<li><a href="${pageContext.request.contextPath}/app/new-project"><span
-								class="list-icon">&nbsp;</span>Add Project</a></li>						
+						<li><ipms:a href="${pageContext.request.contextPath}/app/new-project"><span
+								class="list-icon">&nbsp;</span>Add Project</ipms:a></li>						
 					</ul>
 						
-						<li><a href="${pageContext.request.contextPath}/app/uploadlessonslearned"><span
-											class="list-icon">&nbsp;</span>Upload Lessons Learned</a></li>	
+						<li><ipms:a href="${pageContext.request.contextPath}/app/uploadlessonslearned"><span
+											class="list-icon">&nbsp;</span>Upload Lessons Learned</ipms:a></li>	
 										<ul style="text-indent:10px">					
 									
-									<li><a href="${pageContext.request.contextPath}/app/lessonslearned">View Lessons Learned</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/uploadactionitems"><span
-											class="list-icon">&nbsp;</span>Upload Action Items</a></li>
-									<li><a href="${pageContext.request.contextPath}/app/actionitems">View Action items</a></li>				
+									<li><ipms:a href="${pageContext.request.contextPath}/app/lessonslearned">View Lessons Learned</ipms:a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/uploadactionitems"><span
+											class="list-icon">&nbsp;</span>Upload Action Items</ipms:a></li>
+									<li><ipms:a href="${pageContext.request.contextPath}/app/actionitems">View Action items</ipms:a></li>				
 								</ul>
-					<li><a href="${pageContext.request.contextPath}/app/sharepoint"><span
-								class="list-icon">&nbsp;</span>SharePoint</a></li>
+					<li><ipms:a href="${pageContext.request.contextPath}/app/sharepoint"><span
+								class="list-icon">&nbsp;</span>SharePoint</ipms:a></li>
 				</li>
-				</sec:authorize>
-				<sec:authorize
-						access="hasRole('ROLE_PROJECT_MANAGER') or hasRole('AdminOfSecurityService') or hasRole('EXECUTIVE')">
-						<li><a
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/artifacts"><span
-								class="nav_icon blocks_images"></span> Artifacts Manager</a></li>
-				</sec:authorize> 
+								class="nav_icon blocks_images"></span> Artifacts Manager</ipms:a></li>
 				<li><a href="#"><span class="nav_icon documents"></span>Reports<span
 						class="up_down_arrow">&nbsp;</span></a>
 					<ul class="acitem">
-						<sec:authorize
-						access="hasRole('AdminOfSecurityService') or hasRole('EXECUTIVE')">
-						<li><a
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/groupreport"><span
-								class="list-icon">&nbsp;</span>Group Report</a></li>
-						</sec:authorize>
-						<sec:authorize
-						access="hasRole('AdminOfSecurityService') or hasRole('EXECUTIVE')">
-						<li><a
+								class="list-icon">&nbsp;</span>Group Report</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/programreport"><span
-								class="list-icon">&nbsp;</span>Model Report</a></li>
-						</sec:authorize>
-						<sec:authorize
-						access="hasRole('ROLE_PROJECT_MANAGER') or hasRole('AdminOfSecurityService')">
-						<li><a
+								class="list-icon">&nbsp;</span>Model Report</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/projectreport"><span
-								class="list-icon">&nbsp;</span>Project Report</a></li>
-						</sec:authorize>						
+								class="list-icon">&nbsp;</span>Project Report</ipms:a></li>
 					</ul></li>
-				<sec:authorize
-						access="hasRole('AdminOfSecurityService')">
 				<li><a href="#"><span class="nav_icon frames"></span>Stakeholder
 						Administration<span class="up_down_arrow">&nbsp;</span></a>
 					<ul class="acitem">
-						<li><a
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/principals"><span
-								class="list-icon">&nbsp;</span>Users</a></li>
-						<li><a href="${pageContext.request.contextPath}/app/roles"><span
-								class="list-icon">&nbsp;</span>Roles</a></li>
-						<li><a
+								class="list-icon">&nbsp;</span>Users</ipms:a></li>
+						<li><ipms:a href="${pageContext.request.contextPath}/app/roles"><span
+								class="list-icon">&nbsp;</span>Roles</ipms:a></li>
+						<li><ipms:a
 							href="${pageContext.request.contextPath}/app/privileges"><span
-								class="list-icon">&nbsp;</span>Privileges</a></li>
-					</ul></li>	
-				</sec:authorize>					
+								class="list-icon">&nbsp;</span>Privileges</ipms:a></li>
+					</ul></li>				
 			</ul>           
           	<!-- <div> -->
 			<div id="left_bar">

@@ -29,6 +29,9 @@ public class Privilege implements INameableEntity{
 	@Column(unique = true, nullable = false)
 	@NotEmpty
 	private String name;
+	
+	@Column
+	private String description;
 
 	public Privilege(){
 		super();
@@ -60,6 +63,12 @@ public class Privilege implements INameableEntity{
 		name = nameToSet;
 	}
 
+	public String getFormattedName() {
+		if(name != null)
+			return name.replace(",", "<br>");
+		
+		return name;
+	}
 	//
 
 	@Override
@@ -105,4 +114,13 @@ public class Privilege implements INameableEntity{
 		return null;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
 }

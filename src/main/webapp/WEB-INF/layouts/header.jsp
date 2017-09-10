@@ -39,6 +39,8 @@
 	});
 </script>
 
+<sec:authentication var="user" property="principal" />
+
 <div id="header" class="blue_lin">
 	<div class="header_left">
 		<div>
@@ -116,8 +118,8 @@
 	</div>
 	<div class="header_right"  align="right">
 
-		<span style="color: white;">Logged On: <strong><c:out value="${currentUser.name}" /></strong></span><br/><br/>
-		<span style="color: white;"> <a style="color: white;" href="${pageContext.request.contextPath}/app/profile/${currentUser.name}" title="View Profile">Profile</a>
+		<span style="color: white;">Logged On: <strong><c:out value="${user.username}" /></strong></span><br/><br/>
+		<span style="color: white;"> <a style="color: white;" href="${pageContext.request.contextPath}/app/profile/${user.username}" title="View Profile">Profile</a>
 	    &#124; <a style="color: white;" href="#" title="Manage Settings">Settings</a> 
 	    &#124; <a style="color: white;" href="${pageContext.request.contextPath}/app/help" title="Browse Help Page">Help</a>
 		&nbsp;&nbsp;&nbsp;&nbsp; <a style="color: white;" href="${pageContext.request.contextPath}/util/logout" title="Logout from IPMS"><strong><u> Logout </u>
