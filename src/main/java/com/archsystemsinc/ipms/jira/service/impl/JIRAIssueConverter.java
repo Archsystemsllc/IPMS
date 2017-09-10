@@ -1,3 +1,6 @@
+/**
+* Copyright (c) 2017, Archsystems Inc and/or its affiliates. All rights reserved.
+*/
 package com.archsystemsinc.ipms.jira.service.impl;
 
 import java.text.ParseException;
@@ -13,12 +16,24 @@ import com.archsystemsinc.ipms.sec.persistence.service.IProjectService;
 
 import net.sf.json.JSONObject;
 
+/**
+* JIRA Converter that converts JIRA Issue to the corresponding IPMS Issue
+* @author Martin
+* @version 0.2.1
+*/
 @Service
 public class JIRAIssueConverter implements Converter<net.rcarz.jiraclient.Issue, Issue> {
 
+	/**
+	 * The Autowired principlaService that needed for Project related service calls
+	 */
 	@Autowired
 	IProjectService projectService;
 	
+	/**
+	 * Returns the IPMS Issue for the corresponding JIRA Issue
+	 * @return <code>Issue</code>
+	 */
 	@Override
 	public com.archsystemsinc.ipms.sec.model.Issue convert(net.rcarz.jiraclient.Issue jcIssue) {
 		
@@ -41,7 +56,8 @@ public class JIRAIssueConverter implements Converter<net.rcarz.jiraclient.Issue,
 			issue.setProject(project);
 			
 			com.archsystemsinc.ipms.sec.model.Principal assignedTo = new com.archsystemsinc.ipms.sec.model.Principal();
-			assignedTo.setName(jcIssue.getAssignee().getDisplayName());
+			if(jcIssue != null)
+				assignedTo.setName(jcIssue.getAssignee().getDisplayName());
 			issue.setAssigned(assignedTo);
 			
 

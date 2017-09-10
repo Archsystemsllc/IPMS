@@ -3,7 +3,40 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<div id="breadcrumb">
+    <ul>
+        <li>
+            <a href="${pageContext.request.contextPath}/app/groupdashboard">Home</a> <span> >> </span>
+        </li>
+        <li>
+            <a href="#">Issue Management</a> <span> >> </span>
+        </li>
+        <c:if test="${not empty searchParam}">
+	        
+	         <li>
+	        	
+					<form:form  modelAttribute="searchParam" class="form_container left_label"
+						action="${pageContext.request.contextPath}/app/searchissue"
+						method="post">
+						<form:hidden path="projectIds"/>
+						<form:hidden path="principalIds"/>
+						<form:hidden path="statuses"/>
+	            	<a href="#" onclick="document.forms['searchParam'].submit();">Search Issues</a> <span> >> </span>
+					</form:form>
+	        </li>
+	        <li>
+	            <a href="#" style="text-decoration: none;">Issues</a>
+	        </li>
+        </c:if>
+        <c:if test="${not empty meetingsearch}">
+        	<li>
+	            <a href="#" style="text-decoration: none;">Issues</a>
+	        </li>
+        </c:if>
+        
+    </ul>
+</div>
 <div class="content">
 	  <div class="grid_container">
         <div class="grid_12">

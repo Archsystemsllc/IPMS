@@ -18,5 +18,9 @@
 		<put-attribute name="content" value="/WEB-INF/views/issue/issuesedit.jsp" />
 	</definition>
 	
+	<definition name="searchissue" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/issue/searchissue.jsp" />
+	</definition>
+	
 
 </tiles-definitions>

@@ -61,6 +61,8 @@ import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
 import com.archsystemsinc.ipms.sec.model.RevisionHistory;
+import com.archsystemsinc.ipms.sec.model.dto.IssueSearchParams;
+import com.archsystemsinc.ipms.sec.model.dto.MeetingSearchParams;
 import com.archsystemsinc.ipms.sec.persistence.service.IIssueService;
 import com.archsystemsinc.ipms.sec.persistence.service.IPrincipalService;
 import com.archsystemsinc.ipms.sec.persistence.service.IProgramService;
@@ -168,7 +170,46 @@ public class IssueController extends AbstractController<Issue> {
 		return "issue";
 	}
 
-
+	@RequestMapping(value = "/searchissue", method = {RequestMethod.GET, RequestMethod.POST})
+	public String searchIssue(@Valid @ModelAttribute("searchParam") final IssueSearchParams searchParam,
+			final BindingResult result, final Model model, HttpServletRequest request) {
+	
+		model.addAttribute("referenceData", referenceDataforSearch());
+		
+		return "searchissue";
+	}
+	
+	@RequestMapping(value = "/searchresults", method = RequestMethod.POST)
+	public String issue(@Valid @ModelAttribute("searchParam") final IssueSearchParams searchParam,
+			final BindingResult result, final Model model, HttpServletRequest request) {
+		final List<Issue> issues = new ArrayList<>();
+		List<String> projects = new ArrayList<>();
+		for (Long projectId : searchParam.getProjectIds()) {
+			Project project = projectService.findOne(projectId);
+			if(!StringUtils.isEmpty(project.getJiraProjectKey())) {
+				projects.add(project.getJiraProjectKey());
+			}
+		}
+		
+		List<String> users = new ArrayList<>();
+		for (Long principalId : searchParam.getPrincipalIds()) {
+			Principal principal = principalService.findOne(principalId);
+			if(!StringUtils.isEmpty(principal.getJiraUsername())) {
+				users.add(principal.getJiraUsername());
+			}
+			
+		}
+		issues.addAll(jiraIssueService.searchIssues(users, projects, searchParam.getStatuses()));
+		model.addAttribute("issues", issues);
+		return "issues";
+	}
+	
+	/**
+	 * The endpoint to view a specific JIRA Issue
+	 * @param id the JIRA ID
+	 * @param model the Model
+	 * @return the tile that defines the 
+	 */
 	@RequestMapping(value = "/jiraIssue/{id}", method = RequestMethod.GET)
 	public String jiraIssue(@PathVariable("id") final String id, final Model model) {
 		final Issue issue = jiraIssueService.findOne(id);
@@ -268,10 +309,9 @@ public class IssueController extends AbstractController<Issue> {
 		} else {
 			service.create(issue);
 			model.addAttribute("success", "success.issue.created");
-			// 
 			returnView = "redirect:issues/";
 			/*returnView = "redirect:project/" + project.getId()
-					+ "?page=issues&success=2"*/;
+			+ "?page=issues&success=2"*/;
 		}
 		return returnView;
 	}
@@ -306,7 +346,6 @@ public class IssueController extends AbstractController<Issue> {
 				revisionHistoryService.bulkCreate(histList);
 			}
 			model.addAttribute("success", "success.issue.updated");
-			// page navigates back to list of issues page
 			returnView = "redirect:issues";
 		}
 		model.addAttribute("issue", issue);
@@ -329,6 +368,37 @@ public class IssueController extends AbstractController<Issue> {
 		return returnView;
 	}
 
+	protected Map referenceDataforSearch() {
+
+		final Map referenceData = new HashMap();
+		final List<Principal> list = principalService.findAll();
+		final Map<Integer, String> aList = new LinkedHashMap<Integer, String>();
+		aList.put(0, "--Select Assignees--");
+		for (int i = 0; i < list.size(); i++) {
+			aList.put(list.get(i).getId().intValue(), list.get(i).getName());
+		}
+		referenceData.put("assignList", aList);
+
+		final List<Project> projectlist = projectService.findActiveProjects();
+		final Map<Integer, String> pList = new LinkedHashMap<Integer, String>();
+
+		pList.put(0, "--Select Projects--");
+		for (int i = 0; i < projectlist.size(); i++) {
+			pList.put(projectlist.get(i).getId().intValue(), projectlist.get(i)
+					.getName());
+		}
+		referenceData.put("projectList", pList);
+		
+
+		final Map<String, String> jiraStatusList = new LinkedHashMap<String, String>();
+		jiraStatusList.put("0", "--Select Statuses--");
+		jiraStatusList.put("In Progress", "In Progress");
+		jiraStatusList.put("To Do", "To Do");
+		jiraStatusList.put("Done", "Done");
+		referenceData.put("jirastatuses", jiraStatusList);
+		
+		return referenceData;
+	}
 	protected Map referenceData() {
 		final Map referenceData = new HashMap();
 		final List<Principal> list = principalService.findAll();
@@ -340,6 +410,7 @@ public class IssueController extends AbstractController<Issue> {
 
 		final List<Project> projectlist = projectService.findActiveProjects();
 		final Map<Integer, String> pList = new LinkedHashMap<Integer, String>();
+
 		for (int i = 0; i < projectlist.size(); i++) {
 			pList.put(projectlist.get(i).getId().intValue(), projectlist.get(i)
 					.getName());
@@ -376,6 +447,7 @@ public class IssueController extends AbstractController<Issue> {
 				ActionItemPriority.Low.toString());
 		referenceData.put("priorityList", priorityList);
 
+		
 		final Map<String, String> sList = new LinkedHashMap<String, String>();
 		sList.put(IssueStatus.Closed.toString(), IssueStatus.Closed.toString());
 		sList.put(IssueStatus.Open.toString(), IssueStatus.Open.toString());
