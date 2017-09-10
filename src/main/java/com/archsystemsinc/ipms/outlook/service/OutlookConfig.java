@@ -1,3 +1,6 @@
+/**
+* Copyright (c) 2017, Archsystems Inc and/or its affiliates. All rights reserved.
+*/
 package com.archsystemsinc.ipms.outlook.service;
 
 import org.slf4j.Logger;
@@ -13,15 +16,34 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
 
+/**
+* Outlook Configuration
+* This class holds the outlook configuration such as outlook userid and outlook password
+* @author Martin
+* @version 0.2.1
+*/
 @Configuration
 public class OutlookConfig {
 
-
+	/**
+	 * The looger
+	 */
 	protected final Logger logger = LoggerFactory.getLogger(OutlookConfig.class);
 	
+	/**
+	 * The outlook userid
+	 */
 	@Value( "${outlook.userid}" ) private String userid;
+	
+	/**
+	 * The outlook password
+	 */
 	@Value( "${outlook.password}" ) private String password;
 	
+	/**
+	 * Returns the ExchangeService
+	 * @return <code>ExchangeService</code> 
+	 */
 	@Bean
 	public ExchangeService exchangeService() {
 		ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);

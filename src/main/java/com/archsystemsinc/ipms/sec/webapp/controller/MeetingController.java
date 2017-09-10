@@ -66,6 +66,8 @@ import com.archsystemsinc.ipms.sec.model.ParkingLot;
 import com.archsystemsinc.ipms.sec.model.Principal;
 import com.archsystemsinc.ipms.sec.model.Program;
 import com.archsystemsinc.ipms.sec.model.Project;
+import com.archsystemsinc.ipms.sec.model.dto.FinancialReportSearchParams;
+import com.archsystemsinc.ipms.sec.model.dto.MeetingSearchParams;
 import com.archsystemsinc.ipms.sec.persistence.service.IDiscussionAgendaService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingAgendaItemService;
 import com.archsystemsinc.ipms.sec.persistence.service.IMeetingMinutesService;
@@ -356,7 +358,10 @@ public class MeetingController extends AbstractController<Meeting> {
 	
 		for(Project project :projectService.findActiveProjects()) {
 			if(StringUtils.isNotEmpty(project.getEmail())) {
-				List<Meeting> outlookMeetings = outlookService.findAppointments(project, startDate,endDate);
+				/**
+				 * Find all meetings from outlook and add the the IPMS meetings
+				 */
+				List<Meeting> outlookMeetings = outlookService.findAppointments(project, null, startDate,endDate);
 				meetings.addAll(outlookMeetings);
 			}
 		}
@@ -364,14 +369,49 @@ public class MeetingController extends AbstractController<Meeting> {
 		model.addAttribute("meetings", meetings);
 		return "meetings";
 	}
-
-	public static Calendar date_only(Calendar datetime) {
-	    final long LENGTH_OF_DAY = 24*60*60*1000;
-	    long millis = datetime.getTimeInMillis();
-	    long offset = datetime.getTimeZone().getOffset(millis);
-	    millis = millis - ((millis + offset) % LENGTH_OF_DAY);
-	    datetime.setTimeInMillis(millis);
-	    return datetime;
+	
+	/**
+	 * The end Point for search meeting
+	 * @param searchParam The list of search parameters such is porject id's date range and subject
+	 * @param result The<code>BindingResult</code>
+	 * @param model The <code>Model</code>
+	 * @param request The HttpServletRequest
+	 * @return the tiles definition for the search
+	 */
+	@RequestMapping(value = "/searchmeeting", method = {RequestMethod.GET, RequestMethod.POST})
+	public String searchMeeting(@Valid @ModelAttribute("searchParam") final MeetingSearchParams searchParam,
+			final BindingResult result, final Model model, HttpServletRequest request) {
+	
+		model.addAttribute("referenceData", referenceData());
+		
+		return "searchmeeting";
+	}
+	
+	/**
+	 * Returns the Search results(meetings) for the given search param
+	 * @param searchParam The list of search parameters such is porject id's date range and subject
+	 * @param result The<code>BindingResult</code>
+	 * @param model The <code>Model</code>
+	 * @param request The HttpServletRequest
+	 * @return the tiles definition for the search results
+	 */
+	@RequestMapping(value = "/meetingresults", method = {RequestMethod.POST})
+	public String meetingResults(@Valid @ModelAttribute("searchParam") final MeetingSearchParams searchParam,
+			final BindingResult result, final Model model, HttpServletRequest request) {
+	
+		List<Meeting> meetings = new ArrayList<>();
+		for(Project project :projectService.findActiveProjects()) {
+			if( searchParam.getProjectIds().contains((project.getId()))) {
+				if(StringUtils.isNotEmpty(project.getEmail())) {
+					List<Meeting> outlookMeetings = outlookService.findAppointments(project, searchParam.getSubject(), searchParam.getStartDate(),searchParam.getEndDate());
+					meetings.addAll(outlookMeetings);
+				}
+			}
+		}
+		
+		model.addAttribute("meetings", meetings);
+		model.addAttribute("searchParam", searchParam);
+		return "meetings";
 	}
 	
 	@RequestMapping(value = "/meeting/{id}", method = RequestMethod.GET)
@@ -787,7 +827,6 @@ public class MeetingController extends AbstractController<Meeting> {
 			attendees = new HashSet<Principal>();
 		String returnView = "";
 		if (result.hasErrors()){
-			//navigates back to meeting page
 			returnView = "meetingsedit";
 		}
 		if (request.getParameter("btnAction")

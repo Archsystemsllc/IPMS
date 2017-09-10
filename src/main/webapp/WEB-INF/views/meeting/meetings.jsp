@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <div id="breadcrumb">
     <ul>
@@ -10,8 +11,32 @@
             <a href="${pageContext.request.contextPath}/app/groupdashboard">Home</a> <span> >> </span>
         </li>
         <li>
-            <a href="#" style="text-decoration: none;">Meetings</a>
+            <a href="#">Meetings Management</a> <span> >> </span>
         </li>
+        <c:if test="${not empty searchParam}">
+	        
+	         <li>
+	        	
+					<form:form  modelAttribute="searchParam" class="form_container left_label"
+						action="${pageContext.request.contextPath}/app/searchmeeting"
+						method="post">
+						<form:hidden path="projectIds"/>
+						<form:hidden path="subject"/>
+						<form:hidden path="startDate"/>
+						<form:hidden path="endDate"/>
+	            	<a href="#" onclick="document.forms['searchParam'].submit();">Search Meetings</a> <span> >> </span>
+					</form:form>
+	        </li>
+	        <li>
+	            <a href="#" style="text-decoration: none;">Meetings</a>
+	        </li>
+        </c:if>
+        <c:if test="${not empty meetingsearch}">
+        	<li>
+	            <a href="#" style="text-decoration: none;">Meetings</a>
+	        </li>
+        </c:if>
+        
     </ul>
 </div>
 <div id="content">

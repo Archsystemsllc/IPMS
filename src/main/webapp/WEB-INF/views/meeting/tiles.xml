@@ -39,5 +39,10 @@
 		<put-attribute name="content" value="/WEB-INF/views/meeting/meetingminutesadd.jsp" />
 	</definition>
 	
+	
+	<definition name="searchmeeting" extends="page">
+		<put-attribute name="content" value="/WEB-INF/views/meeting/searchmeeting.jsp" />
+	</definition>
+	
 </tiles-definitions>
 
